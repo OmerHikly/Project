@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Patterns;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+   getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
 
     String Email;
     String phone;
@@ -77,5 +89,29 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+
+
+//Activities path:
+    public void AuthScreen(MenuItem item) {
+        Intent t=new Intent(this,MainActivity.class);
+        startActivity(t);
+}
+    public void RemoveScreen(MenuItem item) {
+        Intent t=new Intent(this,User_Removal.class);
+        startActivity(t);
+
+    }
+
+    public void ImageScreen(MenuItem item) {
+        Intent t=new Intent(this,Upload_Images.class);
+        startActivity(t);
+
+    }
+
+    public void ScanScreen(MenuItem item) {
+        Intent t=new Intent(this,Barcode_Scan.class);
+        startActivity(t);
     }
 }
