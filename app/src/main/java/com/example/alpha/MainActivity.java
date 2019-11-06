@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     EditText et1;
     EditText Password;
     TextView tv;
-    Spinner spin;
 
 
     LinearLayout dialog;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         Password = findViewById(R.id.password);
         btn = findViewById(R.id.sign_up);
         tv = findViewById(R.id.sign_option);
-        spin = findViewById(R.id.spinner3);
+
 
         dial_et = findViewById(R.id.d_et);
         dial_btn = findViewById(R.id.d_btn);
@@ -156,10 +155,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SendVerificationCode() {
-        Toast.makeText(getApplicationContext(),"stage 1",Toast.LENGTH_SHORT).show();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 Phone,        // Phone number to verify
-                10,                 // Timeout duration
+                60,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
                 this,               // Activity (for callback binding)
                 mCallbacks);
@@ -179,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(getApplicationContext(),"User is already exists",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Sign up failed",Toast.LENGTH_SHORT).show();
 
 
 
@@ -215,7 +213,15 @@ public class MainActivity extends AppCompatActivity {
 
 
                             FirebaseUser user = task.getResult().getUser();
-                            // ...
+                            long creationTimestamp = user.getMetadata().getCreationTimestamp();
+                            long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
+                            if (creationTimestamp == lastSignInTimestamp) {
+                                //do create new user
+                            } else {
+                                user.delete();
+                                Toast.makeText(getApplicationContext(),"User already exists",Toast.LENGTH_LONG).show();
+
+                            }
                         } else {
                             // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
@@ -258,12 +264,12 @@ public class MainActivity extends AppCompatActivity {
                     tv.setText("sign up with email address");
                     et1.setInputType(InputType.TYPE_CLASS_PHONE);
                     et1.setHint("Phone number");
-                    spin.setVisibility(View.VISIBLE);
+
                 } else {
                     tv.setText("sign up with phone number");
                     et1.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                     et1.setHint("Enter mail");
-                    spin.setVisibility(View.GONE);
+
 
                 }
                 bo = !bo;
