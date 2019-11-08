@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class User_Removal extends AppCompatActivity {
 
@@ -41,5 +42,9 @@ public class User_Removal extends AppCompatActivity {
     public void ScanScreen(MenuItem item) {
         Intent t=new Intent(this,Barcode_Scan.class);
         startActivity(t);
+    }
+
+    public void AddToLv(View view) {
+
     }
 }
