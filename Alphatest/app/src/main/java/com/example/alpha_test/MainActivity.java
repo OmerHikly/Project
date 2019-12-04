@@ -9,12 +9,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,21 +29,20 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     Button btn;
+    Button bt;
     EditText et1;
     EditText Password;
     TextView tv;
+    EditText et;
 
 
-    LinearLayout dialog;
-
-    EditText dial_et;
     Button dial_btn;
-    AlertDialog.Builder adb;
 
 
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
 
     boolean bo = true;
+    boolean co = false;
 
     PhoneAuthProvider.ForceResendingToken mResendToken;
 
@@ -55,15 +52,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         et1 = findViewById(R.id.mail_phone);
         Password = findViewById(R.id.password);
+        et = findViewById(R.id.et);
         btn = findViewById(R.id.sign_up);
         tv = findViewById(R.id.sign_option);
+        bt = findViewById(R.id.Ver);
 
 
-        dial_et = findViewById(R.id.d_et);
         dial_btn = findViewById(R.id.d_btn);
 
         mAuth = FirebaseAuth.getInstance();
     }
+
     String Email;
     String pass;
 
@@ -85,10 +84,8 @@ public class MainActivity extends AppCompatActivity {
             PhoneAuthentication();
         }
 
-
         et1.getText().clear();
         Password.getText().clear();
-
     }
 
 
@@ -113,8 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_SHORT).show();
 
                     }
@@ -124,78 +120,116 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
     private void PhoneAuthentication() {
         Phone = et1.getText().toString();
 
+        System.out.println("Successfully deleted user.");
         if (Phone.isEmpty()) {
             Toast.makeText(getApplicationContext(), "You didn't write phone number...", Toast.LENGTH_SHORT).show();
 
         } else {
-            if (Phone.length() < 10) {
-                Toast.makeText(getApplicationContext(), "Phone Number is not valid", Toast.LENGTH_SHORT).show();
+                if (Phone.length() < 10) {
+                    Toast.makeText(getApplicationContext(), "Phone Number is not valid", Toast.LENGTH_SHORT).show();
             } else {
-                Phone="+972"+Phone;
+                Phone = "+972" + Phone;
+                if (bo == false) {
+                }
                 SendVerificationCode();
-                //  adb = new AlertDialog.Builder(this);
-                //adb.setView(dialog);
-                //adb.setTitle("Code Verification");
-                //adb.show();
-
-
-
             }
         }
     }
 
+    private void verify() {
+        ChangeView1();
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String code=et.getText().toString();
+                PhoneAuthCredential credential=PhoneAuthProvider.getCredential(codeSent,code);
+                ChangeView2();
+               SignInWithPhoneAuthCredential(credential);
+            }
+        });
+
+        }
+
+
+
+
+
+
+
+
     private void SendVerificationCode() {
+
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 Phone,        // Phone number to verify
                 60,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
                 this,               // Activity (for callback binding)
-                mCallbacks);
+                mCallbacks);        // OnVerificationStateChangedCallbacks
 
     }
 
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
+
+
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-
-            //verifying the code
-            Toast.makeText(getApplicationContext(),"We are sending you the code...",Toast.LENGTH_SHORT).show();
-            SignInWithPhoneAuthCredential(phoneAuthCredential);
+            Toast.makeText(getApplicationContext(), "We are sending you the code...", Toast.LENGTH_SHORT).show();
 
         }
+
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(getApplicationContext(),"Sign up failed",Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getApplicationContext(), "Sign up failed", Toast.LENGTH_SHORT).show();
 
 
         }
-
 
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
-            codeSent = s;
-            mResendToken = forceResendingToken;
-            Toast.makeText(getApplicationContext(),"code sent",Toast.LENGTH_SHORT).show();
-
-
+            Toast.makeText(getApplicationContext(), "Code sent...", Toast.LENGTH_SHORT).show();
+            codeSent =s;
+            verify();
         }
-
-
     };
 
 
 
+
+
+    private void ChangeView1() {
+        et1.setVisibility(View.GONE);
+        Password.setVisibility(View.GONE);
+        tv.setVisibility(View.GONE);
+        btn.setVisibility(View.GONE);
+        et.setVisibility(View.VISIBLE);
+        bt.setVisibility(View.VISIBLE);
+
+    }
+
+
+
+
+        private void ChangeView2() {
+        et1.setVisibility(View.VISIBLE);
+        Password.setVisibility(View.VISIBLE);
+        tv.setVisibility(View.VISIBLE);
+        btn.setVisibility(View.VISIBLE);
+        et.setVisibility(View.GONE);
+        bt.setVisibility(View.GONE);
+        co=false;
+        bo=true;
+
+        tv.setText("sign up with phone number");
+        et1.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        et1.setHint("Enter mail");
+
+    }
 
 
     private void SignInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
@@ -205,32 +239,30 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(),"You are a new user now",Toast.LENGTH_LONG).show();
-
-                            // Sign in success, update UI with the signed-in user's information
-
-
+                            ChangeView2();
                             FirebaseUser user = task.getResult().getUser();
-                            long creationTimestamp = user.getMetadata().getCreationTimestamp();
-                            long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
-                            if (creationTimestamp == lastSignInTimestamp) {
-                                //do create new user
-                            } else {
-                                user.delete();
-                                Toast.makeText(getApplicationContext(),"Oops! User already exists",Toast.LENGTH_LONG).show();
-
-                            }
                         } else {
                             // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                Toast.makeText(getApplicationContext(),"sign in failed",Toast.LENGTH_LONG).show();
-                                // The verification code entered was invalid
+                                Toast.makeText(getApplicationContext(),"Verification code is not valid",Toast.LENGTH_LONG).show();
                             }
+                         //    else {
+                        //    user.delete();
+                      //     Toast.makeText(getApplicationContext(),"Oops! User already exists",Toast.LENGTH_LONG).show();
+                       //     ChangeView2();
+                       // }
                         }
                     }
                 });
 
 
     }
+
+
+
+
+
+
 
     public void phone_mail (View view){
         if (bo == true) {
@@ -276,4 +308,6 @@ public class MainActivity extends AppCompatActivity {
         Intent t = new Intent(this, BarcodeScan.class);
         startActivity(t);
     }
+
+
 }

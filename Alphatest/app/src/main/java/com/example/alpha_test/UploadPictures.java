@@ -19,8 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -32,7 +35,8 @@ public class UploadPictures extends AppCompatActivity {
 
 
     StorageReference mStorageRef;
-    private StorageTask uploadTask;
+    private StorageTask<UploadTask.TaskSnapshot> uploadTask;
+
 
     public Uri imguri;
 
@@ -46,6 +50,7 @@ public class UploadPictures extends AppCompatActivity {
         setContentView(R.layout.activity_upload_pictures);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("Images");
+
 
         img = findViewById(R.id.iv);
         ch = findViewById(R.id.Chs);
@@ -98,8 +103,7 @@ public class UploadPictures extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imguri = data.getData();
-            img.setImageURI(imguri);
-            Toast.makeText(this,"We are uploading your file...",Toast.LENGTH_SHORT).show();
+           // img.setImageURI(imguri);
             upload();
         }
     }
@@ -110,18 +114,22 @@ public class UploadPictures extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
     }
 
+  //  StorageReference Ref=mStorageRef.child(System.currentTimeMillis()+"."+getExtension(imguri));
 
 
     public void upload() {
-        StorageReference Ref=mStorageRef.child(System.currentTimeMillis()+"."+getExtension(imguri));
+        Toast.makeText(this,"We are uploading your file...",Toast.LENGTH_SHORT).show();
+        final StorageReference Ref=mStorageRef.child(System.currentTimeMillis()+"."+getExtension(imguri));
         uploadTask=Ref.putFile(imguri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
-                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Toast.makeText(getApplicationContext(),"Image uploaded successfully",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+
+                     DownloadImg();
                     }
+
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -132,14 +140,34 @@ public class UploadPictures extends AppCompatActivity {
                 });
     }
 
+    private void DownloadImg()  {
+         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(),"Not working",Toast.LENGTH_SHORT).show();
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return mStorageRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {//IT reaches that point and then going to the else beneath.
+                    Uri downloadUri = task.getResult();
+                    img.setImageURI(downloadUri);
+                    Toast.makeText(getApplicationContext(),"This is fucking working",Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(),"Not working2",Toast.LENGTH_SHORT).show();
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
 
 
-
-
-
-
-
-
+    }
 
 
     @Override

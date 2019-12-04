@@ -39,6 +39,15 @@
         android:gravity="center"
         android:orientation="horizontal">
 
+        <EditText
+            android:id="@+id/et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Code..."
+            android:inputType="number"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/sign_option"
             android:layout_width="wrap_content"
@@ -54,5 +63,13 @@
             android:layout_height="wrap_content"
             android:onClick="SendData"
             android:text="sign up" />
+
+        <Button
+            android:id="@+id/Ver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Verify code" />
     </LinearLayout>
+
 </LinearLayout>
