@@ -21,6 +21,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     Button dial_btn;
-
+    Task task1;
 
     FirebaseAuth mAuth;
 
@@ -70,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
     String codeSent;
 
 
-    public void SendData(View view) {
+    public void SendData(View view) {//method that saves the data in the edit texts
         pass = Password.getText().toString();
         if (pass.isEmpty()) {
             Password.setError("Phone number is required");
             Password.requestFocus();
             return;
         }
-        //CRUSH DOWN BECAUSE OF PHONE.LENGTH();
+
         if (bo == true) {
             MailAuthentication();
         } else {
@@ -89,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void MailAuthentication() {
+    private void MailAuthentication() {//mail authentication
         Email = et1.getText().toString();
 
 
         if (Email.isEmpty()) {
-            et1.setError("Email is required");//not learned- doing a red icon next to the Edit Text
+            et1.setError("Email is required");//set error doing a red icon next to the Edit Text
             // with a text view of the text given
             et1.requestFocus();
             return;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {//checking if email exists
             Toast.makeText(getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
         } else {
             mAuth.createUserWithEmailAndPassword(Email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -120,11 +121,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void PhoneAuthentication() {
+    private void PhoneAuthentication() {//phone authentication
         Phone = et1.getText().toString();
 
-        System.out.println("Successfully deleted user.");
-        if (Phone.isEmpty()) {
+        if (Phone.isEmpty()) {//Validation of the phone
             Toast.makeText(getApplicationContext(), "You didn't write phone number...", Toast.LENGTH_SHORT).show();
 
         } else {
@@ -132,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Phone Number is not valid", Toast.LENGTH_SHORT).show();
             } else {
                 Phone = "+972" + Phone;
+
+
                 if (bo == false) {
                 }
                 SendVerificationCode();
@@ -139,7 +141,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void verify() {
+    private void showInfoToUser(Task<AuthResult>task) {
+        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+            Toast.makeText(MainActivity.this, "User already exists",  Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void verify() {//Verification of the code sent to the user
         ChangeView1();
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void SendVerificationCode() {
+    private void SendVerificationCode() {//The method that sents the code
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 Phone,        // Phone number to verify
@@ -175,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        //This method checks the state of the code sending and reacts for that.
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             Toast.makeText(getApplicationContext(), "We are sending you the code...", Toast.LENGTH_SHORT).show();
@@ -191,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+         //gets the code string and triggeres a method called verify
             super.onCodeSent(s, forceResendingToken);
             Toast.makeText(getApplicationContext(), "Code sent...", Toast.LENGTH_SHORT).show();
             codeSent =s;
@@ -202,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void ChangeView1() {
+    private void ChangeView1() {// sets the code verification view
         et1.setVisibility(View.GONE);
         Password.setVisibility(View.GONE);
         tv.setVisibility(View.GONE);
@@ -215,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        private void ChangeView2() {
+        private void ChangeView2() {// sets the view to the original
         et1.setVisibility(View.VISIBLE);
         Password.setVisibility(View.VISIBLE);
         tv.setVisibility(View.VISIBLE);
@@ -241,6 +251,11 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"You are a new user now",Toast.LENGTH_LONG).show();
                             ChangeView2();
                             FirebaseUser user = task.getResult().getUser();
+                            long creationTimestamp = user.getMetadata().getCreationTimestamp();
+                            long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
+                            if (creationTimestamp == lastSignInTimestamp) {
+
+                            }
                         } else {
                             // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {

@@ -15,14 +15,11 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-
-
 import static com.example.alpha_test.FirebaseHelper.refUsers;
 
 public class AddData extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    ArrayList<String> listItems=new ArrayList<String>();
+
     ArrayAdapter<String> adapter;
 
 
@@ -56,7 +53,7 @@ public class AddData extends AppCompatActivity implements AdapterView.OnItemClic
 UserData user;
 
 
-    public void AddToLv(View view) {
+    public void AddToLv(View view) {//adding the data to the firebase
         String st = et.getText().toString();
 
       user = new UserData(st);
@@ -72,7 +69,7 @@ UserData user;
 
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view,  int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view,  int position, long id) {//Data remove fro firebase
 
         final int x=position;
         adb=new AlertDialog.Builder(this);
