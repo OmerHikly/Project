@@ -2,6 +2,7 @@ package com.example.alpha_test;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,41 +20,49 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 public class UploadPictures extends AppCompatActivity {
     ImageView img;
     Button ch;
+    Context ctx=this;
 
 
     StorageReference mStorageRef;
     private StorageTask<UploadTask.TaskSnapshot> uploadTask;
-
+    DatabaseReference mSearchedLocationReference;
 
     public Uri imguri;
+
+    final long ONE_MEGABYTE = 1024*1024;
 
     public static final int IMAGE_PICK_CODE=1000;
     public static final int PERMISSION_CODE=1001;
 
+    public static StorageReference Ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_pictures);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("Images");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
         img = findViewById(R.id.iv);
         ch = findViewById(R.id.Chs);
+        mSearchedLocationReference = FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("images");
 
 
     }
@@ -105,6 +114,7 @@ public class UploadPictures extends AppCompatActivity {
             imguri = data.getData();
            // img.setImageURI(imguri);
             upload();
+
         }
     }
 
@@ -119,7 +129,7 @@ public class UploadPictures extends AppCompatActivity {
 
     public void upload() {
         Toast.makeText(this,"We are uploading your file...",Toast.LENGTH_SHORT).show();
-        final StorageReference Ref=mStorageRef.child(System.currentTimeMillis()+"."+getExtension(imguri));
+        Ref=mStorageRef.child("Images").child(System.currentTimeMillis()+"."+getExtension(imguri));
         uploadTask=Ref.putFile(imguri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -140,34 +150,28 @@ public class UploadPictures extends AppCompatActivity {
                 });
     }
 
-    private void DownloadImg()  {
-         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(),"Not working",Toast.LENGTH_SHORT).show();
-                    throw task.getException();
-                }
-                // Continue with the task to get the download URL
-                return mStorageRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+    private void DownloadImg() {
+        Ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>(){
             @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {//IT reaches that point and then going to the else beneath.
-                    Uri downloadUri = task.getResult();
-                    img.setImageURI(downloadUri);
-                    Toast.makeText(getApplicationContext(),"This is fucking working",Toast.LENGTH_SHORT).show();
+            public void onSuccess(Uri uri) {
+                Picasso.with(ctx).load(uri).fit().centerCrop().into(img);
 
-                } else {
-                    Toast.makeText(getApplicationContext(),"Not working2",Toast.LENGTH_SHORT).show();
-                    // Handle failures
-                    // ...
-                }
+            }
+
+
+    }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+
             }
         });
 
+}
 
-    }
+
+
+
 
 
     @Override

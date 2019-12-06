@@ -12,7 +12,7 @@ public class FirebaseHelper {
    public static FirebaseStorage storage = FirebaseStorage.getInstance();
 
    public  static StorageReference storageRef = storage.getReference();
-  public  static StorageReference pathReference = storageRef.child("images/stars.jpg");
+  public  static StorageReference pathReference = storageRef.child("Images/stars.jpg");
 
 
 
