@@ -20,6 +20,7 @@
             android:ems="10"
             android:hint="Enter mail"
             android:inputType="textEmailAddress"
+            android:gravity="left"
             android:layout_weight="1"
             android:selectAllOnFocus="true" />
 

@@ -22,7 +22,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     public void SendData(View view) {//method that saves the data in the edit texts
         pass = Password.getText().toString();
         if (pass.isEmpty()) {
-            Password.setError("Phone number is required");
+            Password.setError("Password is required");
             Password.requestFocus();
             return;
         }
@@ -92,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void MailAuthentication() {//mail authentication
         Email = et1.getText().toString();
+        Toast.makeText(getApplicationContext()," Email", Toast.LENGTH_SHORT).show();
 
 
         if (Email.isEmpty()) {
@@ -122,30 +122,27 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void PhoneAuthentication() {//phone authentication
-        Phone = et1.getText().toString();
-
+        Phone=et1.getText().toString();
         if (Phone.isEmpty()) {//Validation of the phone
             Toast.makeText(getApplicationContext(), "You didn't write phone number...", Toast.LENGTH_SHORT).show();
 
         } else {
-                if (Phone.length() < 10) {
-                    Toast.makeText(getApplicationContext(), "Phone Number is not valid", Toast.LENGTH_SHORT).show();
+            if (Phone.length() < 10) {
+                Toast.makeText(getApplicationContext(), "Phone Number is not valid", Toast.LENGTH_SHORT).show();
             } else {
+
+                Phone = et1.getText().toString();
+
+
                 Phone = "+972" + Phone;
 
 
-                if (bo == false) {
-                }
                 SendVerificationCode();
             }
         }
     }
 
-    private void showInfoToUser(Task<AuthResult>task) {
-        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-            Toast.makeText(MainActivity.this, "User already exists",  Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     private void verify() {//Verification of the code sent to the user
         ChangeView1();
@@ -187,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             Toast.makeText(getApplicationContext(), "We are sending you the code...", Toast.LENGTH_SHORT).show();
-
+            SignInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
 
@@ -205,6 +202,13 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Code sent...", Toast.LENGTH_SHORT).show();
             codeSent =s;
             verify();
+        }
+
+        @Override
+        public void onCodeAutoRetrievalTimeOut(String s) {
+            super.onCodeAutoRetrievalTimeOut(s);
+            SendVerificationCode();
+
         }
     };
 
@@ -248,24 +252,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(),"You are a new user now",Toast.LENGTH_LONG).show();
                             ChangeView2();
-                            FirebaseUser user = task.getResult().getUser();
-                            long creationTimestamp = user.getMetadata().getCreationTimestamp();
-                            long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
-                            if (creationTimestamp == lastSignInTimestamp) {
+                            if(task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_LONG).show();
 
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "You are a new user now", Toast.LENGTH_LONG).show();
                             }
+
+
                         } else {
-                            // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                Toast.makeText(getApplicationContext(),"Verification code is not valid",Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, "The verification code entered was invalid", Toast.LENGTH_LONG).show();
                             }
-                         //    else {
-                        //    user.delete();
-                      //     Toast.makeText(getApplicationContext(),"Oops! User already exists",Toast.LENGTH_LONG).show();
-                       //     ChangeView2();
-                       // }
                         }
                     }
                 });
