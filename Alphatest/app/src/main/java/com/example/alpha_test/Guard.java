@@ -1,6 +1,6 @@
 package com.example.alpha_test;
 
-public class Admin {
+public class Guard {
     private String Uid;
     private  String Phone;
     private String Id;
@@ -10,26 +10,18 @@ public class Admin {
     private String Description;
     private String SchoolName;
     private String Password;
+    private String GuardCode;
 
 
-
-
-
-
-
-    private Boolean Activated=false;
-    private Integer level=3;
-
-
-    public Admin( String name, String secondName, String ID,String schoolCode,String phone,String password ) {
-        Password=password;
+    public Guard( String name, String secondName, String schoolCode, String id, String schoolName, String phone, String password, String guardCode) {
         Phone = phone;
-        this.Id = ID;
+        Id = id;
         Name = name;
         SecondName = secondName;
         SchoolCode = schoolCode;
-
-
+        SchoolName = schoolName;
+        Password = password;
+        GuardCode = guardCode;
     }
 
     public String getUid() {
@@ -48,12 +40,12 @@ public class Admin {
         Phone = phone;
     }
 
-    public String getID() {
+    public String getId() {
         return Id;
     }
 
-    public void setID(String ID) {
-        this.Id = ID;
+    public void setId(String id) {
+        Id = id;
     }
 
     public String getName() {
@@ -88,13 +80,6 @@ public class Admin {
         Description = description;
     }
 
-    public Boolean getActivated() {
-        return Activated;
-    }
-
-    public void setActivated(Boolean activated) {
-        Activated = activated;
-    }
     public String getSchoolName() {
         return SchoolName;
     }
@@ -111,6 +96,11 @@ public class Admin {
         Password = password;
     }
 
+    public String getGuardCode() {
+        return GuardCode;
+    }
 
-
+    public void setGuardCode(String guardCode) {
+        GuardCode = guardCode;
+    }
 }

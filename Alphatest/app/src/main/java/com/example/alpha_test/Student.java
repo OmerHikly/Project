@@ -1,6 +1,6 @@
 package com.example.alpha_test;
 
-public class Admin {
+public class Student {
     private String Uid;
     private  String Phone;
     private String Id;
@@ -9,27 +9,34 @@ public class Admin {
     private String SchoolCode;
     private String Description;
     private String SchoolName;
+    private String Cls;
     private String Password;
 
 
 
 
 
-
-
     private Boolean Activated=false;
-    private Integer level=3;
+    private Integer level=2;
 
 
-    public Admin( String name, String secondName, String ID,String schoolCode,String phone,String password ) {
-        Password=password;
+    public Student(String name, String secondName, String id,String schoolCode,String cls,String phone,String password ) {
+
         Phone = phone;
-        this.Id = ID;
+        Id = id;
         Name = name;
         SecondName = secondName;
         SchoolCode = schoolCode;
+        Cls = cls;
+        Password = password;
 
+    }
+    public Boolean getActivated() {
+        return Activated;
+    }
 
+    public void setActivated(Boolean activated) {
+        Activated = activated;
     }
 
     public String getUid() {
@@ -48,12 +55,12 @@ public class Admin {
         Phone = phone;
     }
 
-    public String getID() {
+    public String getId() {
         return Id;
     }
 
-    public void setID(String ID) {
-        this.Id = ID;
+    public void setId(String id) {
+        Id = id;
     }
 
     public String getName() {
@@ -88,19 +95,20 @@ public class Admin {
         Description = description;
     }
 
-    public Boolean getActivated() {
-        return Activated;
-    }
-
-    public void setActivated(Boolean activated) {
-        Activated = activated;
-    }
     public String getSchoolName() {
         return SchoolName;
     }
 
     public void setSchoolName(String schoolName) {
         SchoolName = schoolName;
+    }
+
+    public String getCls() {
+        return Cls;
+    }
+
+    public void setCls(String cls) {
+        Cls = cls;
     }
 
     public String getPassword() {
@@ -110,7 +118,6 @@ public class Admin {
     public void setPassword(String password) {
         Password = password;
     }
-
 
 
 }
