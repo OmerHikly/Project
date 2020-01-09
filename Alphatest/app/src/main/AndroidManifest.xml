@@ -17,17 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LoginScreen"></activity>
-        <activity android:name=".BarcodeScan" />
-        <activity android:name=".UploadPictures" />
-        <activity android:name=".AddData" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".logined"></activity>
+        <activity android:name=".LoginScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".BarcodeScan" />
+        <activity android:name=".UploadPictures" />
+        <activity android:name=".AddData" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
