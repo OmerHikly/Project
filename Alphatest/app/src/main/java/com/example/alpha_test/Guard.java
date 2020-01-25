@@ -6,22 +6,21 @@ public class Guard {
     private String Id;
     private String Name;
     private String SecondName;
-    private String SchoolCode;
+
     private String Description;
     private String SchoolName;
     private String Password;
     private String GuardCode;
 
 
-    public Guard( String name, String secondName, String schoolCode, String id, String schoolName, String phone, String password, String guardCode) {
+    public Guard( String name, String secondName, String id, String schoolName, String phone, String password ) {
         Phone = phone;
         Id = id;
         Name = name;
         SecondName = secondName;
-        SchoolCode = schoolCode;
         SchoolName = schoolName;
         Password = password;
-        GuardCode = guardCode;
+
     }
 
     public String getUid() {
@@ -64,13 +63,7 @@ public class Guard {
         SecondName = secondName;
     }
 
-    public String getSchoolCode() {
-        return SchoolCode;
-    }
 
-    public void setSchoolCode(String schoolCode) {
-        SchoolCode = schoolCode;
-    }
 
     public String getDescription() {
         return Description;

@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -19,11 +20,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
@@ -38,13 +43,18 @@ public class MainActivity extends AppCompatActivity {
     EditText PhoneNum;
 
     TextView tv;
+    TextView sclass;
+    TextView snum;
+
+
     EditText et;
 
     EditText Password;
     EditText FirstName;
     EditText SecondName;
     EditText Id;
-    EditText Schoolcode;
+    EditText Vpass;
+    AutoCompleteTextView School;
 
 
     Spinner spinc;
@@ -53,9 +63,16 @@ public class MainActivity extends AppCompatActivity {
 
     boolean bo = false;
     boolean IfAdmin = false;
+
     boolean IfGuard = false;
-    boolean login = false;
-    boolean exists=true;
+
+
+    DatabaseReference databaseReference;
+    FirebaseUser firebaseUser;
+    String[] Schools;
+    private static final String[] COUNTRIES = new String[]{
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Gaurd", "User", "ישראל"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +80,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FirstName = findViewById(R.id.FirstName);
         SecondName = findViewById(R.id.SecondName);
+        School = findViewById(R.id.School);
         Id = findViewById(R.id.Id);
-        Schoolcode = findViewById(R.id.SchoolCode);
         PhoneNum = findViewById(R.id.phone);
         Password = findViewById(R.id.password);
+        Vpass=findViewById(R.id.VerificationPassword);
+        sclass=findViewById(R.id.TvClass);
+        snum=findViewById(R.id.TvClassNumber);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
         et = findViewById(R.id.et);
@@ -77,14 +100,57 @@ public class MainActivity extends AppCompatActivity {
         spinc = findViewById(R.id.Class);
         spinn = findViewById(R.id.ClassNumber);
 
-
         ArrayAdapter<CharSequence> ClassAdapter = ArrayAdapter.createFromResource(this, R.array.classes, R.layout.support_simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> NumbersAdapter = ArrayAdapter.createFromResource(this, R.array.Numbers, R.layout.support_simple_spinner_dropdown_item);
         ClassAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         NumbersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinc.setAdapter(ClassAdapter);
-        spinn.setAdapter(NumbersAdapter);
+        spinn.setAdapter(NumbersAdapter);       //Array creation for the spinners in the application the array will have the class  and class number
 
+
+        FirebaseSchools();//This method goes to the firebase and gets all the schools (I need this to work every time for when a new school regstered)
+
+
+    }
+
+
+    private void FirebaseSchools() {
+
+        refSchool.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int count = 0;
+                int index = 0;
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {//checks how many main children there are in the firebase(Schools number)
+                    count++;
+                }
+                Schools = new String[count];
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    Toast.makeText(getApplicationContext(), dsp.getKey(), Toast.LENGTH_LONG).show();
+                    Schools[index] = dsp.getKey().toString();
+                    index++;
+                }
+
+                Adapt(Schools);//This method sets the adpater between the array we just created and the "edit text" of the school.
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+
+    }
+
+    private void Adapt(String[] array) {
+        Toast.makeText(getApplicationContext(), array[0] + array[1] + array[2] + array[3], Toast.LENGTH_SHORT).show();
+        ArrayAdapter<String> adpater = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, array);
+        School.setAdapter(adpater);
 
     }
 
@@ -96,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
     String firstname;
     String secondname;
     String id;
-    String schoolcode;
+    String school;
     String Phone;
     String pass;
-
+    String vpass;
 
     public void SendData(View view) {//method that saves the data in the edit texts
 
@@ -107,7 +173,11 @@ public class MainActivity extends AppCompatActivity {
         firstname = FirstName.getText().toString();
         secondname = SecondName.getText().toString();
         id = Id.getText().toString();
-        schoolcode = Schoolcode.getText().toString();
+        school = School.getText().toString();
+
+        ClassAndNumber = String.valueOf(spinc.getSelectedItem()) + "'" + String.valueOf(spinn.getSelectedItem());
+        pass = Password.getText().toString();
+        vpass = Vpass.getText().toString();
 
 
         if (firstname.isEmpty()) {
@@ -152,69 +222,63 @@ public class MainActivity extends AppCompatActivity {
                     Id.requestFocus();
                     return;
                 } else {
-                    if (schoolcode.isEmpty()) {
-                        Schoolcode.setError("School code is required");
-                        Schoolcode.requestFocus();
-                        return;
-
-                    }
-                    if (!Pattern.matches("[0-9]+", schoolcode)) {
-                        Schoolcode.setError("School code should contain only numbers");
-                        Schoolcode.requestFocus();
-                        return;
-                    }
-                    if (schoolcode.length() != 6) {
-                        Schoolcode.setError("School code is illegal");
-                        Schoolcode.requestFocus();
+                    if (school.isEmpty()) {
+                        School.setError("School should be chosen");
+                        School.requestFocus();
                         return;
 
                     } else {
 
                         if (!Pattern.matches("[א-י]+", spinc.getSelectedItem().toString())) {
-                            Toast.makeText(MainActivity.this, "Please pick class", Toast.LENGTH_SHORT).show();
-
+                                Toast.makeText(MainActivity.this, "Please pick class", Toast.LENGTH_SHORT).show();
+                                spinc.requestFocus();
+                                return;
                         }
-                        if (!Pattern.matches("[0-9]+", spinn.getSelectedItem().toString())) {
+                        else if (!Pattern.matches("[0-9]+", spinn.getSelectedItem().toString())) {
                             Toast.makeText(MainActivity.this, "Please pick class number", Toast.LENGTH_SHORT).show();
+                            spinn.requestFocus();
+                            return;
                         } else {
-                            ClassAndNumber = String.valueOf(spinc.getSelectedItem()) + "'" + String.valueOf(spinn.getSelectedItem());
-                            String phone = PhoneNum.getText().toString();
-                            pass = Password.getText().toString();
+
                             if (pass.isEmpty()) {
                                 Password.setError("Password is required");
                                 Password.requestFocus();
                                 return;
                             }
-                            if (pass.equals("12358" + schoolcode)) {
-                                IfAdmin = true;
-                            }
-                            if (pass.equals("1618" + schoolcode)) {
-                                IfGuard = true;
-                            }
+                            if (!pass.equals(vpass)) {
+                                Vpass.setError("סיסמה לא זהה");
+                                Id.requestFocus();
+                                return;
+                            } else {
+                                if (pass.equals("12358")) {
+                                    IfAdmin = true;
+                                }
+                                if (pass.equals("1618")) {
+                                    IfGuard = true;
+                                }
 
 
+                            }
                         }
                     }
 
-
                 }
             }
-
         }
 
 
-        String phone = PhoneNum.getText().toString();
+
+      PhoneAuthentication();
 
 
-        PhoneAuthentication();
 
-
-        PhoneNum.getText().clear();
-        Password.getText().clear();
 
     }
 
-    private boolean checkId() {
+    private boolean checkId() {//   A method that checks for a legal id -ID in israel requires to multiply every digit in the an odd place by 1 and a digit in a
+        //even place by 2 and sum up the result (if we get result that higher than 9 we need to sum those digits  and we use the given result instead)
+        //after we got all those results from each digit in the id code - we sum up all the results and the given Result should be devided by 10.
+        //That's what this method does
         String str = id;
         if ((str.length() > 9) || (str.length() < 5)) {
 
@@ -257,20 +321,21 @@ public class MainActivity extends AppCompatActivity {
 
 
                 Phone = "+972" + Phone;
-                checkIfSchoolExists();
-              //  CheckIfPhoneExists();
-             //   SendVerificationCode();
 
+
+                    checkIfSchoolExists();
+                    //  CheckIfPhoneExists();
+                }
 
             }
         }
-    }
+
 
     private void checkIfSchoolExists() {
             refSchool.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.hasChild(schoolcode)){
+                    if(dataSnapshot.hasChild(school)){
                         Toast.makeText(getApplicationContext(),"School Exists",Toast.LENGTH_SHORT).show();
                         CheckIfPhoneExists();
                     }
@@ -288,8 +353,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public  void CheckIfPhoneExists() {//This method checks under each type of user in the firebase if the typed phone number already as signed in
-        refSchool.child(schoolcode).child("Student").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
+    public  void CheckIfPhoneExists() {//This method checks under each type of user in the firebase if the typed phone number has already signed in
+        refSchool.child(school).child("Student").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -297,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    refSchool.child(schoolcode).child("Teacher").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                    refSchool.child(school).child("Teacher").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -305,15 +370,33 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
 
                             } else {
-                                refSchool.child(schoolcode).child("Admin").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                                refSchool.child(school).child("Admin").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
 
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.getValue() != null) {
                                             Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
 
-                                        } else {
-                                            SendVerificationCode();
+                                        }
+                                        else {
+                                            refSchool.child(school).child("Guard").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    if (dataSnapshot.getValue() != null) {
+                                                        Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
+
+                                                    }
+                                                    else{
+                                                        SendVerificationCode();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
                                         }
                                     }
 
@@ -410,8 +493,22 @@ public class MainActivity extends AppCompatActivity {
         Password.setVisibility(View.GONE);
         tv.setVisibility(View.GONE);
         btn.setVisibility(View.GONE);
+        Vpass.setVisibility(View.GONE);
+        FirstName.setVisibility(View.GONE);
+        SecondName.setVisibility(View.GONE);
+        School.setVisibility(View.GONE);
+        Id.setVisibility(View.GONE);
+        spinn.setVisibility(View.GONE);
+        spinc.setVisibility(View.GONE);
+        Vpass.setVisibility(View.GONE);
+        tv.setVisibility(View.GONE);
+        sclass.setVisibility(View.GONE);
+        snum.setVisibility(View.GONE);
+
+
         et.setVisibility(View.VISIBLE);
         bt.setVisibility(View.VISIBLE);
+
 
     }
 
@@ -421,9 +518,22 @@ public class MainActivity extends AppCompatActivity {
         Password.setVisibility(View.VISIBLE);
         tv.setVisibility(View.VISIBLE);
         btn.setVisibility(View.VISIBLE);
+        FirstName.setVisibility(View.VISIBLE);
+        SecondName.setVisibility(View.VISIBLE);
+        School.setVisibility(View.VISIBLE);
+        Id.setVisibility(View.VISIBLE);
+        spinn.setVisibility(View.VISIBLE);
+        spinc.setVisibility(View.VISIBLE);
+        Vpass.setVisibility(View.VISIBLE);
+        sclass.setVisibility(View.VISIBLE);
+        snum.setVisibility(View.VISIBLE);
+
         et.setVisibility(View.GONE);
         bt.setVisibility(View.GONE);
+
+
         IfAdmin = false;
+        IfGuard=false;
 
 
 
@@ -439,45 +549,52 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                            //it means user already registered
-                            //Add code to show your prompt
+
+                            if (IfAdmin) {
+                                Admin admin = new Admin(firstname, secondname, id, school, Phone, pass);
+                                refSchool.child(school).child("Admin").child(Phone).setValue(admin).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                IfAdmin = false;
+                            }
+                            else
+                             if(IfGuard){
+                                Guard guard=new Guard(firstname, secondname, id, school, Phone, pass);
+                                refSchool.child(school).child("Guard").child(Phone).setValue(guard).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(MainActivity.this, "Data was sucssesfully added Guard", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getApplicationContext(), "You are a new user now", Toast.LENGTH_LONG).show();
+                                if (!bo) {
+                                    Toast.makeText(getApplicationContext(), "Student", Toast.LENGTH_LONG).show();
+
+                                    Student student = new Student(firstname, secondname, id, school, ClassAndNumber, Phone, pass);
+                                    refSchool.child(school).child("Student").child(Phone).setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                } else {
+                                    Teacher teacher = new Teacher(firstname, secondname, id, school, ClassAndNumber, Phone, pass);
+                                    refSchool.child(school).child("Teacher").child(Phone).setValue(teacher).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
+                                        }
 
 
+                                    });
 
-                                       if (IfAdmin) {
-                                           Admin admin = new Admin(firstname, secondname, id, schoolcode, Phone, pass);
-                                           refSchool.child(schoolcode).child("Admin").child(Phone).setValue(admin).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                               @Override
-                                               public void onComplete(@NonNull Task<Void> task) {
-                                                   Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
-                                               }
-                                           });
-                                           IfAdmin = false;
-                                       } else {
-                                           Toast.makeText(getApplicationContext(), "You are a new user now", Toast.LENGTH_LONG).show();
-                                           if (!bo) {
-                                               Toast.makeText(getApplicationContext(), "Student", Toast.LENGTH_LONG).show();
-
-                                               Student student = new Student(firstname, secondname, id, schoolcode, ClassAndNumber, Phone, pass);
-                                               refSchool.child(schoolcode).child("Student").child(Phone).setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                   @Override
-                                                   public void onComplete(@NonNull Task<Void> task) {
-                                                       Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
-                                                   }
-                                               });
-                                           } else {
-                                               Teacher teacher = new Teacher(firstname, secondname, id, schoolcode, ClassAndNumber, Phone, pass);
-                                               refSchool.child(schoolcode).child("Teacher").child(Phone).setValue(teacher).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                   @Override
-                                                   public void onComplete(@NonNull Task<Void> task) {
-                                                       Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
-                                                   }
-
-
-                                               });
-
-                                           }
-                                       }
+                                }
+                            }
+                        }
                                        ChangeView2();
 
 
@@ -487,10 +604,9 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "The verification code entered was invalid", Toast.LENGTH_LONG).show();
                             }
                         }
-                    }
-                });
-
+                    });
                 }
+
 
 
 

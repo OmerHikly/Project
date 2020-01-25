@@ -49,14 +49,17 @@
         android:hint="תעודת זהות"
         android:inputType="number" />
 
-    <EditText
-        android:id="@+id/SchoolCode"
+    <AutoCompleteTextView
+        android:id="@+id/School"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="קוד בית הספר"
-        android:inputType="number" />
+        android:completionThreshold="1"
+        android:hint="בחר בית ספר"
+        android:inputType="textPersonName" />
+
+        />
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -115,6 +118,14 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="סיסמה "
+        android:inputType="textPassword" />
+    <EditText
+        android:id="@+id/VerificationPassword"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="אימות סיסמה "
         android:inputType="textPassword" />
 
     <LinearLayout

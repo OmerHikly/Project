@@ -14,14 +14,15 @@
     android:layout_weight="1"
     />
 
-    <EditText
-        android:id="@+id/LSchoolCode"
+    <AutoCompleteTextView
+        android:id="@+id/LSchool"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="קוד בית הספר"
-        android:inputType="number" />
+        android:completionThreshold="1"
+        android:hint="בחר בית הספר"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/Phone"
