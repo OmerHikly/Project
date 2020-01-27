@@ -333,24 +333,25 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void GuardScreen() {
-        Toast.makeText(LoginScreen.this,"Success is coming,Guard",Toast.LENGTH_SHORT).show();
+        Intent i=new Intent(this,GuardLogin.class);
+        startActivity(i);
 
     }
 
 
     private void AdminScreen() {
-        Toast.makeText(LoginScreen.this,"Success is coming,Admin",Toast.LENGTH_SHORT).show();
-
+        Intent i=new Intent(this,AdminLogin.class);
+        startActivity(i);
     }
 
     private void TeacherScreen() {
-        Toast.makeText(LoginScreen.this,"Success is coming,Teacher",Toast.LENGTH_SHORT).show();
-
+        Intent i=new Intent(this,TeacherLogin.class);
+        startActivity(i);
     }
 
     private void StudentScreen() {//what happens when log in is successful
-        Toast.makeText(LoginScreen.this,"Success is coming,Student",Toast.LENGTH_SHORT).show();
-
+        Intent i=new Intent(this,StudentLogin.class);
+        startActivity(i);
     }
 
 
