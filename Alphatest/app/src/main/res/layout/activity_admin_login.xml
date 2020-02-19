@@ -26,9 +26,10 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/manage_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="ManageAccounts"
         android:text= "ניהול משתמשים" />
 
     <Space
@@ -37,9 +38,10 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/watch_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="WatchData"
         android:text="צפה בנתונים" />
     <Space
         android:layout_width="match_parent"
@@ -47,7 +49,7 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/leaving_system"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="יומני יציאות" />

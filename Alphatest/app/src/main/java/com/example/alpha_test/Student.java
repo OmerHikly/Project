@@ -17,10 +17,11 @@ public class Student {
 
 
     private Boolean Activated=false;
-    private Integer level=2;
 
+    public Student() {
+    }
 
-    public Student(String name, String secondName, String id,String schoolCode,String cls,String phone,String password ) {
+    public Student(String name, String secondName, String id, String schoolCode, String cls, String phone, String password ) {
 
         Phone = phone;
         Id = id;

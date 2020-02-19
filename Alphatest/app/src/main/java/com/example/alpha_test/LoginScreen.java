@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,18 +15,25 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static com.example.alpha_test.FirebaseHelper.mAuth;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class LoginScreen extends AppCompatActivity {
-    String name, secondname, id, schoolcode, phone, password, uid, cls;
     EditText Phone, Password;
     AutoCompleteTextView School;
+
+
+
     String typedpass;
     Boolean firstrun, stayConnect;
+    String name, secondname, id, school, phone, password, uid, cls;
 
 
     String[] Schools;
+    ArrayList<String> arrayList=new ArrayList<String>();
     int level, x = 0;
 
     @Override
@@ -38,7 +44,10 @@ public class LoginScreen extends AppCompatActivity {
         Password = findViewById(R.id.Password);
         School=findViewById(R.id.LSchool);
 
+
+
         FirebaseSchools();
+
 
         stayConnect = false;
 
@@ -61,7 +70,7 @@ public class LoginScreen extends AppCompatActivity {
                 }
                 Schools = new String[count];
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Toast.makeText(getApplicationContext(), dsp.getKey(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), dsp.getKey(), Toast.LENGTH_LONG).show();
                     Schools[index] = dsp.getKey().toString();
                     index++;
                 }
@@ -82,12 +91,15 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void Adapt(String[] array) {
-        Toast.makeText(getApplicationContext(), array[0] + array[1] + array[2] + array[3], Toast.LENGTH_SHORT).show();
-        ArrayAdapter<String> adpater = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, array);
-        School.setAdapter(adpater);
+      //  Toast.makeText(getApplicationContext(), array[0] + array[1] + array[2] + array[3], Toast.LENGTH_SHORT).show();
+        arrayList.addAll(Arrays.asList(Schools));
+         SchoolAdapter adapter=new SchoolAdapter(this, arrayList);
+        School.setAdapter(adapter);
+
+
 
     }
+
 
     @Override
     protected void onStart() {
@@ -120,7 +132,7 @@ public class LoginScreen extends AppCompatActivity {
     public void login(View view) {
         phone = "+972" + Phone.getText().toString();
         typedpass = Password.getText().toString();
-        schoolcode=School.getText().toString();
+        school=School.getText().toString();
         checkIfSchoolExists();
 
 
@@ -134,12 +146,16 @@ public class LoginScreen extends AppCompatActivity {
         refSchool.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(schoolcode)){
-                    Toast.makeText(getApplicationContext(),"School Exists",Toast.LENGTH_SHORT).show();
-                    CheckIfPhoneExists();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"School isn't exist",Toast.LENGTH_SHORT).show();
+                if (school == "" || school == null|| school.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Please enter school name or code", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    if (dataSnapshot.hasChild(school)) {
+                        Toast.makeText(getApplicationContext(), "School Exists", Toast.LENGTH_SHORT).show();
+                        CheckIfPhoneExists();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "School isn't exist", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -152,84 +168,88 @@ public class LoginScreen extends AppCompatActivity {
 
     }
         public  void CheckIfPhoneExists() {//This method checks under each type of user in the firebase if the typed phone number already as signed in
-            refSchool.child(schoolcode).child("Student").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+         String ph=Phone.getText().toString();
+            if (ph.isEmpty()||ph == "" || ph == null ) {
+                Toast.makeText(getApplicationContext(), "Please enter phone number", Toast.LENGTH_SHORT).show();
 
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-                        StuActivity();
-                    } else {
-                        refSchool.child(schoolcode).child("Teacher").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            } else {
+                refSchool.child(school).child("Student").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue() != null) {
-                                 Toast.makeText(getApplicationContext(),"Teacher",Toast.LENGTH_SHORT).show();
-                                    TeachActivity();
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            StuActivity();
+                        } else {
+                            refSchool.child(school).child("Teacher").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                } else {
-                                    refSchool.child(schoolcode).child("Admin").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.getValue() != null) {
+                                        Toast.makeText(getApplicationContext(), "Teacher", Toast.LENGTH_SHORT).show();
+                                        TeachActivity();
 
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.getValue() != null) {
-                                                AdActivity();
-                                            } else {
-                                                refSchool.child(schoolcode).child("Guard").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        if (dataSnapshot.getValue() != null) {
-                                                            GuardActivity();
+                                    } else {
+                                        refSchool.child(school).child("Admin").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.getValue() != null) {
+                                                    AdActivity();
+                                                } else {
+                                                    refSchool.child(school).child("Guard").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            if (dataSnapshot.getValue() != null) {
+                                                                GuardActivity();
+                                                            } else {
+                                                                NoUser();
+                                                            }
                                                         }
-                                                        else{
-                                                            NoUser();
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                                         }
-                                                    }
+                                                    });
+                                                }
+                                            }
 
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                                    }
-                                                });
-                                                                                     }
-                                        }
+                                            }
+                                        });
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                }
 
-                                        }
-                                    });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                                 }
-                            }
+                            });
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
 
 
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
+                });
 
 
-            });
-
-
+            }
         }
-
 
 
 
     private void StuActivity() {//password confirmation
         Toast.makeText(getApplicationContext(),"Student login",Toast.LENGTH_SHORT).show();
-        refSchool.child(schoolcode).child("Student").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+        refSchool.child(school).child("Student").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -255,7 +275,7 @@ public class LoginScreen extends AppCompatActivity {
 
     private void TeachActivity() {//password confirmation
         Toast.makeText(getApplicationContext(), "Teacher login", Toast.LENGTH_SHORT).show();
-        refSchool.child(schoolcode).child("Teacher").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+        refSchool.child(school).child("Teacher").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String pass = dataSnapshot.child("password").getValue().toString();
@@ -279,7 +299,7 @@ public class LoginScreen extends AppCompatActivity {
     private void AdActivity() {//password confirmation
         Toast.makeText(getApplicationContext(),"Admin login",Toast.LENGTH_SHORT).show();
 
-        refSchool.child(schoolcode).child("Admin").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+        refSchool.child(school).child("Admin").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String pass = dataSnapshot.child("password").getValue().toString();
@@ -293,9 +313,9 @@ public class LoginScreen extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
+   }
             });
+
 
 
             //login successful
@@ -304,7 +324,7 @@ public class LoginScreen extends AppCompatActivity {
     private void GuardActivity() {
         Toast.makeText(getApplicationContext(),"Guard login",Toast.LENGTH_SHORT).show();
 
-        refSchool.child(schoolcode).child("Guard").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+        refSchool.child(school).child("Guard").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String pass = dataSnapshot.child("password").getValue().toString();
@@ -334,6 +354,8 @@ public class LoginScreen extends AppCompatActivity {
 
     private void GuardScreen() {
         Intent i=new Intent(this,GuardLogin.class);
+        i.putExtra("n", school);
+        i.putExtra("nn",phone);
         startActivity(i);
 
     }
@@ -341,11 +363,15 @@ public class LoginScreen extends AppCompatActivity {
 
     private void AdminScreen() {
         Intent i=new Intent(this,AdminLogin.class);
+        i.putExtra("n", school);
+        i.putExtra("nn",phone);
         startActivity(i);
     }
 
     private void TeacherScreen() {
         Intent i=new Intent(this,TeacherLogin.class);
+        i.putExtra("n", school);
+        i.putExtra("nn",phone);
         startActivity(i);
     }
 

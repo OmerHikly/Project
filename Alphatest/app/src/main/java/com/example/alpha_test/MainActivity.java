@@ -31,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -65,14 +67,13 @@ public class MainActivity extends AppCompatActivity {
     boolean IfAdmin = false;
 
     boolean IfGuard = false;
+    ArrayList<String> arrayList=new ArrayList<String>();
 
 
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
     String[] Schools;
-    private static final String[] COUNTRIES = new String[]{
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Gaurd", "User", "ישראל"
-    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,10 +148,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void Adapt(String[] array) {
-        Toast.makeText(getApplicationContext(), array[0] + array[1] + array[2] + array[3], Toast.LENGTH_SHORT).show();
-        ArrayAdapter<String> adpater = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, array);
-        School.setAdapter(adpater);
+      //  Toast.makeText(getApplicationContext(), array[0] + array[1] + array[2] + array[3], Toast.LENGTH_SHORT).show();
+        arrayList.addAll(Arrays.asList(Schools));
+        SchoolAdapter adapter=new SchoolAdapter(this, arrayList);
+        School.setAdapter(adapter);
+
 
     }
 

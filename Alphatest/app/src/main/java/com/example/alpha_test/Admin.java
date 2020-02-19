@@ -18,10 +18,11 @@ public class Admin {
 
 
     private Boolean Activated=false;
-    private Integer level=3;
 
+    public Admin() {
+    }
 
-    public Admin( String name, String secondName, String ID,String schoolCode,String phone,String password ) {
+    public Admin(String name, String secondName, String ID, String schoolCode, String phone, String password ) {
         Password=password;
         Phone = phone;
         this.Id = ID;

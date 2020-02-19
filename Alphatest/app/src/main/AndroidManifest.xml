@@ -17,12 +17,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".StudentLogin"></activity>
+        <activity android:name=".Teacher_Manage"></activity>
+        <activity android:name=".DataView" />
+        <activity
+            android:name=".ManageAcc"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+        <activity android:name=".StudentLogin" />
         <activity android:name=".TeacherLogin" />
         <activity android:name=".AdminLogin" />
         <activity android:name=".GuardLogin" />
-        <activity android:name=".Alogined" />
-        <activity android:name=".Glogined" />
         <activity android:name=".logined" />
         <activity android:name=".LoginScreen">
             <intent-filter>

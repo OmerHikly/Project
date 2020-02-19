@@ -12,7 +12,13 @@ public class Teacher {
     private String Cls;
     private String Password;
 
-    public Teacher(String name, String secondName, String id, String schoolCode,  String cls,String phone, String password) {
+    private Boolean Activated=false;
+
+
+    public Teacher() {
+    }
+
+    public Teacher(String name, String secondName, String id, String schoolCode, String cls, String phone, String password) {
 
         Phone = phone;
         Id = id;
@@ -101,5 +107,13 @@ public class Teacher {
 
     public void setPassword(String password) {
         Password = password;
+    }
+
+    public Boolean getActivated() {
+        return Activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        Activated = activated;
     }
 }

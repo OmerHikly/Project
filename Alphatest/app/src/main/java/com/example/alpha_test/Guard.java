@@ -6,14 +6,18 @@ public class Guard {
     private String Id;
     private String Name;
     private String SecondName;
-
     private String Description;
     private String SchoolName;
     private String Password;
     private String GuardCode;
 
 
-    public Guard( String name, String secondName, String id, String schoolName, String phone, String password ) {
+    private Boolean Activated=false;
+
+    public Guard() {
+    }
+
+    public Guard(String name, String secondName, String id, String schoolName, String phone, String password ) {
         Phone = phone;
         Id = id;
         Name = name;
@@ -95,5 +99,13 @@ public class Guard {
 
     public void setGuardCode(String guardCode) {
         GuardCode = guardCode;
+    }
+
+    public Boolean getActivated() {
+        return Activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        Activated = activated;
     }
 }
