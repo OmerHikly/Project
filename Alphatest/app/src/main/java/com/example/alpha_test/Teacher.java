@@ -1,14 +1,17 @@
 package com.example.alpha_test;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Teacher {
     private String Uid;
     private  String Phone;
     private String Id;
     private String Name;
     private String SecondName;
-    private String SchoolCode;
+    private String School;
     private String Description;
-    private String SchoolName;
+
     private String Cls;
     private String Password;
 
@@ -18,13 +21,12 @@ public class Teacher {
     public Teacher() {
     }
 
-    public Teacher(String name, String secondName, String id, String schoolCode, String cls, String phone, String password) {
-
+    public Teacher(String name, String secondName, String id, String school, String cls, String phone, String password) {
         Phone = phone;
         Id = id;
         Name = name;
         SecondName = secondName;
-        SchoolCode = schoolCode;
+        School = school;
         Cls = cls;
         Password = password;
     }
@@ -43,6 +45,14 @@ public class Teacher {
 
     public void setPhone(String phone) {
         Phone = phone;
+    }
+
+    public String getSchool() {
+        return School;
+    }
+
+    public void setSchool(String school) {
+        School = school;
     }
 
     public String getId() {
@@ -69,13 +79,7 @@ public class Teacher {
         SecondName = secondName;
     }
 
-    public String getSchoolCode() {
-        return SchoolCode;
-    }
 
-    public void setSchoolCode(String schoolCode) {
-        SchoolCode = schoolCode;
-    }
 
     public String getDescription() {
         return Description;
@@ -85,13 +89,7 @@ public class Teacher {
         Description = description;
     }
 
-    public String getSchoolName() {
-        return SchoolName;
-    }
 
-    public void setSchoolName(String schoolName) {
-        SchoolName = schoolName;
-    }
 
     public String getCls() {
         return Cls;

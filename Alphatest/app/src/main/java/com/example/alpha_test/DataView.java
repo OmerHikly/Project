@@ -1,7 +1,7 @@
 package com.example.alpha_test;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import org.parceler.Parcels;
 
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
@@ -21,6 +23,7 @@ public class DataView extends AppCompatActivity {
 
     int admins=0,guards=0,teachers=0,students=0;
 
+    Admin admin;
 
     TextView Admins,Guards,Teachers,Students;
     @Override
@@ -28,9 +31,12 @@ public class DataView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_view);
 
-        Intent gi = getIntent();
-        school = gi.getStringExtra("n");
-        phone = gi.getStringExtra("nn");
+        Parcelable parcelable=getIntent().getParcelableExtra("adminW");
+        admin= Parcels.unwrap(parcelable);
+
+        school = admin.getSchool();
+        phone = admin.getPhone();
+
         Admins=findViewById(R.id.TvAdmin);
         Guards=findViewById(R.id.TvGuard);
         Teachers=findViewById(R.id.TvTeacher);

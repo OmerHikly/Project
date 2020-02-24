@@ -3,6 +3,7 @@ package com.example.alpha_test;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -15,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,6 +27,11 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 public class LoginScreen extends AppCompatActivity {
     EditText Phone, Password;
     AutoCompleteTextView School;
+
+    Student student;
+    Guard guard;
+    Admin admin;
+    Teacher teacher;
 
 
 
@@ -255,6 +263,7 @@ public class LoginScreen extends AppCompatActivity {
 
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
+                    student=dataSnapshot.getValue(Student.class);
                     StudentScreen();
                 }
                 else{
@@ -280,6 +289,7 @@ public class LoginScreen extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
+                    teacher=dataSnapshot.getValue(Teacher.class);
                     TeacherScreen();
                 }
                 else{
@@ -304,6 +314,7 @@ public class LoginScreen extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String pass = dataSnapshot.child("password").getValue().toString();
                     if (typedpass.equals(pass)) {
+                        admin=dataSnapshot.getValue(Admin.class);
                         AdminScreen();
                     }
                     else{
@@ -329,6 +340,7 @@ public class LoginScreen extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
+                    guard=dataSnapshot.getValue(Guard.class);
                     GuardScreen();
                 }
                 else{
@@ -354,29 +366,30 @@ public class LoginScreen extends AppCompatActivity {
 
     private void GuardScreen() {
         Intent i=new Intent(this,GuardLogin.class);
-        i.putExtra("n", school);
-        i.putExtra("nn",phone);
-        startActivity(i);
+        Parcelable parcelable= Parcels.wrap(guard);
+        i.putExtra("guard", parcelable);       startActivity(i);
 
     }
 
 
     private void AdminScreen() {
         Intent i=new Intent(this,AdminLogin.class);
-        i.putExtra("n", school);
-        i.putExtra("nn",phone);
+        Parcelable parcelable= Parcels.wrap(admin);
+        i.putExtra("admin", parcelable);
         startActivity(i);
     }
 
     private void TeacherScreen() {
         Intent i=new Intent(this,TeacherLogin.class);
-        i.putExtra("n", school);
-        i.putExtra("nn",phone);
+        Parcelable parcelable= Parcels.wrap(teacher);
+        i.putExtra("teacher", parcelable);
         startActivity(i);
     }
 
     private void StudentScreen() {//what happens when log in is successful
         Intent i=new Intent(this,StudentLogin.class);
+        Parcelable parcelable= Parcels.wrap(student);
+        i.putExtra("student", parcelable);
         startActivity(i);
     }
 

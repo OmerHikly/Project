@@ -17,7 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Teacher_Manage"></activity>
+        <activity android:name=".Groups"></activity>
+        <activity android:name=".New_group" />
+        <activity android:name=".Acept_pupils" />
+        <activity android:name=".Teacher_Manage" />
         <activity android:name=".DataView" />
         <activity
             android:name=".ManageAcc"

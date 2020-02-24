@@ -1,17 +1,26 @@
 package com.example.alpha_test;
 
 import android.os.Bundle;
-import android.widget.Toast;
+import android.os.Parcelable;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class StudentLogin extends AppCompatActivity {
+import org.parceler.Parcels;
 
+public class StudentLogin extends AppCompatActivity {
+    Student student;
+
+    String school,phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_login);
-        Toast.makeText(getApplicationContext(),"Success is coming, Student",Toast.LENGTH_SHORT).show();
+
+        Parcelable parcelable=getIntent().getParcelableExtra("student");
+        student= Parcels.unwrap(parcelable);
+
+        school=student.getSchool();
+        phone=student.getPhone();
 
     }
 }

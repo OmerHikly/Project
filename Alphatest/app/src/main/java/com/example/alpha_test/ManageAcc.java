@@ -1,8 +1,8 @@
 package com.example.alpha_test;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class ManageAcc extends AppCompatActivity {
     Guard guard;
     Teacher teacher;
     Student student;
+    Admin admin;
 
     Boolean f = false;
     Boolean t = true;
@@ -60,10 +63,20 @@ public class ManageAcc extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_acc);
+        Parcelable parcelable=getIntent().getParcelableExtra("adminM");
+        admin= Parcels.unwrap(parcelable);
+
+        phone = admin.getPhone();
+        school = admin.getSchool();
+        Toast.makeText(getApplicationContext(),school+"+"+phone,Toast.LENGTH_SHORT).show();
+
         users = findViewById(R.id.User_list);
         Exist_Users = findViewById(R.id.Users);
         Confirm_Users = findViewById(R.id.ConfirmUsers);
         et = findViewById(R.id.SearchText);
+
+
+
 
 
 
@@ -80,6 +93,7 @@ public class ManageAcc extends AppCompatActivity {
                 }
 
 
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -88,9 +102,6 @@ public class ManageAcc extends AppCompatActivity {
 
         });
 
-        Intent gi = getIntent();
-        school = gi.getStringExtra("n");
-        phone = gi.getStringExtra("nn");
 
 
     }
@@ -108,7 +119,7 @@ public class ManageAcc extends AppCompatActivity {
         @NonNull
         @Override
         public Filter getFilter() {
-            return arrrayfilter;
+            return arrayfilter;
         }
 
 
@@ -116,7 +127,6 @@ public class ManageAcc extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            final int place = position;
             ViewHolder mainViewholder = null;
             if (convertView == null) {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -248,7 +258,7 @@ public class ManageAcc extends AppCompatActivity {
 
 
 
-    private Filter arrrayfilter=new Filter() {
+    private Filter arrayfilter=new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();

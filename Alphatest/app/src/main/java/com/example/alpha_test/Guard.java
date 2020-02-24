@@ -1,5 +1,8 @@
 package com.example.alpha_test;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Guard {
     private String Uid;
     private  String Phone;
@@ -7,7 +10,7 @@ public class Guard {
     private String Name;
     private String SecondName;
     private String Description;
-    private String SchoolName;
+    private String School;
     private String Password;
     private String GuardCode;
 
@@ -22,7 +25,7 @@ public class Guard {
         Id = id;
         Name = name;
         SecondName = secondName;
-        SchoolName = schoolName;
+        School= schoolName;
         Password = password;
 
     }
@@ -77,12 +80,12 @@ public class Guard {
         Description = description;
     }
 
-    public String getSchoolName() {
-        return SchoolName;
+    public String getSchool() {
+        return School;
     }
 
-    public void setSchoolName(String schoolName) {
-        SchoolName = schoolName;
+    public void setSchool(String schoolName) {
+        School = schoolName;
     }
 
     public String getPassword() {
