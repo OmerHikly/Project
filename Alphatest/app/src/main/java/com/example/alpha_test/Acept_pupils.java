@@ -34,24 +34,24 @@ import java.util.List;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class Acept_pupils extends AppCompatActivity {
-   ListView results;
+   ListView results;//רכיבי התצוגה של המסך הזה
    EditText search;
 
 
-    Boolean f=false;
-    String school, phone, cls;
+    Boolean f=false;//מכיוון שאחת התכונות שהועלתה לfirebase היא מסוג Boolean  ולא boolean כדי להשוות את התכונה הזאת נצטרך עצם מסוג Boolean
+    String school, phone, cls;//מאפיינים של מורה (כיתה, בית ספר וטלפון)
 
 
-    ArrayList<String> Students = new ArrayList<>();
-    ArrayList<String> Class = new ArrayList<>();
-    ArrayList<String> Demo = new ArrayList<>();
+    ArrayList<String> Students = new ArrayList<>();//רשימה של תלמידים שתכלול את כל התלמידים ששייכים לכיתה של המורה שהתחבר
+    ArrayList<String> Class = new ArrayList<>();//רשימה של תלמידים שאושרו על ידי המורה ונוספו לכיתה שלו
+    ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
 
-    Teacher teacher;
-    Student student;
+    Teacher teacher;//עצם מסוג מורה
+    Student student;//עצם מסוג תלמיד
 
     StudentsAdapter adapter;
 
-    DatabaseReference refClass;
+    DatabaseReference refClass;//רפרנס לכתובת בdatabase שתכיל את הכיתה שיש למורה
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +61,10 @@ public class Acept_pupils extends AppCompatActivity {
         search=findViewById(R.id.Search_students);
 
 
-        Parcelable parcelable=getIntent().getParcelableExtra("teacher");
-        teacher= Parcels.unwrap(parcelable);
-        school = teacher.getSchool();
+        Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
+        teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
+
+        school = teacher.getSchool();//השמת ערכים בתכונות של המורה
         phone = teacher.getPhone();
         cls = teacher.getCls();
 
@@ -71,12 +72,14 @@ public class Acept_pupils extends AppCompatActivity {
         refClass=  refSchool.child(school).child("Teacher").child(phone).child("zclass");
 
 
-        Do();
+        Do();;// פעולה שמציגה את כל התלמידים שניתן להוסיף אל הקבוצה ב-Listview
+        //ומאפשרת חיפוש עבור תלמיד ספציפי בין כל התלמידים שאושרו כתלמידי בית הספר
 
     }
 
     private void Do() {
 
+        //האזנה לרכיב ה-EditText והפעלת פעולה שמסננת את כל העצמים שאינם כוללים את מה שנרשם ב-editText
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,7 +101,7 @@ public class Acept_pupils extends AppCompatActivity {
 
 
         });
-
+//הפעולה שמוסיפה ל-arrayuList את כל התלמידים שאושרו בחלק ממערכת בית הספר
         refSchool.child(school).child("Student").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -118,7 +121,7 @@ public class Acept_pupils extends AppCompatActivity {
                 }
                 Demo.clear();
                 Demo.addAll(Students);
-                Adapt(Students);
+                Adapt(Students);//פעולה שיוצרת מתאם עבור ה-arraylist ומקשרת בינו לבין ה-listView
             }
 
             @Override
@@ -132,7 +135,7 @@ public class Acept_pupils extends AppCompatActivity {
 
 
 
-    public  class StudentsAdapter extends ArrayAdapter {
+    public  class StudentsAdapter extends ArrayAdapter {//ה-class עבור המתאם המעוצב שיצרתי
         private int layout;
 
         public StudentsAdapter(@NonNull Context context, int resource, @NonNull List objects) {
@@ -170,7 +173,7 @@ public class Acept_pupils extends AppCompatActivity {
 
 
             mainViewholder.approve.setOnClickListener(new View.OnClickListener() {
-                @Override
+                @Override//הפעולה הזאתי מקבלת חלק מהתכונות של התלמיד שלאחר לחיצת כפתור נוסף לקבוצה ומשנה עבורו את ערך התכונה activated ל-true ככה התלמיד יוכל להיות חלק מבית הספר
                 public void onClick(View v) {
                     final String str = Students.get(position);
                     String[] Splitted = str.split(" ");
@@ -184,14 +187,14 @@ public class Acept_pupils extends AppCompatActivity {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getValue()==null){
+                            if(dataSnapshot.getValue()==null){//אם ה-class ריק אז התלמיד הוא היחיד בכיתה ולכן הוא הכיתה
                                 refClass.setValue(str);
                             }
-                            else{
+                            else{//במקרה שלא יש לצרף אליו עוד תלמידים כמו בפעולה הזאת
                                 Class.clear();
                                 String Exist_Class=dataSnapshot.getValue().toString();
                                 String newClass=Exist_Class+" "+str;
-                                String[] Splitted = Exist_Class.split(" ");
+                                String[] Splitted = Exist_Class.split(" ");//הפעולה Split יוצרת מערך של כל המילים לפי הרווחים שיש במחרוזת הראשית של הכיתה ב_firebase
                                 for(int i=0;i<Splitted.length/5;i++){
                                     String data=Splitted[i*5]+Splitted[i*5+1]+Splitted[i*5+2]+Splitted[i*5+3]+Splitted[i*5+4];
                                     Class.add(data);
@@ -200,9 +203,7 @@ public class Acept_pupils extends AppCompatActivity {
 
                                 refClass.setValue(newClass);
                             }
-                            for(int i=0;i<Class.size();i++){
-                                Toast.makeText(getApplicationContext(),Class.get(i),Toast.LENGTH_SHORT).show();
-                            }
+
                         }
 
                         @Override
@@ -215,14 +216,14 @@ public class Acept_pupils extends AppCompatActivity {
                         refClass.setValue(Students.toString());
 
 
-                    adapter.remove(adapter.getItem(position));
+                    adapter.remove(adapter.getItem(position));//
                     notifyDataSetChanged();
                 }
 
 
             });
 
-            mainViewholder.remove.setOnClickListener(new View.OnClickListener() {
+            mainViewholder.remove.setOnClickListener(new View.OnClickListener() {//פעולה שמסירה את הצעת התלמיד להצטרף לכיתה משום שהתלמייד לא בחר את כיתתו בטעות
                 @Override
                 public void onClick(View v) {
                     String str = Students.get(position);
@@ -237,12 +238,12 @@ public class Acept_pupils extends AppCompatActivity {
             });
 
 
-            return convertView;
+            return convertView;//בשורה הזו הפעולה מחזירה את התצוגה החדשה שהגדרנו
         }
     }
 
 
-        public class ViewHolder {
+        public class ViewHolder {//רכיבי התצוגה שיועדו לlistview
             TextView details;
             Button approve, remove;
         }
@@ -251,7 +252,7 @@ public class Acept_pupils extends AppCompatActivity {
 
 
 
-    private Filter arrayfilter=new Filter() {
+    private Filter arrayfilter=new Filter() {//פעולה זו מסננת ומשאירה רק את שמות התלמידים שכוללים את רצף האותיות שנרשם בשדה הקלט
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
@@ -275,19 +276,19 @@ public class Acept_pupils extends AppCompatActivity {
 
 
         @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
+        protected void publishResults(CharSequence constraint, FilterResults results) {//פעולה זו מעדכנת את המתאם הספציפי עבור המסך הזה עם הערכים שמעניקה הפעולה שמעליה
             adapter.clear();
             adapter.addAll((List) results.values);
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        public CharSequence convertResultToString(Object resultValue) {
+        public CharSequence convertResultToString(Object resultValue) {// פעולה שהופכת את העצם שהתקבל מהפעולה הראשונה של הסינון לעצם מסוג String
             return ((String) resultValue);
         }
     };
 
-    private void Adapt(ArrayList<String> arrayList) {
+    private void Adapt(ArrayList<String> arrayList) {// פעולת הקישור בין המתאם שעוצב עבור המסך הזה אל הרשימה הנגללת (listview)
         adapter = new StudentsAdapter(this, R.layout.user_list_unconfirmed, arrayList);
         results.setAdapter(adapter);
 
@@ -296,7 +297,7 @@ public class Acept_pupils extends AppCompatActivity {
 
 
 
-    public void new_group(View view) {
+    public void new_group(View view) {//מעבר למסך שמציג את הקבוצות שהקים המורה
         Intent i=new Intent(this,New_group.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
@@ -304,7 +305,7 @@ public class Acept_pupils extends AppCompatActivity {
     }
 
 
-    public void groups(View view) {
+    public void groups(View view) {//מעבר למסך שמאפשר למורה לאשר תלמידים לכיתה שלו
         Intent i=new Intent(this,Groups.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);

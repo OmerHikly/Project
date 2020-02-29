@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -84,6 +87,28 @@ public class AddStudentsToGroup extends AppCompatActivity {
     }
 
     private void SetList() {
+        search_students.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(adapter!=null) {
+                    adapter.clear();
+                }
+                adapter.getFilter().filter(s);
+            }
+
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+
+        });
+        
         refSchool.child(school).child("Student").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -148,6 +173,12 @@ public class AddStudentsToGroup extends AppCompatActivity {
             super(context, 0, objects);
             layout = resource;
 
+        }
+
+        @NonNull
+        @Override
+        public Filter getFilter() {
+            return arrayfilter;
         }
 
 
@@ -242,6 +273,48 @@ public class AddStudentsToGroup extends AppCompatActivity {
         TextView details;
         Button approve, remove;
     }
+
+
+
+    private Filter arrayfilter=new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            List<String> suggestions = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0||search_students.getText().toString().isEmpty()) {
+                suggestions.addAll(Demo);
+            } else {
+                String filterpattern = constraint.toString().toLowerCase().trim();
+                for (String x : Demo) {
+                    if (x.toLowerCase().contains(filterpattern)) {
+                        suggestions.add(x);
+                    }
+                }
+
+            }
+            results.values = suggestions;
+            results.count = suggestions.size();
+            return results;
+        }
+
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            adapter.clear();
+            adapter.addAll((List) results.values);
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public CharSequence convertResultToString(Object resultValue) {
+            return ((String) resultValue);
+        }
+    };
+
+
+
+
 
     private void Adapt() {
         adapter = new NotInGroupAdapter(this, R.layout.user_list_unconfirmed, Options);

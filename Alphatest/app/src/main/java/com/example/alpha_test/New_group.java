@@ -35,55 +35,54 @@ import java.util.List;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class New_group extends AppCompatActivity {
-Teacher teacher;
-Student student;
+Teacher teacher;//עצם מסוג מורה
+Student student;//עצם מסוג תלמיד
 
-Boolean f=false;
+Boolean f=false;//מכיוון שאחת התכונות שהועלתה לfirebase היא מסוג Boolean  ולא boolean כדי להשוות את התכונה הזאת נצטרך עצם מסוג Boolean
 
-GroupOptionsAdapter adapter;
-
-
-    ArrayList<String> Students = new ArrayList<>();
-    ArrayList<String> Demo = new ArrayList<>();
-    ArrayList<String> Choosen = new ArrayList<>();
-    ArrayList<String> BetaChoosen = new ArrayList<>();
+GroupOptionsAdapter adapter;//מתאם שמתאים לאקטיביטי הספציפי
 
 
+    ArrayList<String> Students = new ArrayList<>();//רשימה של תלמידים שתכלול את כל התלמידים שאושרו על ידי המורים שלהם ואפשר להוסיף אותם לקבוצה
+    ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
+    ArrayList<String> Choosen = new ArrayList<>();//רשימה של תלמידים שנבחרו להצטרף לקבוצה שעומד להיווצר
 
-    String school,phone,cls;
+
+    String school,phone,cls;//מאפיינים של מורה (כיתה, בית ספר וטלפון)
 
 TextView Shown_Students;
 ListView students_options;
 EditText search_students,Group_Name;
 
-    DatabaseReference refGroups;
+    DatabaseReference refGroups;//רפרנס לכתובת בdatabase שתחתיה אפשר להוסיף קבוצות
 
-    LinearLayout linearLayout;
+    LinearLayout linearLayout;//יכיל את רכיב ה-xml של המסך
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_group);
-        students_options= findViewById(R.id.Show_Universal_Students);
+        students_options= findViewById(R.id.Show_Universal_Students);//קישורבין עצמים ב-xml ל-Java
         search_students=findViewById(R.id.Search_Universal_Students);
         Shown_Students=findViewById(R.id.ChoosenText);
         Group_Name=findViewById(R.id.GN);
 
-        Parcelable parcelable=getIntent().getParcelableExtra("teacher");
-        teacher= Parcels.unwrap(parcelable);
+        Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
+        teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
 
-        school=teacher.getSchool();
+        school=teacher.getSchool();//השמת ערכים בתכונות של המורה
         phone=teacher.getPhone();
         cls=teacher.getCls();
 
 
         refGroups=refSchool.child(school).child("Teacher").child(phone).child("zgroups");
-      //  refGroups.setValue(null);
-        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
+        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);//קישור בין המסך ב-xml לרכיב ב--java
 
-        GroupOptions();
+        GroupOptions();// פעולה שמציגה את כל התלמידים שניתן להוסיף אל הקבוצה ב-Listview
+        //ומאפשרת חיפוש עבור תלמיד ספציפי בין כל התלמידים שאושרו כתלמידי בית הספר
     }
 
     private void GroupOptions() {
+        //האזנה לרכיב ה-EditText והפעלת פעולה שמסננת את כל העצמים שאינם כוללים את מה שנרשם ב-editText
         search_students.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -105,7 +104,7 @@ EditText search_students,Group_Name;
 
 
         });
-
+//הפעולה שמוסיפה ל-arrayuList את כל התלמידים שאושרו בחלק ממערכת בית הספר
         refSchool.child(school).child("Student").addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -125,7 +124,7 @@ EditText search_students,Group_Name;
             }
             Demo.clear();
             Demo.addAll(Students);
-            Adapt(Students);
+            Adapt(Students);//פעולה שיוצרת מתאם עבור ה-arraylist ומקשרת בינו לבין ה-listView
         }
 
         @Override
@@ -159,7 +158,7 @@ EditText search_students,Group_Name;
     }
 
 
-    public  class GroupOptionsAdapter extends ArrayAdapter {
+    public  class GroupOptionsAdapter extends ArrayAdapter {//ה-class עבור המתאם המעוצב שיצרתי
         private int layout;
 
         public GroupOptionsAdapter(@NonNull Context context, int resource, @NonNull List objects) {
@@ -199,7 +198,7 @@ EditText search_students,Group_Name;
             mainViewholder.remove.setVisibility(View.GONE);
             mainViewholder.approve.setText("הוסף לקבוצה");
             mainViewholder.approve.setOnClickListener(new View.OnClickListener() {
-                @Override
+                @Override//כאשר לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                 public void onClick(View v) {
 
                     Students.remove(position);
@@ -225,7 +224,7 @@ EditText search_students,Group_Name;
 
 
                    }
-                   else{
+                   else{// לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                        Choosen.add(str);
                        final TextView textView = new TextView(New_group.this);
                        textView.setText(Splitted[1]+" "+Splitted[2]+", ");
@@ -259,13 +258,13 @@ EditText search_students,Group_Name;
 
 
             });
-            return convertView;
+            return convertView;//בשורה הזו הפעולה מחזירה את התצוגה החדשה שהגדרנו
 
         }
     }
 
 
-    public class ViewHolder {
+    public class ViewHolder {//רכיבי התצוגה שיועדו לlistview
         TextView details;
         Button approve, remove;
     }
@@ -273,7 +272,7 @@ EditText search_students,Group_Name;
 
 
 
-    private Filter arrayfilter=new Filter() {
+    private Filter arrayfilter=new Filter() {//פעולה זו מסננת ומשאירה רק את שמות התלמידים שכוללים את רצף האותיות שנרשם בשדה הקלט
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
@@ -297,19 +296,19 @@ EditText search_students,Group_Name;
 
 
         @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
+        protected void publishResults(CharSequence constraint, FilterResults results) {//פעולה זו מעדכנת את המתאם הספציפי עבור המסך הזה עם הערכים שמעניקה הפעולה שמעליה
             adapter.clear();
             adapter.addAll((List) results.values);
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        public CharSequence convertResultToString(Object resultValue) {
+        public CharSequence convertResultToString(Object resultValue) {// פעולה שהופכת את העצם שהתקבל מהפעולה הראשונה של הסינון לעצם מסוג String
             return ((String) resultValue);
         }
     };
 
-    private void Adapt(ArrayList<String> arrayList) {
+    private void Adapt(ArrayList<String> arrayList) {// פעולת הקישור בין המתאם שעוצב עבור המסך הזה אל הרשימה הנגללת (listview)
         adapter = new GroupOptionsAdapter(this, R.layout.user_list_unconfirmed, arrayList);
         students_options.setAdapter(adapter);
 
@@ -333,7 +332,7 @@ EditText search_students,Group_Name;
 
 
 
-    public void Groups(View view) {
+    public void Groups(View view) {//מעבר למסך שמציג את הקבוצות שהקים המורה
         Intent i=new Intent(this,Groups.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
@@ -342,7 +341,7 @@ EditText search_students,Group_Name;
 
 
 
-       public void Accep_pupils(View view) {
+       public void Accep_pupils(View view) {//מעבר למסך שמאפשר למורה לאשר תלמידים לכיתה שלו
         Intent i=new Intent(this,Acept_pupils.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
