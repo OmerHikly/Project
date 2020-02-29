@@ -28,7 +28,7 @@ public class TeacherLogin extends AppCompatActivity {
     }
 
     public void PassAc(View view) {
-        Intent i=new Intent(this,Teacher_Manage.class);
+        Intent i=new Intent(this,Groups.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
         startActivity(i);

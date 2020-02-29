@@ -91,11 +91,12 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/newgroup"
+            android:id="@+id/ImbNg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:layout_weight="1"
+            android:background="#ffffff"
             app:srcCompat="@drawable/ic_group_add"
             tools:ignore="VectorDrawableCompat" />
 
@@ -105,6 +106,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:layout_weight="1"
+            android:onClick="Groups"
             app:srcCompat="@drawable/ic_group"
             tools:ignore="VectorDrawableCompat" />
 

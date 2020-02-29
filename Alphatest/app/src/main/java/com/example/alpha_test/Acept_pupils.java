@@ -1,6 +1,7 @@
 package com.example.alpha_test;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -290,5 +291,23 @@ public class Acept_pupils extends AppCompatActivity {
         adapter = new StudentsAdapter(this, R.layout.user_list_unconfirmed, arrayList);
         results.setAdapter(adapter);
 
+    }
+
+
+
+
+    public void new_group(View view) {
+        Intent i=new Intent(this,New_group.class);
+        Parcelable parcelable= Parcels.wrap(teacher);
+        i.putExtra("teacher", parcelable);
+        startActivity(i);
+    }
+
+
+    public void groups(View view) {
+        Intent i=new Intent(this,Groups.class);
+        Parcelable parcelable= Parcels.wrap(teacher);
+        i.putExtra("teacher", parcelable);
+        startActivity(i);
     }
 }

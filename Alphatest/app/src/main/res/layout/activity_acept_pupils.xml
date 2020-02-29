@@ -29,7 +29,7 @@
         android:id="@+id/students_results"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10">
+        android:layout_weight="12">
 
     </ListView>
 
@@ -50,6 +50,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:layout_weight="1"
+        android:onClick="new_group"
         app:srcCompat="@drawable/ic_group_add"
         tools:ignore="VectorDrawableCompat" />
 
@@ -59,16 +60,18 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:layout_weight="1"
+        android:onClick="groups"
         app:srcCompat="@drawable/ic_group"
         tools:ignore="VectorDrawableCompat" />
 
-    <ImageButton
-        android:id="@+id/assign_pupils"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/ic_checkbox"
-        tools:ignore="VectorDrawableCompat" />
+        <ImageButton
+            android:id="@+id/Imbap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            app:srcCompat="@drawable/ic_checkbox"
+            tools:ignore="VectorDrawableCompat" />
     </LinearLayout>
 </LinearLayout>

@@ -42,12 +42,15 @@ Boolean f=false;
 
 GroupOptionsAdapter adapter;
 
+
     ArrayList<String> Students = new ArrayList<>();
     ArrayList<String> Demo = new ArrayList<>();
     ArrayList<String> Choosen = new ArrayList<>();
+    ArrayList<String> BetaChoosen = new ArrayList<>();
 
 
-String school,phone,cls;
+
+    String school,phone,cls;
 
 TextView Shown_Students;
 ListView students_options;
@@ -88,8 +91,9 @@ EditText search_students,Group_Name;
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                adapter.clear();
+                if(adapter!=null) {
+                    adapter.clear();
+                }
                 adapter.getFilter().filter(s);
             }
 
@@ -133,17 +137,24 @@ EditText search_students,Group_Name;
     }
 
     public void New_group(View view) {
-        if ((Choosen.size() > 1)&&(search_students.getText().toString()!="")&&(search_students.getText().toString()!=null)) {
-            String groupName=Group_Name.getText().toString();
-            refGroups.child(groupName).setValue(Choosen.toString());
-            Students.addAll(Choosen);
-            linearLayout.removeAllViews();
-            Choosen.clear();
-            Adapt(Students);
-            Toast.makeText(getApplicationContext(),"קבוצה נוספה בהצלחה!",Toast.LENGTH_SHORT).show();
+        if ((Choosen.size() > 1) && (Group_Name.getText().toString() != "") && (Group_Name.getText().toString() != null)) {
+            if (Group_Name.length() > 1) {
+                String groupName = Group_Name.getText().toString();
+                String NewGroup = Choosen.toString();
+                NewGroup = NewGroup.substring(1, NewGroup.length() - 1);//שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
+                refGroups.child(groupName).setValue(NewGroup);
+                Students.addAll(Choosen);
+                linearLayout.removeAllViews();
+                Choosen.clear();
+                Adapt(Students);
+                Toast.makeText(getApplicationContext(), "קבוצה נוספה בהצלחה!", Toast.LENGTH_SHORT).show();
 
 
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "נא לרשום שם ראוי לקבוצה ", Toast.LENGTH_SHORT).show();
 
+            }
         }
     }
 
@@ -172,8 +183,8 @@ EditText search_students,Group_Name;
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(layout, parent, false);
                 ViewHolder viewHolder = new ViewHolder();
+                viewHolder.approve=convertView.findViewById(R.id.approve);
                 viewHolder.details = convertView.findViewById(R.id.detail);
-                viewHolder.approve = convertView.findViewById(R.id.approve);
                 viewHolder.remove = convertView.findViewById(R.id.remove);
                 convertView.setTag(viewHolder);
 
@@ -217,22 +228,26 @@ EditText search_students,Group_Name;
                    else{
                        Choosen.add(str);
                        final TextView textView = new TextView(New_group.this);
-                       textView.setText(Splitted[1]+Splitted[2]+" ");
+                       textView.setText(Splitted[1]+" "+Splitted[2]+", ");
                        linearLayout.addView(textView);
                        textView.setOnClickListener(new View.OnClickListener() {
                            @Override
                            public void onClick(View v) {
-                               Choosen.remove(position);
                                linearLayout.removeView(textView);
                                Students.add(str);
                                Demo.add(str);
                                Adapt(Students);
+                               for (int i=0;i<Choosen.size();i++){
+                                   if(Students.contains(Choosen.get(i))){
+                                       Choosen.remove(i);
+                                   }
+                               }
+
                            }
                        });
-   //                 Shown_Students.setText(Shown_Students.getText()+(Splitted[1]+Splitted[2]+" "));
+
 
                     }
-                   // adapter.remove(adapter.getItem(position));
 
                 }
 
@@ -318,15 +333,22 @@ EditText search_students,Group_Name;
 
 
 
+    public void Groups(View view) {
+        Intent i=new Intent(this,Groups.class);
+        Parcelable parcelable= Parcels.wrap(teacher);
+        i.putExtra("teacher", parcelable);
+        startActivity(i);
+    }
 
 
 
-    public void Accep_pupils(View view) {
+       public void Accep_pupils(View view) {
         Intent i=new Intent(this,Acept_pupils.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
         startActivity(i);
     }
+
 
 
 }
