@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
     android:orientation="vertical"
     tools:context=".New_group">
 
@@ -19,6 +20,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:ems="10"
+        android:hint="חפש תלמידים"
         android:inputType="textPersonName" />
 
     <LinearLayout

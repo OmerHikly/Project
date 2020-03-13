@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AddStudentsToGroup"></activity>
+        <activity android:name=".Send_Permition"></activity>
+        <activity android:name=".AddStudentsToGroup" />
         <activity android:name=".Team" />
         <activity android:name=".Groups" />
         <activity android:name=".New_group" />
@@ -31,7 +32,6 @@
         <activity android:name=".TeacherLogin" />
         <activity android:name=".AdminLogin" />
         <activity android:name=".GuardLogin" />
-        <activity android:name=".logined" />
         <activity android:name=".LoginScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

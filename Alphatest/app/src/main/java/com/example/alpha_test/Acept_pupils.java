@@ -297,7 +297,7 @@ public class Acept_pupils extends AppCompatActivity {
 
 
 
-    public void new_group(View view) {//מעבר למסך שמציג את הקבוצות שהקים המורה
+    public void new_group(View view) {//מעבר למסך שמאפשר למורה לפתוח קבוצה חדשה
         Intent i=new Intent(this,New_group.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
@@ -305,7 +305,7 @@ public class Acept_pupils extends AppCompatActivity {
     }
 
 
-    public void groups(View view) {//מעבר למסך שמאפשר למורה לאשר תלמידים לכיתה שלו
+    public void groups(View view) {//מעבר למסך שמציג את הקבוצות שהקים המורה
         Intent i=new Intent(this,Groups.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);

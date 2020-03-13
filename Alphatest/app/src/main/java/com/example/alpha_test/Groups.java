@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class Groups extends AppCompatActivity {
-    Teacher teacher;
-    String school,phone,cls;
+    Teacher teacher;//עצם מסוג מורה
+    String school,phone,cls;//מאפיינים של מורה (כיתה, בית ספר וטלפון)
 
 
-     ArrayList<String> GroupsList = new ArrayList<>();
+     ArrayList<String> GroupsList = new ArrayList<>();// רשימה שתכיל את כל הקבוצות שיש למורה
 
     ListView groups;
     @Override
@@ -35,27 +35,28 @@ public class Groups extends AppCompatActivity {
         setContentView(R.layout.activity_groups);
         groups=findViewById(R.id.groups);
 
-        Parcelable parcelable=getIntent().getParcelableExtra("teacher");
-        teacher= Parcels.unwrap(parcelable);
+        Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
+        teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
 
-        school=teacher.getSchool();
+        school=teacher.getSchool();//השמת ערכים בתכונות של המורה
         phone=teacher.getPhone();
         cls=teacher.getCls();
 
-        final Intent team=new Intent(this,Team.class);
+        final Intent team=new Intent(this,Team.class);//יצירת רכיב שיעביר את המורה בשעת הצורך אל המסך שמכיל את נתוני הקבוצה ואפשרות לשנות אותה
         groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {//מאזין ללחיצה על אחד מפרטי הקבוצה
+//בעת לחיצה על אחת מהקבוצות ייהיה מעבר למסך עם נתוני הקבוצה המתאימה שנבחרה
+                Parcelable parcelable= Parcels.wrap(teacher);//הכנת העצם למעבר בין המסכים
+                team.putExtra("teacher", parcelable);// הוספת עצם המורה לרכיב שיעביר את המורה למסך עם נתוני הקבוצה שנבחרה
 
-                Parcelable parcelable= Parcels.wrap(teacher);
-                team.putExtra("teacher", parcelable);
-
-                String GroupName=GroupsList.get(position);
-                team.putExtra("name",GroupName);
+                String GroupName=GroupsList.get(position);//קבלת שם הקבוצה
+                team.putExtra("name",GroupName);//הוספת שם הקבוצה לרכיב שיעביר את המורה למסך עם נתוני הקבוצה שנבחרה
                 startActivity(team);
             }
         });
-         SetList();
+         SetList();//פעולה שמציגה את כל הקבוצות שיש למורה בתוך listview
+
 
 
     }
@@ -94,14 +95,14 @@ public class Groups extends AppCompatActivity {
 
     }
 
-    private void Adapt() {
+    private void Adapt() {// פעולת הקישור בין המתאם שעוצב עבור המסך הזה אל הרשימה הנגללת (listview)
         ArrayAdapter<String> itemsAdapter =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, GroupsList);
         groups.setAdapter(itemsAdapter);
     }
 
 
-    public void Accept_users(View view) {
+    public void Accept_users(View view) {//מעבר למסך שמאפשר למורה לאשר תלמידים לכיתה שלו
         Intent i=new Intent(this,Acept_pupils.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
@@ -109,7 +110,7 @@ public class Groups extends AppCompatActivity {
     }
 
 
-    public void new_group(View view) {
+    public void new_group(View view) {//מעבר למסך שמאפשר למורה לפתוח קבוצה חדשה
         Intent i=new Intent(this,New_group.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);

@@ -32,45 +32,42 @@ import java.util.List;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class ManageAcc extends AppCompatActivity {
-    ListView users;
-    Button Exist_Users, Confirm_Users;
-    EditText et;
+    ListView users;//רשימה נגללת שתכיל את כל המשתמשים
+    Button Exist_Users, Confirm_Users;// כפתורים שמאפשרים צפייה במתשמשים קיימים או במשתמשים שיש לאשר
+    EditText et;//אפשרות לחיפוש התלמידים
 
-    ArrayList<String> MainArrayList = new ArrayList<>();
-    ArrayList<String> suggestions = new ArrayList<>();
+    ArrayList<String> MainArrayList = new ArrayList<>();//רשימה שתדע להכיל בהתאם את מי שאושר ואת מי שלא בהתאם לכפתור שיילחץ
+    ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת
 
-    ArrayList<String> Demo = new ArrayList<>();
-    UsersAdapter adapter;
+    UsersAdapter adapter;//מתאם בין רשימת המשתמשים שאושרו או שלא אל הרשימה הנגללת
 
 
-    String[] Unconfirmed_Users;
-    String[] Confirmed_Users;
 
-    Guard guard;
-    Teacher teacher;
-    Student student;
-    Admin admin;
+    Student student;// עצם מסוג תלמיד
+    Guard guard;// עצם מסוג שומר
+    Admin admin;// עצם מסוג אדמין
+    Teacher teacher;// עצם מסוג מורה
 
-    Boolean f = false;
-    Boolean t = true;
 
-    int textlength;
-    String school;
-    String phone;
-    boolean confirmed = true;
+    Boolean f = false;//עצם מסוג Boolean להשוואה לעצם שהועלה ל-firebase מכיוון שboolean הוא משתנה וBoolean הוא עצם אי אפשר להשוות ביניהם
+    boolean confirmed = true;//המשתנה שבודק איזה משתי הכפתורים נלחץ
+
+
+    String school;//string שיכיל את בית הספר
+    String phone;//string שיכיל את מספר הטלפון
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_acc);
-        Parcelable parcelable=getIntent().getParcelableExtra("adminM");
-        admin= Parcels.unwrap(parcelable);
+        Parcelable parcelable=getIntent().getParcelableExtra("adminM");//קבלת עצם האדמין מהאקטיביטים הקודמים
+        admin= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג אדמין שהגדרנו עבור המסך הזה
 
-        phone = admin.getPhone();
+        phone = admin.getPhone();//השמת ערכים בתכונות האדמין
         school = admin.getSchool();
-        Toast.makeText(getApplicationContext(),school+"+"+phone,Toast.LENGTH_SHORT).show();
 
-        users = findViewById(R.id.User_list);
+        users = findViewById(R.id.User_list); //רכיבי התצוגה
         Exist_Users = findViewById(R.id.Users);
         Confirm_Users = findViewById(R.id.ConfirmUsers);
         et = findViewById(R.id.SearchText);
@@ -80,7 +77,7 @@ public class ManageAcc extends AppCompatActivity {
 
 
 
-        et.addTextChangedListener(new TextWatcher() {
+        et.addTextChangedListener(new TextWatcher() {//מאזין לשינוי בהקלדת הטקסט
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -88,7 +85,7 @@ public class ManageAcc extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                    adapter.clear();
+                    adapter.clear();//כשהטקסט משתנה המתאם ישתנה בהתאם לStrings שיכילו את מה שהוקלד
                     adapter.getFilter().filter(s);
                 }
 
@@ -108,7 +105,7 @@ public class ManageAcc extends AppCompatActivity {
 
 
 
-    public class UsersAdapter extends ArrayAdapter {
+    public class UsersAdapter extends ArrayAdapter {//המחלקה של המתאם שמיועד למסך הזה
         private int layout;
 
         public UsersAdapter(@NonNull Context context, int resource, @NonNull List objects) {
@@ -258,7 +255,7 @@ public class ManageAcc extends AppCompatActivity {
 
 
 
-    private Filter arrayfilter=new Filter() {
+    private Filter arrayfilter=new Filter() {//פעולה לסינון תוצאות החיפוש
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
@@ -282,14 +279,14 @@ public class ManageAcc extends AppCompatActivity {
 
 
         @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
+        protected void publishResults(CharSequence constraint, FilterResults results) {//הפעולה שמעדכנת את המתאם
             adapter.clear();
             adapter.addAll((List) results.values);
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        public CharSequence convertResultToString(Object resultValue) {
+        public CharSequence convertResultToString(Object resultValue) {//פעולה שמחזירה את העצם resulstValue בתור String
             return ((String) resultValue);
         }
     };
@@ -312,21 +309,21 @@ public class ManageAcc extends AppCompatActivity {
 
 
 
-        public void Confirm_users(View view) {
+        public void Confirm_users(View view) {//פעולה שמעדכנת את המשתנה הבוליאני confirmed ומפעילה את הפעולה שמעדכנת את הרשימה של המשתמשים
             confirmed = false;
             UsersList();
 
         }
 
-        public void Watch_users(View view) {
+        public void Watch_users(View view) {//פעולה שמעדכנת את המשתנה הבוליאני confirmed ומפעילה את הפעולה שמעדכנת את הרשימה של המשתמשים
             confirmed = true;
             UsersList();
 
         }
 
 
-        private void UsersList() {
-
+        private void UsersList() {//פעולה שמוסיפה לרשימה אחת משתמשים שאושרו ולרשימה אחרת משתמשים שעוד לא אושרו (המשתמשים יכולים להיות רק שומרים או מורים)
+//הפעולה הזאת מוסיפה לרשימה אחת את השומרים שאושרו ולרשימה השנייה את השומרים שלא אושרו
             refSchool.child(school).child("Guard").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -376,6 +373,7 @@ public class ManageAcc extends AppCompatActivity {
         }
 
         private void Teacher_List(final ArrayList<String> Unconfirmed, final ArrayList<String> Confirmed) {
+            ////הפעולה הזאת מוסיפה לרשימה אחת את המורים שאושרו ולרשימה השנייה את המורים שלא אושרו
             refSchool.child(school).child("Teacher").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -434,7 +432,9 @@ public class ManageAcc extends AppCompatActivity {
 
 
 
+
                 private void Student_List(final ArrayList<String> Un, final ArrayList<String> Co) {
+                    ////הפעולה הזאת מוסיפה לרשימה אחת את התלמידים שאושרו ולרשימה השנייה את התלמידים שלא אושרו
                     refSchool.child(school).child("Student").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -487,7 +487,7 @@ public class ManageAcc extends AppCompatActivity {
                 }
 
 
-        private void Adapt(ArrayList<String> arrayList) {
+        private void Adapt(ArrayList<String> arrayList) {//פעוךה המקשרת בין ה-arraylist לרשימה שמופיעה לאדמין
             adapter = new UsersAdapter(this, R.layout.user_list_unconfirmed, arrayList);
             users.setAdapter(adapter);
 

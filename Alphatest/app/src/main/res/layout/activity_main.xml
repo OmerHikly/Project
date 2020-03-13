@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layoutDirection="rtl"
     android:gravity="center"
     tools:context=".MainActivity">
 
@@ -27,6 +28,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="שם פרטי"
+            android:gravity="right"
             android:inputType="textPersonName" />
 
         <EditText
@@ -35,6 +37,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
+            android:gravity="right"
             android:hint="שם משפחה"
             android:inputType="textPersonName" />
 
@@ -46,6 +49,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:ems="10"
+        android:gravity="right"
         android:hint="תעודת זהות"
         android:inputType="number" />
 
@@ -55,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
+        android:gravity="right"
         android:completionThreshold="1"
         android:hint="בחר בית ספר"
         android:inputType="textPersonName" />
@@ -108,6 +113,7 @@
         android:layout_gravity="right"
         android:layout_weight="1"
         android:ems="10"
+        android:gravity="right"
         android:hint="מספר טלפון"
         android:inputType="phone" />
 
@@ -117,6 +123,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:ems="10"
+        android:gravity="right"
+
         android:hint="סיסמה "
         android:inputType="textPassword" />
     <EditText
@@ -126,6 +134,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="אימות סיסמה "
+        android:gravity="right"
         android:inputType="textPassword" />
 
     <LinearLayout
@@ -175,15 +184,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <TextView
-        android:id="@+id/login"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:onClick="login"
-        android:text="להתחברות"
-        android:textColor="#0066ff"
-        android:textSize="20sp" />
+
 
     <Space
         android:layout_width="match_parent"

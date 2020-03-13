@@ -41,22 +41,22 @@ public class AddStudentsToGroup extends AppCompatActivity {
 
     LinearLayout linearLayout;
 
-    ArrayList<String> Students = new ArrayList<>();
-    ArrayList<String> Options = new ArrayList<>();
-    ArrayList<String> Demo = new ArrayList<>();
-    ArrayList<String> Choosen = new ArrayList<>();
+    ArrayList<String> Students = new ArrayList<>();//יכיל את התלמידים ששייכים לקבוצה שנבחרה
+    ArrayList<String> Options = new ArrayList<>();// יכיל את התלמידים שאינם שייכים לקבוצה ורוצה המורה להוסיף
+    ArrayList<String> Demo = new ArrayList<>();//העתק של  options
+    ArrayList<String> Choosen = new ArrayList<>();//רשימת התלמידים שנבחרו להיווסף לקבוצה
 
 
-    Teacher teacher;
-    Student student;
+    Teacher teacher;//עצם מסוג מורה
+    Student student;//עצם מסוג תלמיד
 
-    String school,phone,cls;
-    String GroupName;
-    String Stu;
+    String school,phone,cls;//מאפיינים של מורה (כיתה, בית ספר וטלפון)
+    String GroupName;//שם הקבוצה
+    String Stu;//Students  עצם מסוג מחרוזת שיכיל את ה-arraylist
     Boolean f=false;
 
-    NotInGroupAdapter adapter;
-    DatabaseReference refGroup;
+    NotInGroupAdapter adapter;//מתאם לListview שיכל את מי שלא נמצא בקבוצה ויכול להתווסף
+    DatabaseReference refGroup;//הרפרנס של הקבוצה ב-database
 
 
     @Override
@@ -68,26 +68,26 @@ public class AddStudentsToGroup extends AppCompatActivity {
         Shown_Students=findViewById(R.id.ChoosenText);
         linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
 
-        Parcelable parcelable=getIntent().getParcelableExtra("teacher");
-        teacher= Parcels.unwrap(parcelable);
+        Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
+        teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
 
         Intent gi=getIntent();
         GroupName=gi.getStringExtra("name");
         Students=gi.getStringArrayListExtra("Stu");
         Stu=Students.toString();
 
-        school=teacher.getSchool();
+        school=teacher.getSchool();//השמת ערכים בתכונות של המורה
         phone=teacher.getPhone();
         cls=teacher.getCls();
 
         Toast.makeText(getApplicationContext(),Stu,Toast.LENGTH_SHORT).show();
         refGroup=refSchool.child(school).child("Teacher").child(phone).child("zgroups").child(GroupName);
-      SetList();
+      SetList();//יצירת רשימה של מועמדים להוספה וסינונם
 
     }
 
     private void SetList() {
-        search_students.addTextChangedListener(new TextWatcher() {
+        search_students.addTextChangedListener(new TextWatcher() {//מגיב כשהטקסט משתנה ו
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -97,7 +97,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                 if(adapter!=null) {
                     adapter.clear();
                 }
-                adapter.getFilter().filter(s);
+                adapter.getFilter().filter(s);// משאי רק את כל המחרוזות שמכילות את מה שהוקלד
             }
 
 
@@ -108,8 +108,8 @@ public class AddStudentsToGroup extends AppCompatActivity {
 
 
         });
-        
-        refSchool.child(school).child("Student").addValueEventListener(new ValueEventListener() {
+
+        refSchool.child(school).child("Student").addValueEventListener(new ValueEventListener() {//יצירת רשימה של כל מי שיוכל להתווסף
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Options.clear();
@@ -145,7 +145,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
 
 
 
-    public void Add(View view) {
+    public void Add(View view) {//הוספה של מי שנבחר לקבוצה החדשה ועדכון בסיס הנתונים
         String ChoosensStudents=Choosen.toString();
         ChoosensStudents=ChoosensStudents.substring(1,ChoosensStudents.length()-1);
         //שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
@@ -166,7 +166,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
         startActivity(i);    }
 
 
-    public  class NotInGroupAdapter extends ArrayAdapter {
+    public  class NotInGroupAdapter extends ArrayAdapter {//ה-class של המתאם
         private int layout;
 
         public NotInGroupAdapter(@NonNull Context context, int resource, @NonNull List objects) {
@@ -276,7 +276,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
 
 
 
-    private Filter arrayfilter=new Filter() {
+    private Filter arrayfilter=new Filter() {//הפעולה שמסננת (עצם מסוג פילטר) את מי שמתאים לפי להוספה ומכיל את המחרוזת שהוקלדה לחיפוש
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
@@ -300,14 +300,14 @@ public class AddStudentsToGroup extends AppCompatActivity {
 
 
         @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
+        protected void publishResults(CharSequence constraint, FilterResults results) {//עדכון המתאם עם הערכים המתאימים לחיפוש שהוזן
             adapter.clear();
             adapter.addAll((List) results.values);
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        public CharSequence convertResultToString(Object resultValue) {
+        public CharSequence convertResultToString(Object resultValue) {//המרה של העצם resultValue למחרוזת
             return ((String) resultValue);
         }
     };
@@ -316,27 +316,27 @@ public class AddStudentsToGroup extends AppCompatActivity {
 
 
 
-    private void Adapt() {
+    private void Adapt() {//פעולה המקשרת בין המתאם לבין Options
         adapter = new NotInGroupAdapter(this, R.layout.user_list_unconfirmed, Options);
         students_options.setAdapter(adapter);
     }
 
 
 
-    public void Accep_pupils(View view) {
+    public void Accep_pupils(View view) {//מעבר למסך אישור תלמידים לכיתה
         Intent i=new Intent(this,Acept_pupils.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
         startActivity(i);
     }
 
-    public void Groups(View view) {
+    public void Groups(View view) { //מעבר למסך קבוצות
         Intent i=new Intent(this,Groups.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
         startActivity(i);
     }
-    public void Open_Group(View view) {
+    public void Open_Group(View view){//מעבר למסך פתיחת קבוצה
         Intent i=new Intent(this,New_group.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);

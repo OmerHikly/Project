@@ -33,4 +33,12 @@ public class TeacherLogin extends AppCompatActivity {
         i.putExtra("teacher", parcelable);
         startActivity(i);
     }
+
+    public void ExitActivity(View view) {
+        Intent i=new Intent(this,Send_Permition.class);
+        Parcelable parcelable= Parcels.wrap(teacher);
+        i.putExtra("teacher", parcelable);
+        startActivity(i);
+
+    }
 }

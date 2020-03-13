@@ -1,6 +1,7 @@
 package com.example.alpha_test;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,9 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +39,7 @@ import static com.example.alpha_test.FirebaseHelper.mAuth;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class MainActivity extends AppCompatActivity {
-    Button btn;
+    Button btn;// רכיבי התצוגה
     Button bt;
     EditText PhoneNum;
 
@@ -62,17 +61,18 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinc;
     Spinner spinn;
 
+    Boolean stayConnect, registered, firstrun;
 
-    boolean bo = false;
-    boolean IfAdmin = false;
+    boolean bo = false;//משתנה שנועד להבחין בין הרשמה של מורה ותלמיד
 
-    boolean IfGuard = false;
-    ArrayList<String> arrayList=new ArrayList<String>();
+    boolean IfAdmin = false; //משתנה שבודק האם המשתמש שנרשם נרשם כאדמין
+    boolean IfGuard = false; //משתנה שבודק האם המשתמש שנרשם נרשם כשומר
+
+    ArrayList<String> arrayList=new ArrayList<String>();// מכיל את רשימת בתי הספר לבחירה של המשתמש
 
 
-    DatabaseReference databaseReference;
-    FirebaseUser firebaseUser;
-    String[] Schools;
+    DatabaseReference databaseReference;//אזכור לdatabase- יצביע על השורש של העץ בבבסיס הנתונים
+    String[] Schools;//מערך שיכיל את בתי הספר
 
 
     @Override
@@ -89,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
         sclass=findViewById(R.id.TvClass);
         snum=findViewById(R.id.TvClassNumber);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-
         et = findViewById(R.id.et);
         btn = findViewById(R.id.sign_up);
         tv = findViewById(R.id.sign_option);
@@ -101,19 +97,42 @@ public class MainActivity extends AppCompatActivity {
         spinc = findViewById(R.id.Class);
         spinn = findViewById(R.id.ClassNumber);
 
+        stayConnect=false;
+        registered=true;
+
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+
         ArrayAdapter<CharSequence> ClassAdapter = ArrayAdapter.createFromResource(this, R.array.classes, R.layout.support_simple_spinner_dropdown_item);
+        //מתאם שנועד לקשר ספינר אל רשימת הכיתות האפשריים
         ArrayAdapter<CharSequence> NumbersAdapter = ArrayAdapter.createFromResource(this, R.array.Numbers, R.layout.support_simple_spinner_dropdown_item);
+        //מתאם שנועד לקשר ספינר אל רשימת מספרי הכיתות האפשריים
+
         ClassAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         NumbersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinc.setAdapter(ClassAdapter);
-        spinn.setAdapter(NumbersAdapter);       //Array creation for the spinners in the application the array will have the class  and class number
+        spinn.setAdapter(NumbersAdapter); //Array creation for the spinners in the application the array will have the class  and class number
 
 
-        FirebaseSchools();//This method goes to the firebase and gets all the schools (I need this to work every time for when a new school regstered)
+        FirebaseSchools();
+        //This method goes to the firebase and gets all the schools (I need this to work every time for when a new school regstered)
 
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences settings=getSharedPreferences("PREFS_NAME",MODE_PRIVATE);
+        Boolean isChecked=settings.getBoolean("stayConnect",false);
+        Intent si = new Intent(MainActivity.this,LoginScreen.class);
+        if (isChecked) {
+            stayConnect=true;
+            startActivity(si);
+        }
+    }
 
     private void FirebaseSchools() {
 
@@ -127,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Schools = new String[count];
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Toast.makeText(getApplicationContext(), dsp.getKey(), Toast.LENGTH_LONG).show();
                     Schools[index] = dsp.getKey().toString();
                     index++;
                 }
@@ -147,8 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void Adapt(String[] array) {
-      //  Toast.makeText(getApplicationContext(), array[0] + array[1] + array[2] + array[3], Toast.LENGTH_SHORT).show();
+    private void Adapt(String[] array) {//מקשר בין המתאם ל-listview
         arrayList.addAll(Arrays.asList(Schools));
         SchoolAdapter adapter=new SchoolAdapter(this, arrayList);
         School.setAdapter(adapter);
@@ -156,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+//משתנים שיקבלו את מה שהקליד המשתמש
     String codeSent;
 
 
@@ -277,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private boolean checkId() {//   A method that checks for a legal id -ID in israel requires to multiply every digit in the an odd place by 1 and a digit in a
+    private boolean checkId() {//   A method that checks for a legal id -ID in israel requires to multiply every digit in the  odd place by 1 and a digit in a
         //even place by 2 and sum up the result (if we get result that higher than 9 we need to sum those digits  and we use the given result instead)
         //after we got all those results from each digit in the id code - we sum up all the results and the given Result should be devided by 10.
         //That's what this method does
@@ -542,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void SignInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
+    private void SignInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {//פעולה הרושמת את המשתמש החדש ל-firebase ובודקת אם הוא תלמיד מורה אדמין או שומר
         mAuth.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -574,7 +591,6 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(getApplicationContext(), "You are a new user now", Toast.LENGTH_LONG).show();
                                 if (!bo) {
-                                    Toast.makeText(getApplicationContext(), "Student", Toast.LENGTH_LONG).show();
 
                                     Student student = new Student(firstname, secondname, id, school, ClassAndNumber, Phone, pass);
                                     refSchool.child(school).child("Student").child(Phone).setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -596,6 +612,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                             }
+                            moveActivity();
                         }
                                        ChangeView2();
 
@@ -607,10 +624,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-                }
 
+    }
 
-
+    private void moveActivity() {
+        Intent intento = new Intent(this, LoginScreen.class);
+        startActivity(intento);
+    }
 
 
     public void teacher_student(View view) {
@@ -629,10 +649,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Activities
-    public void login(View view) {
-        Intent intento = new Intent(this, LoginScreen.class);
-        startActivity(intento);
-    }
 
 
 

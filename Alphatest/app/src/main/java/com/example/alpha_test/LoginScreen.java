@@ -25,24 +25,24 @@ import static com.example.alpha_test.FirebaseHelper.mAuth;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class LoginScreen extends AppCompatActivity {
-    EditText Phone, Password;
-    AutoCompleteTextView School;
+    EditText Phone, Password;//פרטים להזנה טלפון ומספר
+    AutoCompleteTextView School;//בית ספר (בעת הקלדה משלים את החיפוש)
 
-    Student student;
-    Guard guard;
-    Admin admin;
-    Teacher teacher;
+    Student student;// עצם מסוג תלמיד
+    Guard guard;// עצם מסוג שומר
+    Admin admin;// עצם מסוג אדמין
+    Teacher teacher;// עצם מסוג מורה
 
+
+    Boolean firstrun, stayConnect;
 
 
     String typedpass;
-    Boolean firstrun, stayConnect;
-    String name, secondname, id, school, phone, password, uid, cls;
+    String  school, phone;
 
 
-    String[] Schools;
-    ArrayList<String> arrayList=new ArrayList<String>();
-    int level, x = 0;
+    String[] Schools;//מערך שיכיל את בתי הספר
+    ArrayList<String> arrayList=new ArrayList<String>();//מערך רשימתי שיכיל את בתי הספר
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +52,36 @@ public class LoginScreen extends AppCompatActivity {
         Password = findViewById(R.id.Password);
         School=findViewById(R.id.LSchool);
 
+        Intent i=new Intent(this,MainActivity.class);
+        Parcelable parcelable= Parcels.wrap(admin);
+        i.putExtra("admin", parcelable);
+        startActivity(i);
 
 
-        FirebaseSchools();
+        Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                .getBoolean("isFirstRun", true);
+
+        if (isFirstRun) {
+            //show start activity
+
+            startActivity(new Intent(LoginScreen.this, MainActivity.class));
+            Toast.makeText(LoginScreen.this, "First Run", Toast.LENGTH_LONG)
+                    .show();
+        }
+
+
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                .putBoolean("isFirstRun", false).commit();
+
+
+        FirebaseSchools();//פעולה שמוסיפה את כל האפשרויות
 
 
         stayConnect = false;
 
-        SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
-        firstrun = settings.getBoolean("firstRun", false);
-        if (firstrun) {
-            signup();
-        }
+
     }
+
 
     private void FirebaseSchools() {
 
@@ -78,7 +95,6 @@ public class LoginScreen extends AppCompatActivity {
                 }
                 Schools = new String[count];
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    //Toast.makeText(getApplicationContext(), dsp.getKey(), Toast.LENGTH_LONG).show();
                     Schools[index] = dsp.getKey().toString();
                     index++;
                 }
@@ -98,8 +114,7 @@ public class LoginScreen extends AppCompatActivity {
 
     }
 
-    private void Adapt(String[] array) {
-      //  Toast.makeText(getApplicationContext(), array[0] + array[1] + array[2] + array[3], Toast.LENGTH_SHORT).show();
+    private void Adapt(String[] array) {//פעולה שמקשרת בין המערך הרשימתי שמכיל את בתי הספר לרשימה הנגללת
         arrayList.addAll(Arrays.asList(Schools));
          SchoolAdapter adapter=new SchoolAdapter(this, arrayList);
         School.setAdapter(adapter);
@@ -116,8 +131,7 @@ public class LoginScreen extends AppCompatActivity {
         Boolean isChecked = settings.getBoolean("stayConnect", false);
         if (mAuth.getCurrentUser() != null && isChecked) {
             stayConnect = true;
-            Intent si = new Intent(this, logined.class);
-            startActivity(si);
+
         }
     }
 
@@ -127,21 +141,12 @@ public class LoginScreen extends AppCompatActivity {
         if (stayConnect) finish();
     }
 
-    public void SignUp(View view) {
-        signup();
-    }
 
-    private void signup() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("n", true);
-        startActivity(intent);
-    }
-
-    public void login(View view) {
+    public void login(View view) {//פעולה בעת לחיצה על התחבר מקבלת לString את מה שהוקלד
         phone = "+972" + Phone.getText().toString();
         typedpass = Password.getText().toString();
         school=School.getText().toString();
-        checkIfSchoolExists();
+        checkIfSchoolExists();//פעולה הבודקת אם הבית ספר שהוקלד קיים
 
 
 
@@ -150,7 +155,7 @@ public class LoginScreen extends AppCompatActivity {
 
 
 
-    private void checkIfSchoolExists() {
+    private void checkIfSchoolExists() {//במידה ובית הספר לא קיים המערכת מודיעה למשתמש
         refSchool.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -159,8 +164,7 @@ public class LoginScreen extends AppCompatActivity {
 
                 } else {
                     if (dataSnapshot.hasChild(school)) {
-                        Toast.makeText(getApplicationContext(), "School Exists", Toast.LENGTH_SHORT).show();
-                        CheckIfPhoneExists();
+                        CheckIfPhoneExists();//פעולה הבודקת אם הטלפון שהוקלד קיים באותו בית ספר
                     } else {
                         Toast.makeText(getApplicationContext(), "School isn't exist", Toast.LENGTH_SHORT).show();
                     }
@@ -210,7 +214,7 @@ public class LoginScreen extends AppCompatActivity {
                                                             if (dataSnapshot.getValue() != null) {
                                                                 GuardActivity();
                                                             } else {
-                                                                NoUser();
+                                                                NoUser();//במידה ולא קיים משתמש לא תחת עץ שומר עץ מורה עץ תלמיד או עץ אדמין יש פעולה מתאימה לכך שתתריע את המשתמש על כך
                                                             }
                                                         }
 
@@ -264,7 +268,7 @@ public class LoginScreen extends AppCompatActivity {
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
                     student=dataSnapshot.getValue(Student.class);
-                    StudentScreen();
+                    StudentScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (תלמיד)
                 }
                 else{
                     Password.setError("Wrong password");
@@ -290,7 +294,7 @@ public class LoginScreen extends AppCompatActivity {
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
                     teacher=dataSnapshot.getValue(Teacher.class);
-                    TeacherScreen();
+                    TeacherScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (מורה)
                 }
                 else{
                     Password.setError("Wrong password");
@@ -315,7 +319,7 @@ public class LoginScreen extends AppCompatActivity {
                     String pass = dataSnapshot.child("password").getValue().toString();
                     if (typedpass.equals(pass)) {
                         admin=dataSnapshot.getValue(Admin.class);
-                        AdminScreen();
+                        AdminScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (אדמין)
                     }
                     else{
                         Toast.makeText(getApplicationContext(),"Password is wrong",Toast.LENGTH_SHORT).show();
@@ -341,7 +345,7 @@ public class LoginScreen extends AppCompatActivity {
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
                     guard=dataSnapshot.getValue(Guard.class);
-                    GuardScreen();
+                    GuardScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (שומר)
                 }
                 else{
                     Toast.makeText(getApplicationContext(),"Password is wrong",Toast.LENGTH_SHORT).show();
@@ -359,12 +363,12 @@ public class LoginScreen extends AppCompatActivity {
 
 
 
-    private void NoUser() {
+    private void NoUser() {//מתריעה למשתמש אם הפרטים שלו קיימים או לא
         Toast.makeText(getApplicationContext(),"User isn't exists",Toast.LENGTH_SHORT).show();
 
     }
-
-    private void GuardScreen() {
+    //what happens when log in is successful
+    private void GuardScreen(){//העברה למסך כניסה של שומר
         Intent i=new Intent(this,GuardLogin.class);
         Parcelable parcelable= Parcels.wrap(guard);
         i.putExtra("guard", parcelable);       startActivity(i);
@@ -372,21 +376,21 @@ public class LoginScreen extends AppCompatActivity {
     }
 
 
-    private void AdminScreen() {
+    private void AdminScreen() {//העברה למסך כניסה של אדמין
         Intent i=new Intent(this,AdminLogin.class);
         Parcelable parcelable= Parcels.wrap(admin);
         i.putExtra("admin", parcelable);
         startActivity(i);
     }
 
-    private void TeacherScreen() {
+    private void TeacherScreen() {//העברה למסך כניסה של מורה
         Intent i=new Intent(this,TeacherLogin.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
         startActivity(i);
     }
 
-    private void StudentScreen() {//what happens when log in is successful
+    private void StudentScreen() {//העברה למסך כניסה של תלמיד
         Intent i=new Intent(this,StudentLogin.class);
         Parcelable parcelable= Parcels.wrap(student);
         i.putExtra("student", parcelable);
@@ -403,8 +407,5 @@ public class LoginScreen extends AppCompatActivity {
 
 
 
-    private void log() {
-        Intent i=new Intent(this,logined.class);
-        startActivity(i);
-    }
+
 }

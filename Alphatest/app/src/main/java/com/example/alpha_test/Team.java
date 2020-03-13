@@ -29,20 +29,20 @@ import java.util.List;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class Team extends AppCompatActivity {
-    Teacher teacher;
+    Teacher teacher;//עצם מסוג מורה
 
-    String school,phone,cls;
-    String GroupName;
+    String school,phone,cls;//מאפיינים של מורה (כיתה, בית ספר וטלפון)
+    String GroupName;//יכיל את שם הקבוצה שנבחרה במסך הקודם
 
-    ArrayList<String> Students = new ArrayList<>();
+    ArrayList<String> Students = new ArrayList<>();// יכיל את התלמידים ששייכים לקבוצה
 
     ListView lv;
     Button btn;
-    TextView Shown_Students;
 
-    GroupAdapter adapter;
 
-    DatabaseReference refGroup;
+    GroupAdapter adapter;//מתאם אישי שעוצב עבור הlistview
+
+    DatabaseReference refGroup;// רפרנס אל מיקום הקבוצה ב -database
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,21 +51,21 @@ public class Team extends AppCompatActivity {
         lv=findViewById(R.id.StudentsLv);
         btn=findViewById(R.id.AddMembers);
 
-        Intent gi=getIntent();
-       GroupName=gi.getStringExtra("name");
+        Intent gi=getIntent();//רכיב שמעביר את הערכים שהועברו מהמסך הקודם
+       GroupName=gi.getStringExtra("name");//הצבת שם הקבוצה מהמסך הקודם
 
-        Parcelable parcelable=getIntent().getParcelableExtra("teacher");
-        teacher= Parcels.unwrap(parcelable);
+        Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
+        teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
 
-        school=teacher.getSchool();
+        school=teacher.getSchool();;//השמת ערכים בתכונות של המורה
         phone=teacher.getPhone();
         cls=teacher.getCls();
 
 
-        refGroup=refSchool.child(school).child("Teacher").child(phone).child("zgroups").child(GroupName);
+        refGroup=refSchool.child(school).child("Teacher").child(phone).child("zgroups").child(GroupName);//הגדרת הרפרנס
 
 
-            SetList();
+            SetList();// פעולה ששמה בListview את הרשימה של התלמידים ששייכים לקבוצה
 
     }
 
@@ -87,7 +87,7 @@ public class Team extends AppCompatActivity {
 
                 } else {
                     Students.clear();
-                    Adapt(Students);
+                    Adapt(Students);//פעולה שמקשרת בין הsrraylist  אל המתאם
                 }
             }
 
@@ -104,14 +104,14 @@ public class Team extends AppCompatActivity {
 
     }
 
-    private void Adapt(ArrayList<String> arrayList) {
+    private void Adapt(ArrayList<String> arrayList) {// פעולת הקישור בין המתאם שעוצב עבור המסך הזה אל הרשימה הנגללת (listview)
         adapter = new GroupAdapter(this, R.layout.user_list_unconfirmed, arrayList);
         lv.setAdapter(adapter);
     }
 
 
 
-    public  class GroupAdapter extends ArrayAdapter {
+    public  class GroupAdapter extends ArrayAdapter {//ה-class עבור המתאם המעוצב שיצרתי
         private int layout;
 
         public GroupAdapter(@NonNull Context context, int resource, @NonNull List objects) {
@@ -146,7 +146,7 @@ public class Team extends AppCompatActivity {
             mainViewholder.approve.setVisibility(View.GONE);
             mainViewholder.remove.setText("הסר");
             mainViewholder.remove.setOnClickListener(new View.OnClickListener() {
-                @Override
+                @Override//פעולה זו מאםשרת למורה להסיר תלמיד מהקבוצה בגלל שכנראה התלמיד עבר כיתה
                 public void onClick(View v) {
                     Students.remove(position);
                     Adapt(Students);
@@ -164,13 +164,13 @@ public class Team extends AppCompatActivity {
 
 
 
-            return convertView;
+            return convertView;//בשורה הזו הפעולה מחזירה את התצוגה החדשה שהגדרנו
 
         }
     }
 
 
-    public class ViewHolder {
+    public class ViewHolder {//רכיבי התצוגה שיועדו לlistview
         TextView details;
         Button  remove,approve;
     }
@@ -179,7 +179,7 @@ public class Team extends AppCompatActivity {
 
 
 
-    public void AddStudents(View view) {
+    public void AddStudents(View view) {//פעולת מעבר בין המסכים שמעבירה את המורה בלחיצת כפתור אל המסך שבו הוא יכול להוסיף תלמידים נוספים לקבוצה
         Intent i=new Intent(this,AddStudentsToGroup.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);

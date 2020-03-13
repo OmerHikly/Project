@@ -16,14 +16,14 @@ import org.parceler.Parcels;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class DataView extends AppCompatActivity {
-    String school;
-    String phone;
+    String school;//מחרוזת מסוג בית ספר שתכיל את הבית ספר אליו שייך האדמין
+    String phone;//מחרוזת מסוג טלפון שתכיל את מספר הטלפון של האדמין
 
-    Boolean T=true;
+    Boolean T=true;//משתנה להשוואה עם תכונת הBoolean בבסיס הנתונים
 
-    int admins=0,guards=0,teachers=0,students=0;
+    int admins=0,guards=0,teachers=0,students=0;//משתנים שיכילו את מספר המשתמשים שקיימים עבורכל סוג של משתמש
 
-    Admin admin;
+    Admin admin;//עצם מסוג אדמין עבור המסך הזה
 
     TextView Admins,Guards,Teachers,Students;
     @Override
@@ -31,10 +31,10 @@ public class DataView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_view);
 
-        Parcelable parcelable=getIntent().getParcelableExtra("adminW");
-        admin= Parcels.unwrap(parcelable);
+        Parcelable parcelable=getIntent().getParcelableExtra("adminW");//קבלת עצם האדמין מהאקטיביטים הקודמים
+        admin= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג אדמין שהגדרנו עבור המסך הזה
 
-        school = admin.getSchool();
+        school = admin.getSchool();//השמת ערכים בתכונות האדמין
         phone = admin.getPhone();
 
         Admins=findViewById(R.id.TvAdmin);
@@ -42,7 +42,7 @@ public class DataView extends AppCompatActivity {
         Teachers=findViewById(R.id.TvTeacher);
         Students=findViewById(R.id.TvStudent);
 
-       HowMany();
+       HowMany();//פעולה שתספור ותציג כמה שומרים יש כמה תלמידים יש כמה מורים יש וכמה אדמינים יש
     }
 
     private void HowMany() {
