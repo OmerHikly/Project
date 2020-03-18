@@ -43,6 +43,9 @@ public class Groups extends AppCompatActivity {
         cls=teacher.getCls();
 
         final Intent team=new Intent(this,Team.class);//יצירת רכיב שיעביר את המורה בשעת הצורך אל המסך שמכיל את נתוני הקבוצה ואפשרות לשנות אותה
+
+         SetList();//פעולה שמציגה את כל הקבוצות שיש למורה בתוך listview
+
         groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {//מאזין ללחיצה על אחד מפרטי הקבוצה
@@ -55,9 +58,6 @@ public class Groups extends AppCompatActivity {
                 startActivity(team);
             }
         });
-         SetList();//פעולה שמציגה את כל הקבוצות שיש למורה בתוך listview
-
-
 
     }
 

@@ -170,6 +170,8 @@ public class Acept_pupils extends AppCompatActivity {
             String[] Splitted = str.split(" ");
             String text = Splitted[0] + " " + Splitted[1] + " " + Splitted[2] + Splitted[3];
             mainViewholder.details.setText(text);
+            ViewGroup.LayoutParams params= mainViewholder.details.getLayoutParams();
+            params.height= ViewGroup.LayoutParams.MATCH_PARENT;
 
 
             mainViewholder.approve.setOnClickListener(new View.OnClickListener() {

@@ -33,6 +33,19 @@
         <item>19</item>
         <item>20</item>
 
+        <item> </item>
+        <item>8:10</item>
+        <item>8:55</item>
+        <item>10:00</item>
+        <item>10:50</item>
+        <item>12:00</item>
+        <item>12:45</item>
+        <item>13:45</item>
+        <item>14:30</item>
+        <item>15:30</item>
+        <item>16:15</item>
+        <item>17:15</item>
+
     </string-array>
 
 </resources>

@@ -84,10 +84,11 @@ public class ManageAcc extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (adapter != null) {
                     adapter.clear();//כשהטקסט משתנה המתאם ישתנה בהתאם לStrings שיכילו את מה שהוקלד
                     adapter.getFilter().filter(s);
                 }
+            }
 
 
 
@@ -142,6 +143,8 @@ public class ManageAcc extends AppCompatActivity {
             String[] Splitted = str.split(" ");
             String text = Splitted[0] + " " + Splitted[1] + " " + Splitted[2] + Splitted[3];
             mainViewholder.details.setText(text);
+            ViewGroup.LayoutParams params= mainViewholder.details.getLayoutParams();
+            params.height= ViewGroup.LayoutParams.MATCH_PARENT;
 
             if (confirmed) {
 

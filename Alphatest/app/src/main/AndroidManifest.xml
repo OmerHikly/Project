@@ -17,16 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Send_Permition"></activity>
+        <activity android:name=".profile"></activity>
+        <activity android:name=".New_group" />
+        <activity
+            android:name=".Send_Permition"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity android:name=".AddStudentsToGroup" />
         <activity android:name=".Team" />
         <activity android:name=".Groups" />
-        <activity android:name=".New_group" />
         <activity android:name=".Acept_pupils" />
         <activity android:name=".DataView" />
         <activity
             android:name=".ManageAcc"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity android:name=".StudentLogin" />
         <activity android:name=".TeacherLogin" />

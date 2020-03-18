@@ -52,10 +52,7 @@ public class LoginScreen extends AppCompatActivity {
         Password = findViewById(R.id.Password);
         School=findViewById(R.id.LSchool);
 
-        Intent i=new Intent(this,MainActivity.class);
-        Parcelable parcelable= Parcels.wrap(admin);
-        i.putExtra("admin", parcelable);
-        startActivity(i);
+
 
 
         Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
