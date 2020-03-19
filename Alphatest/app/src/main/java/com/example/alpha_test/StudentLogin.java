@@ -1,7 +1,10 @@
 package com.example.alpha_test;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,5 +25,17 @@ public class StudentLogin extends AppCompatActivity {
         school=student.getSchool();
         phone=student.getPhone();
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.optionsmenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void Profile(MenuItem item) {
+        Intent i = new Intent(this, ChangeProfile.class);
+        Parcelable parcelable= Parcels.wrap(student);
+        i.putExtra("student", parcelable);
+        startActivity(i);
     }
 }

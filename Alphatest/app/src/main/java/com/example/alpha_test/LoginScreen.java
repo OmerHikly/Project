@@ -40,7 +40,7 @@ public class LoginScreen extends AppCompatActivity {
     String typedpass;
     String  school, phone;
 
-
+    int sender=-1;
     String[] Schools;//מערך שיכיל את בתי הספר
     ArrayList<String> arrayList=new ArrayList<String>();//מערך רשימתי שיכיל את בתי הספר
 
@@ -264,8 +264,13 @@ public class LoginScreen extends AppCompatActivity {
 
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
-                    student=dataSnapshot.getValue(Student.class);
-                    StudentScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (תלמיד)
+                    student = dataSnapshot.getValue(Student.class);
+                    if (student.getActivated() == false) {
+                        sender=0;
+                        NotApproved();
+                    } else {
+                        StudentScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (תלמיד)
+                    }
                 }
                 else{
                     Password.setError("Wrong password");
@@ -290,8 +295,13 @@ public class LoginScreen extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
-                    teacher=dataSnapshot.getValue(Teacher.class);
-                    TeacherScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (מורה)
+                    teacher = dataSnapshot.getValue(Teacher.class);
+                    if (teacher.getActivated() == false) {
+                        sender=1;
+                            NotApproved();
+                    } else {
+                        TeacherScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (מורה)
+                    }
                 }
                 else{
                     Password.setError("Wrong password");
@@ -307,6 +317,9 @@ public class LoginScreen extends AppCompatActivity {
         });
 
     }
+
+
+
     private void AdActivity() {//password confirmation
         Toast.makeText(getApplicationContext(),"Admin login",Toast.LENGTH_SHORT).show();
 
@@ -315,8 +328,13 @@ public class LoginScreen extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String pass = dataSnapshot.child("password").getValue().toString();
                     if (typedpass.equals(pass)) {
-                        admin=dataSnapshot.getValue(Admin.class);
-                        AdminScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (אדמין)
+                        admin = dataSnapshot.getValue(Admin.class);
+                        if (admin.getActivated() == false) {
+                            sender=2;
+                            NotApproved();
+                        } else {
+                            AdminScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (אדמין)
+                        }
                     }
                     else{
                         Toast.makeText(getApplicationContext(),"Password is wrong",Toast.LENGTH_SHORT).show();
@@ -341,8 +359,13 @@ public class LoginScreen extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String pass = dataSnapshot.child("password").getValue().toString();
                 if (typedpass.equals(pass)) {
-                    guard=dataSnapshot.getValue(Guard.class);
-                    GuardScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (שומר)
+                    guard = dataSnapshot.getValue(Guard.class);
+                    if (guard.getActivated() == false) {
+                        sender=3;
+                        NotApproved();
+                    } else {
+                        GuardScreen();//פעולה שמעבירה את המשתמש למסך הבא בהתאם לסוג המשתמש (שומר)
+                    }
                 }
                 else{
                     Toast.makeText(getApplicationContext(),"Password is wrong",Toast.LENGTH_SHORT).show();
@@ -364,11 +387,18 @@ public class LoginScreen extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"User isn't exists",Toast.LENGTH_SHORT).show();
 
     }
+
+    private void NotApproved() {
+        Intent i=new Intent(this,NotActivated.class );
+        i.putExtra("Type",sender);
+        startActivity(i);
+    }
     //what happens when log in is successful
     private void GuardScreen(){//העברה למסך כניסה של שומר
         Intent i=new Intent(this,GuardLogin.class);
         Parcelable parcelable= Parcels.wrap(guard);
-        i.putExtra("guard", parcelable);       startActivity(i);
+        i.putExtra("guard", parcelable);
+        startActivity(i);
 
     }
 

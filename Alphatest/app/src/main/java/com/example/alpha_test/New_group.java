@@ -59,6 +59,8 @@ public class New_group extends AppCompatActivity {
     DatabaseReference refGroups;//רפרנס לכתובת בdatabase שתחתיה אפשר להוסיף קבוצות
 
     LinearLayout linearLayout;
+
+    int studento=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,16 +87,21 @@ public class New_group extends AppCompatActivity {
             refGroups=refSchool.child(school).child("Teacher").child(phone).child("zgroups");
             linearLayout = (LinearLayout) findViewById(R.id.linear_layout);//קישור בין המסך ב-xml לרכיב ב--java
 
+
+            students_options.setLongClickable(true);
             students_options.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     String str = Students.get(position);
                     String[] Splitted = str.split(" ");
-                    String phone =Splitted[4];
+                    String sphone =Splitted[4];
 
                     Intent i=new Intent(New_group.this,profile.class);
 
-                    i.putExtra("teacher", phone);
+                    i.putExtra("tphone", phone);
+                    i.putExtra("sphone", sphone);
+                    i.putExtra("sc",school);
+                    i.putExtra("st",studento);
                     startActivity(i);
                     return true;
                 }

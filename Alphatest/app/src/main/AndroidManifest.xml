@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".profile"></activity>
+        <activity android:name=".ChangeProfile"></activity>
+        <activity android:name=".NotActivated" />
+        <activity android:name=".profile" />
         <activity android:name=".New_group" />
         <activity
             android:name=".Send_Permition"
