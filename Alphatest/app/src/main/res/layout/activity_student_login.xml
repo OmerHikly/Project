@@ -30,6 +30,7 @@
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="AskPermition"
         android:text="בקש אישור" />
 
     <Space

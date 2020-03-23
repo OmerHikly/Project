@@ -248,12 +248,12 @@ public class MainActivity extends AppCompatActivity {
 
                     } else {
 
-                        if (!Pattern.matches("[א-י]+", spinc.getSelectedItem().toString())) {
+                        if (((IfAdmin==false)&&(IfGuard==false)&&(!bo)&&(!Pattern.matches("[א-י]+", spinc.getSelectedItem().toString())))) {
                                 Toast.makeText(MainActivity.this, "Please pick class", Toast.LENGTH_SHORT).show();
                                 spinc.requestFocus();
                                 return;
                         }
-                        else if (!Pattern.matches("[0-9]+", spinn.getSelectedItem().toString())) {
+                        else if ((IfAdmin==false)&&(IfGuard==false)&&(!bo)&&(!Pattern.matches("[0-9]+", spinn.getSelectedItem().toString()))) {
                             Toast.makeText(MainActivity.this, "Please pick class number", Toast.LENGTH_SHORT).show();
                             spinn.requestFocus();
                             return;

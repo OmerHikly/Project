@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,6 +35,14 @@ public class StudentLogin extends AppCompatActivity {
 
     public void Profile(MenuItem item) {
         Intent i = new Intent(this, ChangeProfile.class);
+        i.putExtra("type",0);
+        Parcelable parcelable= Parcels.wrap(student);
+        i.putExtra("student", parcelable);
+        startActivity(i);
+    }
+
+    public void AskPermition(View view) {
+        Intent i = new Intent(this, AskExit.class);
         Parcelable parcelable= Parcels.wrap(student);
         i.putExtra("student", parcelable);
         startActivity(i);

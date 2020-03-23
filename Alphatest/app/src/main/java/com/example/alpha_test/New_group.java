@@ -60,7 +60,7 @@ public class New_group extends AppCompatActivity {
 
     LinearLayout linearLayout;
 
-    int studento=1;
+    Student studentP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,14 +95,32 @@ public class New_group extends AppCompatActivity {
                     String str = Students.get(position);
                     String[] Splitted = str.split(" ");
                     String sphone =Splitted[4];
+                    Toast.makeText(getApplicationContext(),Splitted[4],Toast.LENGTH_SHORT).show();
 
-                    Intent i=new Intent(New_group.this,profile.class);
+                    refSchool.child(school).child("Student").child(sphone).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            studentP=dataSnapshot.getValue(Student.class);
 
-                    i.putExtra("tphone", phone);
-                    i.putExtra("sphone", sphone);
-                    i.putExtra("sc",school);
-                    i.putExtra("st",studento);
-                    startActivity(i);
+                            Intent i=new Intent(New_group.this,profile.class);
+
+                            Parcelable parcelable= Parcels.wrap(studentP);
+                            i.putExtra("student", parcelable);
+                            i.putExtra("tphone", phone);
+                            i.putExtra("type",1);
+                            i.putExtra("WatchedUserType",0);
+                            i.putExtra("sc",school);
+
+
+                            startActivity(i);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
                     return true;
                 }
             });
@@ -237,7 +255,6 @@ public class New_group extends AppCompatActivity {
                     public void onClick(View v) {
                         final String str = Students.get(position);
                         String[] Splitted = str.split(" ");
-
 
                         Students.remove(position);
                         notifyDataSetChanged();

@@ -43,6 +43,11 @@ public class ChangeProfile extends AppCompatActivity {
     Context ctx=this;
 
     Student student;
+    Teacher teacher;
+    Guard guard;
+    Admin admin;
+
+
     String phone,cls,educator,id,school,name;
 
 
@@ -51,7 +56,7 @@ public class ChangeProfile extends AppCompatActivity {
 
     public Uri imguri;
 
-
+    int user;
 
     public static final int IMAGE_PICK_CODE=1000;
     public static final int PERMISSION_CODE=1001;
@@ -71,33 +76,78 @@ public class ChangeProfile extends AppCompatActivity {
         Phone=findViewById(R.id.UserPhone);
         chg=findViewById(R.id.ChangeProfile);
 
-        Parcelable parcelable=getIntent().getParcelableExtra("student");
-        student= Parcels.unwrap(parcelable);
-
-        school=student.getSchool();
-        phone=student.getPhone();
-        id = student.getId();
-        name = student.getName()+" "+student.getSecondName();
-        cls=student.getCls();
-
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        search();
+
+
+        Intent gi=getIntent();
+        user=gi.getIntExtra("type",-1);
+        switch (user){
+            case 0:
+                Parcelable parcelable1=getIntent().getParcelableExtra("student");
+                student= Parcels.unwrap(parcelable1);
+                school=student.getSchool();
+                phone=student.getPhone();
+                id = student.getId();
+                name = student.getName()+" "+student.getSecondName();
+                cls=student.getCls();
+                Ref=mStorageRef.child("Students").child(phone+"Profile");
+                findEducator();
+                Toast.makeText(getApplicationContext(),"Student",Toast.LENGTH_SHORT).show();
+                break;
+
+
+            case 1:
+                Parcelable parcelable2=getIntent().getParcelableExtra("teacher");
+                teacher= Parcels.unwrap(parcelable2);
+                school=teacher.getSchool();
+                phone=teacher.getPhone();
+                id = teacher.getId();
+                name = teacher.getName()+" "+teacher.getSecondName();
+                cls=teacher.getCls();
+                Ref=mStorageRef.child("Teachers").child(phone+"Profile");
+                Educator.setVisibility(View.GONE);
+                break;
+
+            case 2:
+                Parcelable parcelable3=getIntent().getParcelableExtra("guard");
+                guard= Parcels.unwrap(parcelable3);
+                school=guard.getSchool();
+                phone=guard.getPhone();
+                id = guard.getId();
+                name = guard.getName()+" "+guard.getSecondName();
+                Ref=mStorageRef.child("Guards").child(phone+"Profile");
+                Educator.setVisibility(View.GONE);
+                Class.setVisibility(View.GONE);
+                break;
+
+            case 3:
+                Parcelable parcelable=getIntent().getParcelableExtra("admin");
+                admin= Parcels.unwrap(parcelable);
+                school=admin.getSchool();
+                phone=admin.getPhone();
+                id = admin.getID();
+                name = admin.getName()+" "+admin.getSecondName();
+                Ref=mStorageRef.child("Admins").child(phone+"Profile");
+                Educator.setVisibility(View.GONE);
+                Class.setVisibility(View.GONE);
+                break;
+
+        }
+
+
+
+
+
+        DownloadImg();
 
 
         Name.setText(Name.getText().toString()+" "+name);
         Class.setText(Class.getText().toString()+" "+cls);
         Id.setText(Id.getText().toString()+" "+id);
         Phone.setText(Phone.getText().toString()+" "+phone);
-        findEducator();
+
     }
 
-    private void search() {
-        String ex1="jpg";
-        String ex2="jpeg";
-        String ex3="png";
-        Ref=mStorageRef.child("Students").child(phone+"Profile"+"."+ex1);
-        DownloadImg();
-    }
 
     private void findEducator() {
         refSchool.child(school).child("Teacher").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -183,7 +233,6 @@ public class ChangeProfile extends AppCompatActivity {
 
     public void upload() {//This method doing the service action of uploading the file.
         Toast.makeText(this,"We are uploading your file...",Toast.LENGTH_SHORT).show();
-        Ref=mStorageRef.child("Students").child(phone+"Profile"+"."+getExtension(imguri));//
         //the line above keeps the extension of the file and name it with his millis since the the UNIX epoch: (1970-01-01 00:00:00 UTC) a date
         // That makes sure that the first file that was uploaded will always remain the first and won't mix by the firebase order
         uploadTask=Ref.putFile(imguri)

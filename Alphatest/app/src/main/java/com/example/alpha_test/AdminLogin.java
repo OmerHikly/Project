@@ -3,6 +3,8 @@ package com.example.alpha_test;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -45,5 +47,18 @@ public class AdminLogin extends AppCompatActivity {
         i.putExtra("adminW", parcelable);
         startActivity(i);
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.optionsmenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void Profile(MenuItem item) {
+        Intent i = new Intent(this, ChangeProfile.class);
+        i.putExtra("type",3);
+        Parcelable parcelable= Parcels.wrap(admin);
+        i.putExtra("admin", parcelable);
+        startActivity(i);
     }
 }
