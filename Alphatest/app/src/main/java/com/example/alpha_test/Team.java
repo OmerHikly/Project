@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,9 +36,12 @@ public class Team extends AppCompatActivity {
     String GroupName;//יכיל את שם הקבוצה שנבחרה במסך הקודם
 
     ArrayList<String> Students = new ArrayList<>();// יכיל את התלמידים ששייכים לקבוצה
+    ArrayList<String> ExistPhones = new ArrayList<>();//רשימת התלמידים שנבחרו להיווסף לקבוצה
 
     ListView lv;
     Button btn;
+
+    Student student;
 
 
     GroupAdapter adapter;//מתאם אישי שעוצב עבור הlistview
@@ -74,20 +78,24 @@ public class Team extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Students.clear();
+                ExistPhones.clear();
                 if (dataSnapshot.getValue() != null) {
                     String team = dataSnapshot.getValue().toString();
                     String Splitted[] = team.split(" ");
 
-                    for (int i = 0; i < Splitted.length / 5; i++) {
-                        String StudentD = Splitted[i * 5] + " " + Splitted[i * 5 + 1] + " " + Splitted[i * 5 + 2] + " " + Splitted[i * 5 + 3] + " " + Splitted[i * 5 + 4];
-                        Students.add(StudentD);
+                    for (int i = 0; i < Splitted.length; i++) {
+                        String StudentD = Splitted[i];
+                        char last=StudentD.charAt(StudentD.length()-1);
+                        if(last==','){
+                            StudentD=StudentD.substring(0,StudentD.length()-1);
+                        }
+                        ExistPhones.add(StudentD);
                     }
-                    Adapt(Students);
+                    Toast.makeText(getApplicationContext(),ExistPhones.get(0),Toast.LENGTH_SHORT).show();
+                    showData();
 
 
-                } else {
-                    Students.clear();
-                    Adapt(Students);//פעולה שמקשרת בין הsrraylist  אל המתאם
+
                 }
             }
 
@@ -101,6 +109,32 @@ public class Team extends AppCompatActivity {
 
 
 
+
+    }
+
+    private void showData() {
+        Students.clear();
+        for(String p:ExistPhones) {
+            refSchool.child(school).child("Student").child(p).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dsp) {
+                    student = new Student();
+                    student = dsp.getValue(Student.class);
+                    String id = student.getId();
+                    String name = student.getName();
+                    String secondname = student.getSecondName();
+                    String uphone = student.getPhone();
+                    String x = "תלמיד: " + name + " " + secondname + " " + id + " " + uphone;
+                    Students.add(x);
+                    Adapt(Students);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
     }
 
@@ -149,11 +183,12 @@ public class Team extends AppCompatActivity {
                 @Override//פעולה זו מאםשרת למורה להסיר תלמיד מהקבוצה בגלל שכנראה התלמיד עבר כיתה
                 public void onClick(View v) {
                     Students.remove(position);
+                    ExistPhones.remove(position);
                     Adapt(Students);
                     if (Students.isEmpty()) {
                         refGroup.removeValue();
                     } else {
-                        String GroupData = Students.toString();
+                        String GroupData = ExistPhones.toString();
                         GroupData=GroupData.substring(1,GroupData.length()-1); //שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
                         refGroup.setValue(GroupData);
                     }
@@ -185,6 +220,7 @@ public class Team extends AppCompatActivity {
         i.putExtra("teacher", parcelable);
         i.putExtra("name",GroupName);
         i.putExtra("Stu",Students);
+        i.putExtra("Ex",ExistPhones);
         startActivity(i);
     }
 }

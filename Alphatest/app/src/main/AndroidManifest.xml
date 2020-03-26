@@ -17,7 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AskExit"></activity>
+        <activity android:name=".PermitionsRecived"></activity>
+        <activity
+            android:name=".AskExit"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity android:name=".ChangeProfile" />
         <activity android:name=".NotActivated" />
         <activity android:name=".profile" />

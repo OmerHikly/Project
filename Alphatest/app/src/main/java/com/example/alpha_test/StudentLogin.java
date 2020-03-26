@@ -47,4 +47,12 @@ public class StudentLogin extends AppCompatActivity {
         i.putExtra("student", parcelable);
         startActivity(i);
     }
+
+    public void ViewPermition(View view) {
+        Intent i = new Intent(this, PermitionsRecived.class);
+        Parcelable parcelable= Parcels.wrap(student);
+        i.putExtra("student", parcelable);
+        startActivity(i);
+
+    }
 }

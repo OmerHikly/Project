@@ -46,6 +46,9 @@ public class AddStudentsToGroup extends AppCompatActivity {
     ArrayList<String> Demo = new ArrayList<>();//העתק של  options
     ArrayList<String> Choosen = new ArrayList<>();//רשימת התלמידים שנבחרו להיווסף לקבוצה
 
+    ArrayList<String> ExistPhones = new ArrayList<>();//רשימת התלמידים שנבחרו להיווסף לקבוצה
+    ArrayList<String> NewPhones = new ArrayList<>();//רשימת התלמידים שנבחרו להיווסף לקבוצה
+
 
     Teacher teacher;//עצם מסוג מורה
     Student student;//עצם מסוג תלמיד
@@ -74,6 +77,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
         Intent gi=getIntent();
         GroupName=gi.getStringExtra("name");
         Students=gi.getStringArrayListExtra("Stu");
+        ExistPhones=gi.getStringArrayListExtra("Ex");
         Stu=Students.toString();
 
         school=teacher.getSchool();//השמת ערכים בתכונות של המורה
@@ -146,14 +150,15 @@ public class AddStudentsToGroup extends AppCompatActivity {
 
 
     public void Add(View view) {//הוספה של מי שנבחר לקבוצה החדשה ועדכון בסיס הנתונים
-        String ChoosensStudents=Choosen.toString();
+        String ChoosensStudents=NewPhones.toString();
         ChoosensStudents=ChoosensStudents.substring(1,ChoosensStudents.length()-1);
         //שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
-        String ExsistStudents=Students.toString();
+        String ExsistStudents=ExistPhones.toString();
         ExsistStudents=ExsistStudents.substring(1,ExsistStudents.length()-1);
         //שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
         linearLayout.removeAllViews();
         Students.addAll(Choosen);
+        NewPhones.clear();
         Choosen.clear();
         String UpdatedGroup=ExsistStudents+" "+ChoosensStudents;
         refGroup.setValue(UpdatedGroup);
@@ -219,6 +224,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                     Adapt();
                     if(Shown_Students.getText() == ""){
                         Choosen.add(str);
+                        NewPhones.add(Splitted[4]);
                         final TextView textView = new TextView(AddStudentsToGroup.this);
                         textView.setText(Splitted[1]+" "+Splitted[2]+", ");
                         linearLayout.addView(textView);
@@ -226,6 +232,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Choosen.remove(position);
+                                NewPhones.remove(position);
                                 linearLayout.removeView(textView);
                                 Options.add(str);
                                 Demo.add(str);
@@ -239,6 +246,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                     }
                     else{
                         Choosen.add(str);
+                        NewPhones.add(Splitted[4]);
                         final TextView textView = new TextView(AddStudentsToGroup.this);
                         textView.setText(Splitted[1]+Splitted[2]+" ");
                         linearLayout.addView(textView);
@@ -246,6 +254,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Choosen.remove(position);
+                                NewPhones.remove(position);
                                 linearLayout.removeView(textView);
                                 Options.add(str);
                                 Demo.add(str);

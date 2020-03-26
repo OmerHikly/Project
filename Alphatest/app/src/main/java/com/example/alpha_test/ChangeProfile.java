@@ -62,7 +62,7 @@ public class ChangeProfile extends AppCompatActivity {
     public static final int PERMISSION_CODE=1001;
 
     public static StorageReference Ref;
-    public  static StorageReference RefP;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -4,9 +4,9 @@
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-    import android.text.Editable;
-    import android.text.TextWatcher;
-    import android.view.LayoutInflater;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,14 +49,12 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
         Student student;
         String school, phone, cls;
 
-        String ex,re;
+        String ex, re;
 
         UsersNgroupsAdapter adapter;
 
-        ArrayList<String> Students = new ArrayList<>();//רשימה של תלמידים שתכלול את כל התלמידים שאושרו על ידי המורים שלהם ואפשר להוסיף אותם לקבוצה
-        ArrayList<String> Groups = new ArrayList<>();//רשימה של קבוצות שיש לאותו מורה ולהן הוא רוצה לשלוח את האישור יציאה
         ArrayList<String> Mixed = new ArrayList<>();//רשימה של קבוצות שיש לאותו מורה ולהן הוא רוצה לשלוח את האישור יציאה
-
+        ArrayList<String> PhoneList = new ArrayList<>();//רשימה של קבוצות שיש לאותו מורה ולהן הוא רוצה לשלוח את האישור יציאה
 
         ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
         ArrayList<String> Choosen = new ArrayList<>();//רשימה של תלמידים שנבחרו להצטרף לקבוצה שעומד להיווצר
@@ -64,7 +63,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
         Boolean f = false;
 
-        String fileName,cause,notes;
+        String fileName, cause, notes;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +74,10 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             Cause = findViewById(R.id.Cause);
             Notes = findViewById(R.id.Notes);
             ShowOptions = findViewById(R.id.showOptions);
-            Shown=findViewById(R.id.choosen);
+            Shown = findViewById(R.id.choosen);
 
-            firstH=findViewById(R.id.exit);
-            secondH=findViewById(R.id.enter);
+            firstH = findViewById(R.id.exit);
+            secondH = findViewById(R.id.enter);
 
             Parcelable parcelable = getIntent().getParcelableExtra("teacher");
             teacher = Parcels.unwrap(parcelable);
@@ -103,13 +102,10 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (adapter != null) {
-                        adapter.clear();//כשהטקסט משתנה המתאם ישתנה בהתאם לStrings שיכילו את מה שהוקלד
-                    }
+                    adapter.clear();//כשהטקסט משתנה המתאם ישתנה בהתאם לStrings שיכילו את מה שהוקלד
                     adapter.getFilter().filter(s);
 
                 }
-
 
 
                 @Override
@@ -120,14 +116,12 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
             });
 
-            Mixed.clear();
-            Demo.clear();
-
 
             refSchool.child(school).child("Student").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Students.clear();
+
+                    Mixed.clear();
                     for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                         if (dsp.child("activated").getValue() != f) {
                             student = new Student();
@@ -137,11 +131,11 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                             String secondname = student.getSecondName();
                             String uphone = student.getPhone();
                             String x = "תלמיד: " + name + " " + secondname + " " + id + " " + uphone;
-                            Students.add(x);
+                            Mixed.add(x);
 
                         }
                     }
-                    Mixed.addAll(Students);
+
                 }
 
                 @Override
@@ -154,17 +148,19 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             refGroups.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Groups.clear();
                     for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                            String GroupName=dsp.getKey();
-                            String x = "קבוצה: " +GroupName;
-                            Groups.add(x);
+                        String GroupName = dsp.getKey();
+                        String x = "קבוצה: " + GroupName;
+                        Mixed.add(x);
 
 
                     }
-                    Mixed.addAll(Groups);
+
+
+                    Demo.clear();
                     Demo.addAll(Mixed);
                     Adapt(Mixed);//פעולה שיוצרת מתאם עבור ה-arraylist ומקשרת בינו לבין ה-listView
+
                 }
 
 
@@ -173,7 +169,6 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
                 }
             });
-
 
 
         }
@@ -217,7 +212,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
         }
 
 
-        public  class UsersNgroupsAdapter extends ArrayAdapter {//ה-class עבור המתאם המעוצב שיצרתי
+        public class UsersNgroupsAdapter extends ArrayAdapter {//ה-class עבור המתאם המעוצב שיצרתי
             private int layout;
 
             public UsersNgroupsAdapter(@NonNull Context context, int resource, @NonNull List objects) {
@@ -236,12 +231,12 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             @NonNull
             @Override
             public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-               ViewHolder mainViewholder = null;
+                ViewHolder mainViewholder = null;
                 if (convertView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getContext());
                     convertView = inflater.inflate(layout, parent, false);
                     ViewHolder viewHolder = new ViewHolder();
-                    viewHolder.approve=convertView.findViewById(R.id.approve);
+                    viewHolder.approve = convertView.findViewById(R.id.approve);
                     viewHolder.details = convertView.findViewById(R.id.detail);
                     viewHolder.remove = convertView.findViewById(R.id.remove);
                     convertView.setTag(viewHolder);
@@ -250,34 +245,45 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                 }
 
                 mainViewholder = (ViewHolder) convertView.getTag();
-                final String str = Mixed.get(position);
-                final String[] Splitted = str.split(" ");
-                String text="";
-                if(Splitted[0].equals("תלמיד:")) {
+                String str = Mixed.get(position);
+                String[] Splitted = str.split(" ");
+                String text = "";
+                //אם מדובר בתלמיד יש להציג רק את ה-4 הסטרינגים הראשונים ללא הטלפון
+                if (Splitted[0].equals("תלמיד:")) {
                     text = Splitted[0] + " " + Splitted[1] + " " + Splitted[2] + Splitted[3];
+                } else {
+                    //כשמדובר בקבוצה יש להציג את כל שם הקבוצה
+                    for (int i = 0; i < Splitted.length; i++) {
+                        text = text + " " + Splitted[i];
+                    }
+
                 }
-                else{
-                    for(int i=0;i<Splitted.length;i++)
-                    text=text+" "+ Splitted[i];
-                }
+                //הצג טקסט
                 mainViewholder.details.setText(text);
-                ViewGroup.LayoutParams params= mainViewholder.details.getLayoutParams();
-                params.height= ViewGroup.LayoutParams.MATCH_PARENT;
+                ViewGroup.LayoutParams params = mainViewholder.details.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                //התאם את גודל התא לכתוב
 
                 mainViewholder.remove.setVisibility(View.GONE);
                 mainViewholder.approve.setText("הוסף לשליחה");
                 mainViewholder.approve.setOnClickListener(new View.OnClickListener() {
-                    @Override//כאשר לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
+                    @Override
+//כאשר לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                     public void onClick(View v) {
+                        final String str = Mixed.get(position);
+                        String[] Splitted = str.split(" ");
 
+
+                        //להסיר מה-Listview את השורה שנבחרה
                         Mixed.remove(position);
                         notifyDataSetChanged();
-                        for(int i=0;i<Demo.size();i++){
-                            if(Demo.get(i).contains(str)){
+                        for (int i = 0; i < Demo.size(); i++) {
+                            if (Demo.get(i).contains(str)) {
                                 Demo.remove(i);
                             }
                         }
-                        if(Shown.getText() == ""){
+
+                        if (Shown.getText() == "") {
                             Choosen.add(str);
                             final TextView textView = new TextView(Send_Permition.this);
                             textView.setText(Splitted[1]+" "+Splitted[2]+", ");
@@ -296,20 +302,17 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                             });
 
 
-
-                        }
-                        else{// לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
+                        } else {// לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                             Choosen.add(str);
                             final TextView textView = new TextView(Send_Permition.this);
-                            if(Splitted[0].equals("תלמיד:")) {
-                                textView.setText(Splitted[1] + " " + Splitted[2] + ", ");
-                            }
-                            else {
-                                String text="";
-                                for (int i = 1; i < Splitted.length; i++){
+                            if (Splitted[0].equals("תלמיד:")) {
+                                textView.setText(Splitted[1]+" "+Splitted[2]+", ");
+                            } else {
+                                String text = "";
+                                for (int i = 1; i < Splitted.length; i++) {
                                     text = text + " " + Splitted[i];
-                            }
-                                textView.setText(text+", ");
+                                }
+                                textView.setText(text + " (קבוצה), ");
                             }
                             linearLayout.addView(textView);
                             textView.setOnClickListener(new View.OnClickListener() {
@@ -319,9 +322,8 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                                     Mixed.add(str);
                                     notifyDataSetChanged();
                                     Demo.add(str);
-
-                                    for (int i=0;i<Choosen.size();i++){
-                                        if(Mixed.contains(Choosen.get(i))){
+                                    for (int i = 0; i < Choosen.size(); i++) {
+                                        if (Mixed.contains(Choosen.get(i))) {
                                             Choosen.remove(i);
                                         }
                                     }
@@ -337,10 +339,6 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                     ;
 
 
-
-
-
-
                 });
                 return convertView;//בשורה הזו הפעולה מחזירה את התצוגה החדשה שהגדרנו
 
@@ -352,17 +350,17 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             Button approve, remove;
         }
 
-        private Filter arrayfilter=new Filter() {//פעולה זו מסננת ומשאירה רק את שמות התלמידים שכוללים את רצף האותיות שנרשם בשדה הקלט
+        private Filter arrayfilter = new Filter() {//פעולה זו מסננת ומשאירה רק את שמות התלמידים שכוללים את רצף האותיות שנרשם בשדה הקלט
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 List<String> suggestions = new ArrayList<>();
 
-                if (constraint == null || constraint.length() == 0||Searcher.getText().toString().isEmpty()) {
+                if (constraint == null || constraint.length() == 0 || Searcher.getText().toString().isEmpty()) {
                     suggestions.addAll(Demo);
                 } else {
                     String filterpattern = constraint.toString().toLowerCase().trim();
-                    for (String x :Demo ) {
+                    for (String x : Demo) {
                         if (x.toLowerCase().contains(filterpattern)) {
                             suggestions.add(x);
                         }
@@ -395,31 +393,103 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 
         public void SendBarcode(View view) {
-            if(FileName.getText().toString().isEmpty()){
-                FileName.setError("נא לרשום את האישור");
-                FileName.requestFocus();
-                return;
-            }
-            else {
-                fileName = FileName.getText().toString();
-            }
-            if(Cause.getText().toString().isEmpty()){
-                Cause.setError("נא לרשום את סיבת היציאה");
-                Cause.requestFocus();
-                return;
-            }
-            else {
-                cause = Cause.getText().toString();
-            }
-            notes=Notes.getText().toString();
-            ex=firstH.getText().toString();
-            re=secondH.getText().toString();
-            firstH.setText("שעת יציאה");
-            secondH.setText("שעת חזרה");
 
+            if (Choosen.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "נא לבחור תלמידים או קבוצות לשליחה", Toast.LENGTH_SHORT).show();
+            } else {
+                if (FileName.getText().toString().isEmpty()) {
+                    FileName.setError("נא לרשום את האישור");
+                    FileName.requestFocus();
+                    return;
+                } else {
+                    fileName = FileName.getText().toString();
+                }
+                if (Cause.getText().toString().isEmpty()) {
+                    Cause.setError("נא לרשום את סיבת היציאה");
+                    Cause.requestFocus();
+                    return;
+                } else {
+                    cause = Cause.getText().toString();
+                }
+
+                notes = Notes.getText().toString();
+                ex = firstH.getText().toString();
+                re = secondH.getText().toString();
+
+
+                listUserPhone();
+
+
+
+                firstH.setText("שעת יציאה");
+                secondH.setText("שעת חזרה");
+
+                Mixed.addAll(Choosen);
+                Demo.addAll(Choosen);
+                linearLayout.removeAllViews();
+                Choosen.clear();
+                PhoneList.clear();
+                Adapt(Mixed);
+                Toast.makeText(getApplicationContext(), "ברקוד נשלח בהצלחה!", Toast.LENGTH_SHORT).show();
+
+
+            }
+        }
+
+        private void listUserPhone() {
+            PhoneList.clear();
+            for (int i = 0; i < Choosen.size(); i++) {
+                String x = Choosen.get(i);
+                final String z = x;
+
+                if (x.contains("קבוצה:")) {
+                    x = x.substring(7);
+                    final  String y=x;
+                    String Splitted[];
+                    refGroups.child(y).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.getValue() != null) {
+                                String team = dataSnapshot.getValue().toString();
+                                String Splitted[] = team.split(" ");
+                                for (int i = 0; i < Splitted.length; i++) {
+                                    String StudentD = Splitted[i];
+                                    char last = StudentD.charAt(StudentD.length() - 1);
+                                    if (last == ',') {
+                                        StudentD = StudentD.substring(0, StudentD.length() - 1);
+                                    }
+                                    if (!PhoneList.contains(StudentD)) {
+                                        PhoneList.add(StudentD);
+                                        UpdateInfo(StudentD);
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    String Splitted2[] = z.split(" ");
+                    String gphone = Splitted2[4];
+                    if (!PhoneList.contains(gphone)) {
+                        PhoneList.add(gphone);
+                        UpdateInfo(gphone);
+                    }
+                }
+
+            }
 
         }
 
-
-
+        private void UpdateInfo(String phoneSent) {
+            String dataStore = phoneSent + "; "+phone + "; "+ fileName + "; " + cause + "; " + notes + "; " + ex + "; " + re;
+            refSchool.child(school).child("Student").child(phoneSent).child("QR_Info").setValue(dataStore);
+        }
     }

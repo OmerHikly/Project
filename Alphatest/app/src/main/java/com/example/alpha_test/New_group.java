@@ -44,6 +44,8 @@ public class New_group extends AppCompatActivity {
     ArrayList<String> Students = new ArrayList<>();//רשימה של תלמידים שתכלול את כל התלמידים ששייכים לכיתה של המורה שהתחבר
     ArrayList<String> Choosen = new ArrayList<>();//רשימה של תלמידים שאושרו על ידי המורה ונוספו לכיתה שלו
     ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
+    ArrayList<String> ChoosenPhones = new ArrayList<>();//רשימה של תלמידים שאושרו על ידי המורה ונוספו לכיתה שלו
+
 
     Teacher teacher;//עצם מסוג מורה
     Student student;//עצם מסוג תלמיד
@@ -186,27 +188,7 @@ public class New_group extends AppCompatActivity {
         }
 
 
-    public void New_group(View view) {
-        if ((Choosen.size() > 1) && (Group_Name.getText().toString() != "") && (Group_Name.getText().toString() != null)) {
-            if (Group_Name.length() > 1) {
-                String groupName = Group_Name.getText().toString();
-                String NewGroup = Choosen.toString();
-                NewGroup = NewGroup.substring(1, NewGroup.length() - 1);//שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
-                refGroups.child(groupName).setValue(NewGroup);
-                Students.addAll(Choosen);
-                linearLayout.removeAllViews();
-                Choosen.clear();
-                Adapt(Students);
-                Toast.makeText(getApplicationContext(), "קבוצה נוספה בהצלחה!", Toast.LENGTH_SHORT).show();
 
-
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "נא לרשום שם ראוי לקבוצה ", Toast.LENGTH_SHORT).show();
-
-            }
-        }
-    }
 
 
 
@@ -256,6 +238,7 @@ public class New_group extends AppCompatActivity {
                         final String str = Students.get(position);
                         String[] Splitted = str.split(" ");
 
+
                         Students.remove(position);
                         notifyDataSetChanged();
                         for(int i=0;i<Demo.size();i++){
@@ -266,6 +249,7 @@ public class New_group extends AppCompatActivity {
 
                         if(Shown_Students.getText() == ""){
                             Choosen.add(str);
+                            ChoosenPhones.add(Splitted[4]);
                             final TextView textView = new TextView(com.example.alpha_test.New_group.this);
                             textView.setText(Splitted[1]+" "+Splitted[2]+", ");
                             linearLayout.addView(textView);
@@ -273,6 +257,7 @@ public class New_group extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Choosen.remove(position);
+                                    ChoosenPhones.remove(position);
                                     linearLayout.removeView(textView);
                                     Students.add(str);
                                     notifyDataSetChanged();
@@ -287,6 +272,7 @@ public class New_group extends AppCompatActivity {
                         }
                         else{// לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                             Choosen.add(str);
+                            ChoosenPhones.add(Splitted[4]);
                             final TextView textView = new TextView(com.example.alpha_test.New_group.this);
                             textView.setText(Splitted[1]+" "+Splitted[2]+", ");
                             linearLayout.addView(textView);
@@ -300,6 +286,7 @@ public class New_group extends AppCompatActivity {
                                     for (int i=0;i<Choosen.size();i++){
                                         if(Students.contains(Choosen.get(i))){
                                             Choosen.remove(i);
+                                            ChoosenPhones.remove(i);
                                         }
                                     }
 
@@ -372,6 +359,30 @@ public class New_group extends AppCompatActivity {
             students_options.setAdapter(adapter);
 
         }
+
+
+    public void New_group(View view) {
+        if ((Choosen.size() > 1) && (Group_Name.getText().toString() != "") && (Group_Name.getText().toString() != null)) {
+            if (Group_Name.length() > 1) {
+                String groupName = Group_Name.getText().toString();
+                String NewGroup = ChoosenPhones.toString();
+                NewGroup = NewGroup.substring(1, NewGroup.length() - 1);//שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
+                refGroups.child(groupName).setValue(NewGroup);
+                Students.addAll(Choosen);
+                linearLayout.removeAllViews();
+                Choosen.clear();
+                ChoosenPhones.clear();
+                Adapt(Students);
+                Toast.makeText(getApplicationContext(), "קבוצה נוספה בהצלחה!", Toast.LENGTH_SHORT).show();
+
+
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "נא לרשום שם ראוי לקבוצה ", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
 
 
 
