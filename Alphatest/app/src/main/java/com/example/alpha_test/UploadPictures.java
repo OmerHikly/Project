@@ -180,11 +180,7 @@ public class UploadPictures extends AppCompatActivity {
         startActivity(t);
     }
 
-    public void RemoveScreen(MenuItem item) {
-        Intent t = new Intent(this, AddData.class);
-        startActivity(t);
 
-    }
 
     public void ImageScreen(MenuItem item) {
         Intent t = new Intent(this, UploadPictures.class);

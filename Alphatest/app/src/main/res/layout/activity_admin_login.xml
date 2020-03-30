@@ -53,7 +53,8 @@
         android:id="@+id/leaving_system"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="יומני יציאות" />
+        android:onClick="MonitorView"
+        android:text="יומן יציאות" />
 
     <Space
         android:layout_width="match_parent"

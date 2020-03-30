@@ -3,16 +3,12 @@ package com.example.alpha_test;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Parcelable;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.alpha_test.Model.QRGeoModel;
-import com.example.alpha_test.Model.QRUrlModel;
-import com.example.alpha_test.Model.QRVcardModel;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -21,19 +17,30 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import org.parceler.Parcels;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class BarcodeScan extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView scannerView;
     private TextView tv;
 
+    Guard guard;
+    String school;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan);
 
-        scannerView=(ZXingScannerView)findViewById(R.id.scan);
-        tv=findViewById(R.id.txt_result);
+        scannerView = (ZXingScannerView) findViewById(R.id.scan);
+        tv = findViewById(R.id.txt_result);
+
+
+        Parcelable parcelable = getIntent().getParcelableExtra("guard");
+        guard = Parcels.unwrap(parcelable);
+
+        school = guard.getSchool();
 
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
@@ -46,7 +53,7 @@ public class BarcodeScan extends AppCompatActivity implements ZXingScannerView.R
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(getApplicationContext(),"The application won't work without a camera permission",Toast.LENGTH_LONG);
+                        Toast.makeText(getApplicationContext(), "The application won't work without a camera permission", Toast.LENGTH_LONG);
 
                     }
 
@@ -65,15 +72,17 @@ public class BarcodeScan extends AppCompatActivity implements ZXingScannerView.R
     }
 
 
-
     @Override
     public void handleResult(Result rawResult) {
         ProcessRawResult(rawResult.getText());
 
     }
+
     //A construction that checks which types of qr code text we get and remove their firet letters
     //Works with Vcard,Vevent,Url,,Geo and text
     private void ProcessRawResult(String text) {
+
+        /*
         if (text.startsWith("BEGIN:")) {
             String[] tokens = text.split("\n");
             QRVcardModel qrVcardModel = new QRVcardModel();
@@ -125,98 +134,36 @@ public class BarcodeScan extends AppCompatActivity implements ZXingScannerView.R
             tv.setText(qrGeoModel.getLat()+"/"+qrGeoModel.getLng());
         }
         else{
-            tv.setText(text);
-        }
+
+         */
+        Intent i = new Intent(this, BarcodeData.class);
+        i.putExtra("data", text);
+        i.putExtra("school", school);
+        startActivity(i);
+        tv.setText(text);
         scannerView.resumeCameraPreview(BarcodeScan.this);
 
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    public void AuthScreen (MenuItem item){
-        Intent t = new Intent(this, MainActivity.class);
-        startActivity(t);
-    }
-
-    public void RemoveScreen (MenuItem item){
-        Intent t = new Intent(this, AddData.class);
-        startActivity(t);
-
-    }
-
-    public void ImageScreen (MenuItem item){
-        Intent t = new Intent(this, UploadPictures.class);
-        startActivity(t);
-
-    }
-
-    public void ScanScreen (MenuItem item){
-        Intent t = new Intent(this, BarcodeScan.class);
-        startActivity(t);
-    }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

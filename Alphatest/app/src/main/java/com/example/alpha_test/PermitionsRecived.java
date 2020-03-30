@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,9 +52,15 @@ QRGEncoder qrgEncoder;
         refSchool.child(school).child("Student").child(phone).child("QR_Info").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null){
-                    String d=dataSnapshot.getValue().toString();
+                if(dataSnapshot.getValue()!=null) {
+                    String d = dataSnapshot.getValue().toString();
+                    String Splitted[] = d.split(";");
+                    if (phone.equals(Splitted[0])) {
                     Continue(d);
+                }
+                    else{
+                        Toast.makeText(getApplicationContext(),"אין גישה לקובץ ברקוד זה", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 

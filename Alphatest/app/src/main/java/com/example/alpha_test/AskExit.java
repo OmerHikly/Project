@@ -1,7 +1,9 @@
 package com.example.alpha_test;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -41,7 +43,9 @@ import org.parceler.Parcels;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
@@ -53,30 +57,38 @@ public class AskExit extends AppCompatActivity {
     Button firstH;
     Button secondH;
 
+    AlertDialog.Builder adb;
+
+
     Teacher teacher;
     Student student;
-    String school, phone, cls;
+    String school, Phone, cls;
+
 
     String ex, re;
     String fileName, cause, notes;
+    String permit = "no";
     String to;
+    String TiMe;
 
     ArrayList<String> Teachers = new ArrayList<>();//רשימה של תלמידים שתכלול את כל התלמידים שאושרו על ידי המורים שלהם ואפשר להוסיף אותם לקבוצה
     ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
 
     Boolean f = false;
+    Boolean keepGoing=true;
 
     TeachersAdapter adapter;
 
     public Uri imguri;
 
-    public static final int IMAGE_PICK_CODE=1000;
-    public static final int PERMISSION_CODE=1001;
+    public static final int IMAGE_PICK_CODE = 1000;
+    public static final int PERMISSION_CODE = 1001;
 
     private StorageTask<UploadTask.TaskSnapshot> uploadTask;
 
     public static StorageReference Ref;
     StorageReference mStorageRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,13 +107,13 @@ public class AskExit extends AppCompatActivity {
         student = Parcels.unwrap(parcelable);
 
         school = student.getSchool();
-        phone = student.getPhone();
+        Phone = student.getPhone();
 
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        long time=System.currentTimeMillis();
-        Ref=mStorageRef.child("ParentsPermit").child(time+phone);
+        TiMe = String.valueOf(System.currentTimeMillis());
+        Ref = mStorageRef.child("ParentsPermit").child(TiMe + Phone);
 
         setList();
 
@@ -141,11 +153,11 @@ public class AskExit extends AppCompatActivity {
                     if (dsp.child("activated").getValue() != f) {
                         teacher = new Teacher();
                         teacher = dsp.getValue(Teacher.class);
-                        String phone=teacher.getPhone();
+                        String phone = teacher.getPhone();
                         String name = teacher.getName();
                         String cls = teacher.getCls();
                         String secondname = teacher.getSecondName();
-                        String x = "מורה: " + name + " " + secondname + " " + cls+" "+ phone;
+                        String x = "מורה: " + name + " " + secondname + " " + cls + " " + phone;
                         Teachers.add(x);
 
                     }
@@ -175,17 +187,14 @@ public class AskExit extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case PERMISSION_CODE:{
-                if (grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickFromGallery();
-                }
-                else{
-                    Toast.makeText(this,"Permission denied",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -210,18 +219,17 @@ public class AskExit extends AppCompatActivity {
     }
 
 
-
     public void upload() {//This method doing the service action of uploading the file.
-        Toast.makeText(this,"We are uploading your file...",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "We are uploading your file...", Toast.LENGTH_SHORT).show();
         //the line above keeps the extension of the file and name it with his millis since the the UNIX epoch: (1970-01-01 00:00:00 UTC) a date
         // That makes sure that the first file that was uploaded will always remain the first and won't mix by the firebase order
-        uploadTask=Ref.putFile(imguri)
+        uploadTask = Ref.putFile(imguri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {//If the reference is right do:
                         // Get a URL to the uploaded content
                         Toast.makeText(getApplicationContext(), "Image uploaded successfully", Toast.LENGTH_SHORT).show();
-
+                        permit = Ref.toString();
 
                     }
 
@@ -271,20 +279,21 @@ public class AskExit extends AppCompatActivity {
             final String[] Splitted = str.split(" ");
 
             String text = "";
-            text = Splitted[0]+" "+Splitted[1]+" "+Splitted[2]+" "+Splitted[3] ;
+            text = Splitted[0] + " " + Splitted[1] + " " + Splitted[2] + " " + Splitted[3];
 
 
             mainViewholder.details.setText(text);
-            ViewGroup.LayoutParams params= mainViewholder.details.getLayoutParams();
-            params.height= ViewGroup.LayoutParams.MATCH_PARENT;
+            ViewGroup.LayoutParams params = mainViewholder.details.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
 
             mainViewholder.remove.setVisibility(View.GONE);
             mainViewholder.approve.setText("בחר מורה");
             mainViewholder.approve.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Searcher.setText(str);
-                    to=Splitted[4];
+                    Searcher.setText(Splitted[0] + " " + Splitted[1] + " " + Splitted[2] + " " + Splitted[3]);
+                    to = Splitted[4];
+
                 }
             });
             return convertView;
@@ -292,46 +301,46 @@ public class AskExit extends AppCompatActivity {
         }
     }
 
-        private Filter arrayfilter=new Filter() {//פעולה זו מסננת ומשאירה רק את שמות התלמידים שכוללים את רצף האותיות שנרשם בשדה הקלט
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
-                List<String> suggestions = new ArrayList<>();
+    private Filter arrayfilter = new Filter() {//פעולה זו מסננת ומשאירה רק את שמות התלמידים שכוללים את רצף האותיות שנרשם בשדה הקלט
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            List<String> suggestions = new ArrayList<>();
 
-                if (constraint == null || constraint.length() == 0||Searcher.getText().toString().isEmpty()) {
-                    suggestions.addAll(Demo);
-                } else {
-                    String filterpattern = constraint.toString().toLowerCase().trim();
-                    for (String x :Demo ) {
-                        if (x.toLowerCase().contains(filterpattern)) {
-                            suggestions.add(x);
-                        }
+            if (constraint == null || constraint.length() == 0 || Searcher.getText().toString().isEmpty()) {
+                suggestions.addAll(Demo);
+            } else {
+                String filterpattern = constraint.toString().toLowerCase().trim();
+                for (String x : Demo) {
+                    if (x.toLowerCase().contains(filterpattern)) {
+                        suggestions.add(x);
                     }
-
                 }
-                results.values = suggestions;
-                results.count = suggestions.size();
-                return results;
+
             }
+            results.values = suggestions;
+            results.count = suggestions.size();
+            return results;
+        }
 
 
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {//פעולה זו מעדכנת את המתאם הספציפי עבור המסך הזה עם הערכים שמעניקה הפעולה שמעליה
-                adapter.clear();
-                adapter.addAll((List) results.values);
-                adapter.notifyDataSetChanged();
-            }
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {//פעולה זו מעדכנת את המתאם הספציפי עבור המסך הזה עם הערכים שמעניקה הפעולה שמעליה
+            adapter.clear();
+            adapter.addAll((List) results.values);
+            adapter.notifyDataSetChanged();
+        }
 
-            @Override
-            public CharSequence convertResultToString(Object resultValue) {// פעולה שהופכת את העצם שהתקבל מהפעולה הראשונה של הסינון לעצם מסוג String
-                return ((String) resultValue);
-            }
-        };
+        @Override
+        public CharSequence convertResultToString(Object resultValue) {// פעולה שהופכת את העצם שהתקבל מהפעולה הראשונה של הסינון לעצם מסוג String
+            return ((String) resultValue);
+        }
+    };
 
-        public class ViewHolder {//רכיבי התצוגה שיועדו לlistview
-                TextView details;
-                Button approve, remove;
-            }
+    public class ViewHolder {//רכיבי התצוגה שיועדו לlistview
+        TextView details;
+        Button approve, remove;
+    }
 
 
     public void pickHourE(View view) {
@@ -371,29 +380,99 @@ public class AskExit extends AppCompatActivity {
     }
 
     public void RequestBarcode(View view) {
-        if(FileName.getText().toString().isEmpty()){
+        String t= Searcher.getText().toString()+ " " +to;
+        boolean c=false;
+
+        for(int i=0;i<Teachers.size();i++){
+            if(Teachers.get(i).equals(t)){
+                c=true;
+                break;
+            }
+        }
+
+        if(!c){
+            Searcher.setError("נא לבחור מורה");
+            Searcher.requestFocus();
+            return;
+        }
+
+
+        if (FileName.getText().toString().isEmpty()) {
             FileName.setError("נא לרשום את האישור");
             FileName.requestFocus();
             return;
-        }
-        else {
+        } else {
             fileName = FileName.getText().toString();
         }
-        if(Cause.getText().toString().isEmpty()){
+        if (Cause.getText().toString().isEmpty()) {
             Cause.setError("נא לרשום את סיבת היציאה");
             Cause.requestFocus();
             return;
-        }
-        else {
+        } else {
             cause = Cause.getText().toString();
         }
+//
+        if (firstH.getText().toString().equals("שעת יציאה")) {
+            Toast.makeText(getApplicationContext(), "חובה למלא שעת יציאה", Toast.LENGTH_LONG).show();
+        } else {
+            if (secondH.getText().toString().equals("שעת חזרה")) {
+                keepGoing = false;
+                adb=new AlertDialog.Builder(this);
+                adb.setTitle("שים לב!");
+                adb.setMessage("לא סימנת שעת חזרה ומשמעות הדבר שאינך חוזר לבית הספר");
+                adb.setPositiveButton("אני לא מתכוון לחזור", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        keepGoing = true;
+                    }
+                });
+                adb.setNegativeButton("אופס שכחתי!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        keepGoing = false;
+                    }
+                });
+                AlertDialog ad = adb.create();
+                ad.show();
+            }
 
-        notes=Notes.getText().toString();
-        ex=firstH.getText().toString();
-        re=secondH.getText().toString();
-        firstH.setText("שעת יציאה");
-        secondH.setText("שעת חזרה");
+            if (keepGoing) {
+                Toast.makeText(getApplicationContext(),"keep going",Toast.LENGTH_SHORT).show();
+
+                notes = Notes.getText().toString();
+                ex = firstH.getText().toString();
+                re = secondH.getText().toString();
+                firstH.setText("שעת יציאה");
+                secondH.setText("שעת חזרה");
+                String FullName = student.getName() + " " + student.getSecondName();
+                cls = student.getCls();
+                String Id = student.getId();
+
+                Calendar rightNow = Calendar.getInstance();
+                int currentHour = rightNow.get(Calendar.HOUR_OF_DAY);
+                int minutes = rightNow.get(Calendar.MINUTE);
+
+                String time = currentHour + ":" + minutes;
+
+                String myDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
 
 
+                String Req = FullName + "; " + cls + "; " + time + "; " + myDate + "; " + Phone + "; " + Id + "; " + cause + "; " + notes + "; " + ex + "; " + re;
+
+
+                refSchool.child(school).child("Teacher").child(to).child("Requests").child(Phone).setValue(Req);
+
+                Toast.makeText(getApplicationContext(), "בקשתך נשלחה למורה בהצלחה", Toast.LENGTH_SHORT).show();
+                Searcher.setText("");
+                Notes.setText("");
+                Cause.setText("");
+                FileName.setText("");
+
+
+
+
+
+            }
+        }
     }
 }

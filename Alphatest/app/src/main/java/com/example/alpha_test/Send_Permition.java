@@ -1,8 +1,10 @@
     package com.example.alpha_test;
 
+    import android.app.AlertDialog;
     import android.app.TimePickerDialog;
 import android.content.Context;
-import android.os.Bundle;
+    import android.content.DialogInterface;
+    import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,6 +39,8 @@ import java.util.List;
 
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
+
+
     public class Send_Permition extends AppCompatActivity {
         EditText Searcher, FileName, Cause, Notes;
         ListView ShowOptions;
@@ -47,9 +51,12 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
         Teacher teacher;
         Student student;
-        String school, phone, cls;
+        String school, phone, cls,fullName;
 
         String ex, re;
+
+        AlertDialog.Builder adb;
+        boolean keepGoing=true;
 
         UsersNgroupsAdapter adapter;
 
@@ -412,30 +419,54 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                     cause = Cause.getText().toString();
                 }
 
-                notes = Notes.getText().toString();
-                ex = firstH.getText().toString();
-                re = secondH.getText().toString();
+                if (firstH.getText().toString().equals("שעת יציאה")) {
+                    Toast.makeText(getApplicationContext(), "חובה למלא שעת יציאה", Toast.LENGTH_LONG).show();
+                } else {
+                    if (secondH.getText().toString().equals("שעת חזרה")) {
+                        keepGoing = false;
+                        adb = new AlertDialog.Builder(this);
+                        adb.setTitle("שים לב!");
+                        adb.setMessage("לא סימנת שעת חזרה ומשמעות הדבר שאינך חוזר לבית הספר");
+                        adb.setPositiveButton("אני לא מתכוון לחזור", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                keepGoing = true;
+                            }
+                        });
+                        adb.setNegativeButton("אופס שכחתי!", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                keepGoing = false;
+                            }
+                        });
+                        AlertDialog ad = adb.create();
+                        ad.show();
+                    }
 
 
-                listUserPhone();
+                    notes = Notes.getText().toString();
+                    ex = firstH.getText().toString();
+                    re = secondH.getText().toString();
+                    fullName = teacher.getName() + " " + teacher.getSecondName();
+
+                    listUserPhone();
 
 
+                    firstH.setText("שעת יציאה");
+                    secondH.setText("שעת חזרה");
 
-                firstH.setText("שעת יציאה");
-                secondH.setText("שעת חזרה");
-
-                Mixed.addAll(Choosen);
-                Demo.addAll(Choosen);
-                linearLayout.removeAllViews();
-                Choosen.clear();
-                PhoneList.clear();
-                Adapt(Mixed);
-                Toast.makeText(getApplicationContext(), "ברקוד נשלח בהצלחה!", Toast.LENGTH_SHORT).show();
+                    Mixed.addAll(Choosen);
+                    Demo.addAll(Choosen);
+                    linearLayout.removeAllViews();
+                    Choosen.clear();
+                    PhoneList.clear();
+                    Adapt(Mixed);
+                    Toast.makeText(getApplicationContext(), "ברקוד נשלח בהצלחה!", Toast.LENGTH_SHORT).show();
 
 
+                }
             }
         }
-
         private void listUserPhone() {
             PhoneList.clear();
             for (int i = 0; i < Choosen.size(); i++) {
@@ -488,8 +519,38 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
         }
 
-        private void UpdateInfo(String phoneSent) {
-            String dataStore = phoneSent + "; "+phone + "; "+ fileName + "; " + cause + "; " + notes + "; " + ex + "; " + re;
+        private void UpdateInfo(final String phoneSent) {
+            refSchool.child(school).child("Student").child(phoneSent).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Student thisTudent=dataSnapshot.getValue(Student.class);
+                    String Id=thisTudent.getId();
+                    con(Id,phoneSent);
+
+
+
+                }
+
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+            });
+
+
+
+        }
+
+        private void con(String id, String phoneSent) {
+            String dataStore = phoneSent + "; "+fullName + "; " + cause + "; " + notes + "; " + id+"; "+ex + "; " + re;
             refSchool.child(school).child("Student").child(phoneSent).child("QR_Info").setValue(dataStore);
+            FileName.setText("");
+            Cause.setText("");
+            Notes.setText("");
+
+
         }
     }

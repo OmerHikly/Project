@@ -57,4 +57,11 @@ public class TeacherLogin extends AppCompatActivity {
         i.putExtra("teacher", parcelable);
         startActivity(i);
     }
+
+    public void OpenRequests(View view) {
+        Intent i=new Intent(this,Requests.class);
+        Parcelable parcelable= Parcels.wrap(teacher);
+        i.putExtra("teacher", parcelable);
+        startActivity(i);
+    }
 }

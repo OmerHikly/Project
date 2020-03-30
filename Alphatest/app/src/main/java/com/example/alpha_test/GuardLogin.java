@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,20 @@ public class GuardLogin extends AppCompatActivity {
         i.putExtra("type",2);
         Parcelable parcelable= Parcels.wrap(guard);
         i.putExtra("guard", parcelable);
+        startActivity(i);
+    }
+
+    public void BarcodeScan(View view) {
+        Intent i=new Intent(this,BarcodeScan.class);
+        Parcelable parcelable= Parcels.wrap(guard);
+        i.putExtra("guard", parcelable);
+        startActivity(i);
+    }
+
+    public void Monitor(View view) {
+        Intent i=new Intent(this,MonitorScreen.class);
+        Parcelable parcelable= Parcels.wrap(guard);
+        i.putExtra("school", guard.getSchool());
         startActivity(i);
     }
 }

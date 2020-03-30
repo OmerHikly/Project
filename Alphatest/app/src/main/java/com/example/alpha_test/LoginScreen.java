@@ -426,13 +426,4 @@ public class LoginScreen extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
 }

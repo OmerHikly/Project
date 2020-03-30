@@ -61,4 +61,10 @@ public class AdminLogin extends AppCompatActivity {
         i.putExtra("admin", parcelable);
         startActivity(i);
     }
+
+    public void MonitorView(View view) {
+        Intent i = new Intent(this, MonitorScreen.class);
+        i.putExtra("school",admin.getSchool());
+        startActivity(i);
+    }
 }

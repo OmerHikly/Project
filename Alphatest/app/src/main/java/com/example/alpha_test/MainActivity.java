@@ -3,8 +3,6 @@ package com.example.alpha_test;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -651,35 +649,6 @@ public class MainActivity extends AppCompatActivity {
     //Activities
 
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    public void AuthScreen(MenuItem item) {
-        Intent t = new Intent(this, MainActivity.class);
-        startActivity(t);
-    }
-
-    public void RemoveScreen(MenuItem item) {
-        Intent t = new Intent(this, AddData.class);
-        startActivity(t);
-
-    }
-
-    public void ImageScreen(MenuItem item) {
-        Intent t = new Intent(this, UploadPictures.class);
-        startActivity(t);
-
-    }
-
-    public void ScanScreen(MenuItem item) {
-        Intent t = new Intent(this, BarcodeScan.class);
-        startActivity(t);
-    }
 
 
 
