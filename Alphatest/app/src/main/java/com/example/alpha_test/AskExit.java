@@ -1,6 +1,7 @@
 package com.example.alpha_test;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.LinearLayout;
@@ -56,6 +58,7 @@ public class AskExit extends AppCompatActivity {
     LinearLayout linearLayout;
     Button firstH;
     Button secondH;
+    Button DaTe;
 
     AlertDialog.Builder adb;
 
@@ -70,6 +73,10 @@ public class AskExit extends AppCompatActivity {
     String permit = "no";
     String to;
     String TiMe;
+
+    int UpdatedYear;
+    int UpdatedMonth;
+    int UpdatedDate;
 
     ArrayList<String> Teachers = new ArrayList<>();//רשימה של תלמידים שתכלול את כל התלמידים שאושרו על ידי המורים שלהם ואפשר להוסיף אותם לקבוצה
     ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
@@ -89,6 +96,14 @@ public class AskExit extends AppCompatActivity {
     public static StorageReference Ref;
     StorageReference mStorageRef;
 
+    Calendar calendar=Calendar.getInstance();
+    int Year=calendar.get(Calendar.YEAR);
+    int Month=calendar.get(Calendar.MONTH);
+    int Date=calendar.get(Calendar.DATE);
+    String Dol=Date+"/"+Month+"/"+Year;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +114,8 @@ public class AskExit extends AppCompatActivity {
         Notes = findViewById(R.id.Notes);
         ShowOptions = findViewById(R.id.showOptions);
         Shown = findViewById(R.id.choosen);
+
+        DaTe=findViewById(R.id.datesetter);
 
         firstH = findViewById(R.id.exit);
         secondH = findViewById(R.id.enter);
@@ -112,8 +129,7 @@ public class AskExit extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        TiMe = String.valueOf(System.currentTimeMillis());
-        Ref = mStorageRef.child("ParentsPermit").child(TiMe + Phone);
+
 
         setList();
 
@@ -183,6 +199,8 @@ public class AskExit extends AppCompatActivity {
     }
 
     public void ParentsApproval(View view) {
+        TiMe = String.valueOf(System.currentTimeMillis());
+        Ref = mStorageRef.child("ParentsPermit").child(TiMe);
         pickFromGallery();
     }
 
@@ -241,6 +259,28 @@ public class AskExit extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    public void getDate(View view) {
+        DatePickerDialog datePickerDialog=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int date) {
+                String dataString= date+"/"+month+"/"+year;
+                if(((year<Year) ||(year==Year)&&(month<Month)||((year==Year)&&(month==Month)&&(date<Date)))) {
+                    Toast.makeText(getApplicationContext(), "נא לבחור תאריך עתידי", Toast.LENGTH_LONG).show();
+                    DaTe.requestFocus();
+                    return;
+                }
+                else{
+                    DaTe.setText(dataString);
+                    Dol=dataString;
+                    UpdatedYear=year;
+                    UpdatedMonth=month;
+                    UpdatedDate=date;
+                }
+            }
+        },Year,Month,Date);
+        datePickerDialog.show();
     }
 
 
@@ -457,7 +497,7 @@ public class AskExit extends AppCompatActivity {
                 String myDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
 
 
-                String Req = FullName + "; " + cls + "; " + time + "; " + myDate + "; " + Phone + "; " + Id + "; " + cause + "; " + notes + "; " + ex + "; " + re;
+                String Req = FullName + "; " + cls + "; " + time + "; " + myDate + "; " + Phone + "; " + Id + "; " + cause + "; " + notes + "; " + ex + "; " + re+ "; "+TiMe+"; " +Dol;
 
 
                 refSchool.child(school).child("Teacher").child(to).child("Requests").child(Phone).setValue(Req);
@@ -467,6 +507,8 @@ public class AskExit extends AppCompatActivity {
                 Notes.setText("");
                 Cause.setText("");
                 FileName.setText("");
+
+
 
 
 

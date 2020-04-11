@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -55,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     EditText Vpass;
     AutoCompleteTextView School;
 
+    ArrayList<String> Schools = new ArrayList<>();//רשימה של בתי ספר שיש ב-firebase
+
+
 
     Spinner spinc;
     Spinner spinn;
@@ -66,11 +68,9 @@ public class MainActivity extends AppCompatActivity {
     boolean IfAdmin = false; //משתנה שבודק האם המשתמש שנרשם נרשם כאדמין
     boolean IfGuard = false; //משתנה שבודק האם המשתמש שנרשם נרשם כשומר
 
-    ArrayList<String> arrayList=new ArrayList<String>();// מכיל את רשימת בתי הספר לבחירה של המשתמש
 
 
     DatabaseReference databaseReference;//אזכור לdatabase- יצביע על השורש של העץ בבבסיס הנתונים
-    String[] Schools;//מערך שיכיל את בתי הספר
 
 
     @Override
@@ -137,16 +137,13 @@ public class MainActivity extends AppCompatActivity {
         refSchool.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int count = 0;
-                int index = 0;
+                Schools.clear();
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {//checks how many main children there are in the firebase(Schools number)
-                    count++;
+                    String st =dsp.getKey();
+                    Schools.add(st);
+
                 }
-                Schools = new String[count];
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Schools[index] = dsp.getKey().toString();
-                    index++;
-                }
+
 
                 Adapt(Schools);//This method sets the adpater between the array we just created and the "edit text" of the school.
             }
@@ -163,8 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void Adapt(String[] array) {//מקשר בין המתאם ל-listview
-        arrayList.addAll(Arrays.asList(Schools));
+    private void Adapt( ArrayList<String> arrayList) {//מקשר בין המתאם ל-listview
         SchoolAdapter adapter=new SchoolAdapter(this, arrayList);
         School.setAdapter(adapter);
 

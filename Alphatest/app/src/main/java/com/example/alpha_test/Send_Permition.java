@@ -1,10 +1,11 @@
     package com.example.alpha_test;
 
     import android.app.AlertDialog;
-    import android.app.TimePickerDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
-    import android.content.DialogInterface;
-    import android.os.Bundle;
+import android.content.DialogInterface;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.LinearLayout;
@@ -32,9 +34,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.alpha_test.FirebaseHelper.refSchool;
@@ -48,15 +52,16 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
         LinearLayout linearLayout;
         Button firstH;
         Button secondH;
+        Button DaTe;
 
         Teacher teacher;
         Student student;
-        String school, phone, cls,fullName;
+        String school, phone, cls, fullName;
 
         String ex, re;
 
         AlertDialog.Builder adb;
-        boolean keepGoing=true;
+        boolean keepGoing = true;
 
         UsersNgroupsAdapter adapter;
 
@@ -67,11 +72,23 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
         ArrayList<String> Choosen = new ArrayList<>();//רשימה של תלמידים שנבחרו להצטרף לקבוצה שעומד להיווצר
 
         DatabaseReference refGroups;//רפרנס לכתובת בdatabase שתחתיה אפשר להוסיף קבוצות
+        DatabaseReference refBarcode;
 
         Boolean f = false;
 
         String fileName, cause, notes;
 
+        long millis;
+
+
+        Calendar calendar=Calendar.getInstance();
+        int Year=calendar.get(Calendar.YEAR);
+        int Month=calendar.get(Calendar.MONTH);
+        int Date=calendar.get(Calendar.DATE);
+
+        int UpdatedYear;
+        int UpdatedMonth;
+        int UpdatedDate;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -85,6 +102,8 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
             firstH = findViewById(R.id.exit);
             secondH = findViewById(R.id.enter);
+
+            DaTe=findViewById(R.id.datesetter);
 
             Parcelable parcelable = getIntent().getParcelableExtra("teacher");
             teacher = Parcels.unwrap(parcelable);
@@ -109,9 +128,10 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    adapter.clear();//כשהטקסט משתנה המתאם ישתנה בהתאם לStrings שיכילו את מה שהוקלד
+                  if(adapter!=null) {
+                      adapter.clear();//כשהטקסט משתנה המתאם ישתנה בהתאם לStrings שיכילו את מה שהוקלד
+                  }
                     adapter.getFilter().filter(s);
-
                 }
 
 
@@ -124,7 +144,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             });
 
 
-            refSchool.child(school).child("Student").addValueEventListener(new ValueEventListener() {
+            refSchool.child(school).child("Student").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -180,18 +200,52 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
         }
 
-        public void pickHourE(View view) {
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        public void pickHourE(View view){
             Calendar mcurrentTime = Calendar.getInstance();
-            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-            int minute = mcurrentTime.get(Calendar.MINUTE);
+            final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            final int minute = mcurrentTime.get(Calendar.MINUTE);
+            final int second = mcurrentTime.get(Calendar.SECOND);
+            int day = mcurrentTime.get(Calendar.DAY_OF_MONTH);
+            int  month = mcurrentTime.get(Calendar.MONTH);
+            int year = mcurrentTime.get(Calendar.YEAR);
+
+            if(DaTe.getText().toString().equals("בחר תאריך יציאה עתידי")){
+                year=Year;
+                month=Month;
+                day=Date;
+            }
+            else{
+                year=UpdatedYear;
+                month=UpdatedMonth;
+                day=UpdatedDate;
+            }
+
+
+
             TimePickerDialog mTimePicker;
+            final int finalYear = year;
+            final int finalMonth = month;
+            final int finalDay = day;
             mTimePicker = new TimePickerDialog(Send_Permition.this, new TimePickerDialog.OnTimeSetListener() {
 
+                SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                     firstH.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+
+
+                    String myDate = finalYear + "/" + finalMonth + "/" + finalDay + " " + selectedHour + ":" + selectedMinute + ":" + "00";
+
+                    Date date = null;
+                    try {
+                        date = sd.parse(myDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    millis = date.getTime();
+
+
                 }
             }, hour, minute, true);//Yes 24 hour time
             mTimePicker.setTitle("Select Time");
@@ -216,6 +270,28 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             mTimePicker.setTitle("Select Time");
             mTimePicker.show();
 
+        }
+
+        public void getDate(View view) {
+
+            DatePickerDialog datePickerDialog=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int date) {
+                    String dataString= date+"/"+month+"/"+year;
+                    if(((year<Year) ||(year==Year)&&(month<Month)||((year==Year)&&(month==Month)&&(date<Date)))) {
+                        Toast.makeText(getApplicationContext(), "נא לבחור תאריך עתידי", Toast.LENGTH_LONG).show();
+                        DaTe.requestFocus();
+                        return;
+                    }
+                    else{
+                        DaTe.setText(dataString);
+                        UpdatedYear=year;
+                        UpdatedMonth=month;
+                        UpdatedDate=date;
+                    }
+                }
+            },Year,Month,Date);
+            datePickerDialog.show();
         }
 
 
@@ -279,8 +355,6 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                     public void onClick(View v) {
                         final String str = Mixed.get(position);
                         String[] Splitted = str.split(" ");
-
-
                         //להסיר מה-Listview את השורה שנבחרה
                         Mixed.remove(position);
                         notifyDataSetChanged();
@@ -289,31 +363,11 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                                 Demo.remove(i);
                             }
                         }
-
-                        if (Shown.getText() == "") {
-                            Choosen.add(str);
-                            final TextView textView = new TextView(Send_Permition.this);
-                            textView.setText(Splitted[1]+" "+Splitted[2]+", ");
-                            linearLayout.addView(textView);
-                            textView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Choosen.remove(position);
-                                    linearLayout.removeView(textView);
-                                    Mixed.add(str);
-                                    notifyDataSetChanged();
-                                    Demo.add(str);
-
-
-                                }
-                            });
-
-
-                        } else {// לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
+                        // לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                             Choosen.add(str);
                             final TextView textView = new TextView(Send_Permition.this);
                             if (Splitted[0].equals("תלמיד:")) {
-                                textView.setText(Splitted[1]+" "+Splitted[2]+", ");
+                                textView.setText(Splitted[1] + " " + Splitted[2] + ", ");
                             } else {
                                 String text = "";
                                 for (int i = 1; i < Splitted.length; i++) {
@@ -341,9 +395,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
                         }
 
-                    }
 
-                    ;
 
 
                 });
@@ -399,6 +451,9 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
         }
 
 
+
+
+
         public void SendBarcode(View view) {
 
             if (Choosen.isEmpty()) {
@@ -449,24 +504,28 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                     re = secondH.getText().toString();
                     fullName = teacher.getName() + " " + teacher.getSecondName();
 
+
                     listUserPhone();
+
+                    Mixed.addAll(Choosen);
+                    Demo.addAll(Choosen);
+                    linearLayout.removeAllViews();
+
+                    Choosen.clear();
+                    PhoneList.clear();
+                    Adapt(Mixed);
+
 
 
                     firstH.setText("שעת יציאה");
                     secondH.setText("שעת חזרה");
 
-                    Mixed.addAll(Choosen);
-                    Demo.addAll(Choosen);
-                    linearLayout.removeAllViews();
-                    Choosen.clear();
-                    PhoneList.clear();
-                    Adapt(Mixed);
-                    Toast.makeText(getApplicationContext(), "ברקוד נשלח בהצלחה!", Toast.LENGTH_SHORT).show();
-
+                  Toast.makeText(getApplicationContext(), "ברקוד נשלח בהצלחה!", Toast.LENGTH_SHORT).show();
 
                 }
             }
         }
+
         private void listUserPhone() {
             PhoneList.clear();
             for (int i = 0; i < Choosen.size(); i++) {
@@ -475,7 +534,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
                 if (x.contains("קבוצה:")) {
                     x = x.substring(7);
-                    final  String y=x;
+                    final String y = x;
                     String Splitted[];
                     refGroups.child(y).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -523,14 +582,13 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             refSchool.child(school).child("Student").child(phoneSent).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Student thisTudent=dataSnapshot.getValue(Student.class);
-                    String Id=thisTudent.getId();
-                    con(Id,phoneSent);
-
-
+                    Student thisTudent = dataSnapshot.getValue(Student.class);
+                    String Id = thisTudent.getId();
+                    String dataStore = phoneSent + "; " + fullName + "; " + cause + "; " + notes + "; " + Id + "; " + ex + "; " + re+ "; " +millis;
+                    refBarcode = refSchool.child(school).child("Student").child(phoneSent).child("QR_Info");
+                    refBarcode.setValue(dataStore);
 
                 }
-
 
 
                 @Override
@@ -541,16 +599,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             });
 
 
-
         }
 
-        private void con(String id, String phoneSent) {
-            String dataStore = phoneSent + "; "+fullName + "; " + cause + "; " + notes + "; " + id+"; "+ex + "; " + re;
-            refSchool.child(school).child("Student").child(phoneSent).child("QR_Info").setValue(dataStore);
-            FileName.setText("");
-            Cause.setText("");
-            Notes.setText("");
 
-
-        }
     }

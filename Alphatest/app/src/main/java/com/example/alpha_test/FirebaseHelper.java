@@ -10,7 +10,7 @@ public class FirebaseHelper {
    public static FirebaseAuth mAuth=FirebaseAuth.getInstance();
 
     public static FirebaseDatabase FBDB = FirebaseDatabase.getInstance();
-    public static DatabaseReference refUsers=FBDB.getReference("User");
+  public static DatabaseReference refUsers=FBDB.getReference("User");
 
     public static DatabaseReference refSchool=FirebaseDatabase.getInstance().getReference();
 

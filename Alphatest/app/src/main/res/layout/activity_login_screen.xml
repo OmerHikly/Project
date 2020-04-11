@@ -9,21 +9,72 @@
     android:gravity="center"
     android:layout_weight="6"
     tools:context=".LoginScreen">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00FFD8"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/littlogo"
+                android:layout_gravity="center"
+                android:paddingLeft="25dp"
+
+                android:contentDescription="@string/app_name" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:paddingLeft="25dp"
+                android:textColor="#FF9C00"
+                android:text="ByeCode"
+                />
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+
+
+
 <Space
     android:layout_width="wrap_content"
     android:layout_height="0dp"
     android:layout_weight="6"
     />
-    <AutoCompleteTextView
-        android:id="@+id/LSchool"
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:layout_weight="1"
-        android:gravity="right"
-        android:completionThreshold="1"
-        android:hint="בחר בית ספר"
-        android:inputType="textPersonName" />
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/LSchool"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:completionThreshold="1"
+            android:ems="10"
+            android:gravity="right"
+            android:hint="בחר בית ספר"
+            android:inputType="textPersonName" />
+    </LinearLayout>
 
     <Space
         android:layout_width="wrap_content"
@@ -31,44 +82,61 @@
         android:layout_weight="6"
         />
 
-    <EditText
-        android:id="@+id/Phone"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:layout_weight="1"
-        android:hint="מספר טלפון"
-        android:gravity="right"
-        android:inputType="phone" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/Phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="right"
+            android:hint="מספר טלפון"
+            android:inputType="phone" />
+    </LinearLayout>
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="6" />
 
-    <EditText
-        android:id="@+id/Password"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="right"
-        android:hint="סיסמה"
         android:layout_weight="1"
-        android:inputType="textPassword" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="right"
+            android:hint="סיסמה"
+            android:inputType="textPassword" />
+    </LinearLayout>
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="6"
         />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="4"
         android:onClick="login"
-        android:text="התחבר "/>
-
+        android:textSize="25dp"
+        android:text="התחבר "
+        android:textColor="#000000"
+        android:background="#00FFD8"/>
+;#00FFD8
 
 
 </LinearLayout>

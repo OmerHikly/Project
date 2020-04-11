@@ -127,7 +127,7 @@ public class profile extends AppCompatActivity {
             case 2:
                 Parcelable parcelable3 = getIntent().getParcelableExtra("guard");
                 guard = Parcels.unwrap(parcelable3);
-                school = teacher.getSchool();
+                school = guard.getSchool();
                 Watchedphone = guard.getPhone();
                 id = guard.getId();
                 name = guard.getName() + " " + guard.getSecondName();

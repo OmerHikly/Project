@@ -5,9 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     android:gravity="center"
     tools:context=".MonitorScreen">
 
+
+    <EditText
+        android:id="@+id/SearchText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="...חפש יציאה" />
 
     <ListView
         android:id="@+id/Outs"

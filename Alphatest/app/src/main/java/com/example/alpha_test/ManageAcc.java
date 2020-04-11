@@ -1,6 +1,7 @@
 package com.example.alpha_test;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,6 +79,83 @@ public class ManageAcc extends AppCompatActivity {
 
 
 
+
+        users.setLongClickable(true);
+        users.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String str = MainArrayList.get(position);
+                String[] Splitted = str.split(" ");
+                String sphone = Splitted[4];
+                String t = null;
+                String g=Splitted[0];
+                switch (g){
+                    case "תלמיד:":
+                        t="Student";
+                        break;
+                    case "מורה:":
+                        t="Teacher";
+                        break;
+                    case "שומר:":
+                        t="Guard";
+                        break;
+
+                }
+
+
+
+
+if(t!=null) {
+    final String finalT = t;
+    refSchool.child(school).child(t).child(sphone).addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Intent i = new Intent(ManageAcc.this, profile.class);
+            int type=0;
+
+            switch (finalT) {
+                case "Student":
+                    Student studentP = dataSnapshot.getValue(Student.class);
+                    Parcelable parcelable = Parcels.wrap(studentP);
+                    i.putExtra("student", parcelable);
+                    type=0;
+                    break;
+                case "Teacher":
+                    Teacher teacherP=dataSnapshot.getValue(Teacher.class);
+                    Parcelable parcelable2 = Parcels.wrap(teacherP);
+                    i.putExtra("teacher", parcelable2);
+                    type=1;
+                    break;
+
+                case "Guard":
+                    Guard guardP=dataSnapshot.getValue(Guard.class);
+                    Parcelable parcelable3 = Parcels.wrap(guardP);
+                    i.putExtra("guard", parcelable3);
+                    type=2;
+                    break;
+            }
+
+
+            i.putExtra("tphone", phone);
+            i.putExtra("type", 3);
+            i.putExtra("WatchedUserType", type);
+            i.putExtra("sc", school);
+
+            startActivity(i);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    });
+}
+                return true;
+            }
+        });
+
+
+
         et.addTextChangedListener(new TextWatcher() {//מאזין לשינוי בהקלדת הטקסט
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -99,6 +178,7 @@ public class ManageAcc extends AppCompatActivity {
 
 
         });
+
 
 
 
@@ -162,7 +242,9 @@ public class ManageAcc extends AppCompatActivity {
                             refSchool.child(school).child("Guard").child(Splitted[4]).child("activated").setValue(false);
                         } else if (Splitted[0].equals("מורה:")) {//checks if the user is guard by checking the first word in the string and looking in the firebase for the Teacher branch
                             refSchool.child(school).child("Teacher").child(Splitted[4]).child("activated").setValue(false);
-
+                        }
+                        if (Splitted[0].equals("תלמיד:")) {//checks if the user is guard by checking the first word in the string and looking in the firebase for the Guard branch
+                            refSchool.child(school).child("Student").child(Splitted[4]).child("activated").setValue(false);
                         }
 
 
@@ -186,8 +268,9 @@ public class ManageAcc extends AppCompatActivity {
                         }
                         if (Splitted[0].equals("מורה:")) {//checks if the user is guard by checking the first word in the string and looking in the firebase for the Teacher branch
                             refSchool.child(school).child("Teacher").child(Splitted[4]).removeValue();
-
-
+                        }
+                        if (Splitted[0].equals("תלמיד:")) {//checks if the user is guard by checking the first word in the string and looking in the firebase for the Guard branch
+                            refSchool.child(school).child("Student").child(Splitted[4]).removeValue();
                         }
 
                         adapter.remove(adapter.getItem(position));
@@ -233,8 +316,6 @@ public class ManageAcc extends AppCompatActivity {
                         }
                         if (Splitted[0].equals("מורה:")) {//checks if the user is guard by checking the first word in the string and looking in the firebase for the Teacher branch
                             refSchool.child(school).child("Teacher").child(Splitted[4]).removeValue();
-
-
                         }
                         //
                         adapter.remove(adapter.getItem(position));

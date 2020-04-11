@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,13 +20,14 @@ import com.google.firebase.database.ValueEventListener;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.example.alpha_test.FirebaseHelper.mAuth;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class LoginScreen extends AppCompatActivity {
     EditText Phone, Password;//פרטים להזנה טלפון ומספר
+    Toolbar toolbar;
+
     AutoCompleteTextView School;//בית ספר (בעת הקלדה משלים את החיפוש)
 
     Student student;// עצם מסוג תלמיד
@@ -41,8 +43,7 @@ public class LoginScreen extends AppCompatActivity {
     String  school, phone;
 
     int sender=-1;
-    String[] Schools;//מערך שיכיל את בתי הספר
-    ArrayList<String> arrayList=new ArrayList<String>();//מערך רשימתי שיכיל את בתי הספר
+    ArrayList<String> Schools = new ArrayList<>();//רשימה של בתי ספר שיש ב-firebase
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,12 @@ public class LoginScreen extends AppCompatActivity {
         Phone = findViewById(R.id.Phone);
         Password = findViewById(R.id.Password);
         School=findViewById(R.id.LSchool);
+
+      toolbar=findViewById(R.id.toolbar);
+      toolbar.setTitle("התחברות");
+
+       setSupportActionBar(toolbar);
+
 
 
 
@@ -65,7 +72,6 @@ public class LoginScreen extends AppCompatActivity {
             Toast.makeText(LoginScreen.this, "First Run", Toast.LENGTH_LONG)
                     .show();
         }
-
 
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
                 .putBoolean("isFirstRun", false).commit();
@@ -85,16 +91,14 @@ public class LoginScreen extends AppCompatActivity {
         refSchool.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int count = 0;
-                int index = 0;
+
+                Schools.clear();
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {//checks how many main children there are in the firebase(Schools number)
-                    count++;
+                    String st =dsp.getKey();
+                    Schools.add(st);
+
                 }
-                Schools = new String[count];
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Schools[index] = dsp.getKey().toString();
-                    index++;
-                }
+
 
                 Adapt(Schools);//This method sets the adpater between the array we just created and the "edit text" of the school.
             }
@@ -111,8 +115,7 @@ public class LoginScreen extends AppCompatActivity {
 
     }
 
-    private void Adapt(String[] array) {//פעולה שמקשרת בין המערך הרשימתי שמכיל את בתי הספר לרשימה הנגללת
-        arrayList.addAll(Arrays.asList(Schools));
+    private void Adapt(ArrayList<String> arrayList ) {//פעולה שמקשרת בין המערך הרשימתי שמכיל את בתי הספר לרשימה הנגללת
          SchoolAdapter adapter=new SchoolAdapter(this, arrayList);
         School.setAdapter(adapter);
 

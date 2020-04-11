@@ -25,14 +25,20 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class RequestScreen extends AppCompatActivity {
 
-    ImageView iv,ivp;
+    ImageView iv;
     TextView name,clss,ID,cause,timeOut,notes,date;
 
-    String Name,Cls,Id,Notes,Cause,TimeOut,Datee;
+    String Name,Cls,Id,Notes,Cause,TimeOut,Datee,Time;
     String ex,re;
 
     Student student;
@@ -42,11 +48,16 @@ public class RequestScreen extends AppCompatActivity {
     String school,phone,cls;
 
     Context ctx=this;
+    String ref;
 
     DatabaseReference RequestRef;
+    DatabaseReference refBarcode;
 
     StorageReference mStorageRef;
     public static StorageReference Ref;
+    String Dol;
+
+    long millis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +124,7 @@ public class RequestScreen extends AppCompatActivity {
 
     private void make(String request) {
         String Splitted[]=request.split(";");
-        Name=teacher.getName()+" "+teacher.getSecondName();
+        Name=Splitted[0];
         Cls=Splitted[1];
         Datee=Splitted[2]+" "+Splitted[3];
         Id=Splitted[5];
@@ -121,11 +132,12 @@ public class RequestScreen extends AppCompatActivity {
         Notes=Splitted[7];
         ex=Splitted[8];
         re=Splitted[9];
-   //     String Time=Splitted[10];
+        Time=Splitted[10];
+        Dol=Splitted[11];
         TimeOut=ex+"-"+re;
-
-       // Ref=mStorageRef.child("ParentsPermit").child(Time+sphone);
-     //   DownloadPermitImg();
+        if(Time!="null"&&Time!=null) {
+             ref=Time.substring(1);
+        }
 
 
         name.setText(name.getText()+" "+Name);
@@ -134,8 +146,29 @@ public class RequestScreen extends AppCompatActivity {
         ID.setText(ID.getText()+" "+Id);
         cause.setText(cause.getText()+" "+Cause);
         notes.setText(notes.getText()+" "+Notes);
-        timeOut.setText(timeOut.getText()+" "+TimeOut);
+        timeOut.setText(timeOut.getText()+" "+TimeOut+"    "+Dol);
         date.setText(Datee);
+
+
+
+
+
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+        String Splitt[]=Dol.split("/");
+        String year=Splitt[2];
+        String month=Splitt[1];
+        String day=Splitt[0];
+
+        String myDate = year + "/" + month + "/" + day + " "  + ex  + ":" + "00";
+
+        Date date = null;
+        try {
+            date = sd.parse(myDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        millis = date.getTime();
 
     }
 
@@ -156,23 +189,7 @@ public class RequestScreen extends AppCompatActivity {
         });
 
     }
-    private void DownloadPermitImg() {// a method that downloads the url of the last added image
-        Ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(ctx).load(uri).fit().centerCrop().into(ivp);
-            }
 
-
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }
 
 
 
@@ -187,9 +204,20 @@ public class RequestScreen extends AppCompatActivity {
     }
 
     public void approve(View view) {
+        Name=teacher.getName()+" "+teacher.getSecondName();
+        String dataStore = sphone + "; "+Name + "; " + Cause + "; " + Notes + "; " + Id+"; "+ex + "; " + re+"; "+millis;
+        refBarcode= refSchool.child(school).child("Student").child(sphone).child("QR_Info");
+       refBarcode.setValue(dataStore);
+        final long maxDurationInMilliseconds = 30 * 60 * 1000;
 
-        String dataStore = sphone + "; "+Name + "; " + Cause + "; " + Notes + "; " + Id+"; "+ex + "; " + re;
-        refSchool.child(school).child("Student").child(sphone).child("QR_Info").setValue(dataStore);
+
+        Timer timer = new Timer();
+        timer.schedule( new TimerTask(){
+            public void run() {
+                refBarcode.removeValue();
+            }
+        },  maxDurationInMilliseconds );
+
         Toast.makeText(getApplicationContext(),"אישור נשלח לתלמיד",Toast.LENGTH_SHORT).show();
         RequestRef.removeValue();
         Intent i=new Intent(this,Requests.class);
@@ -199,5 +227,10 @@ public class RequestScreen extends AppCompatActivity {
     }
 
 
+    public void ShowParentsPermit(View view) {
+        Intent i=new Intent(this,ParentsPermit.class);
+        i.putExtra("refrence",ref);
+        startActivity(i);
     }
+}
 

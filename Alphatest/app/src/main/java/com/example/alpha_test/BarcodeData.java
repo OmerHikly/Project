@@ -73,7 +73,7 @@ public class BarcodeData extends AppCompatActivity {
         teacherName=Splitted[1];
         Cause=Splitted[2];
         Notes=Splitted[3];
-         TimeOut=Splitted[5]+"-"+Splitted[6];
+        TimeOut=Splitted[5]+"-"+Splitted[6];
 
          String myDate=new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
         Calendar rightNow = Calendar.getInstance();
@@ -115,7 +115,9 @@ public class BarcodeData extends AppCompatActivity {
                 refSchool.child(school).child("Student").child(Phone).child("QR_Info").removeValue();
 
                 String out=Name+"; "+Cls+"; "+Id+"; "+teacherName+"; "+Phone+"; "+Cause+"; "+Notes+"; "+TimeOut+"; "+TimeAndDate;
-                refSchool.child(school).child("AAMonitor").child(Phone+"_"+TimeAndDate).setValue(out);
+
+                String st= String.valueOf(System.currentTimeMillis());
+                refSchool.child(school).child("AAMonitor").child(st+"_"+Phone+"_"+TimeAndDate).setValue(out);
 
             }
 

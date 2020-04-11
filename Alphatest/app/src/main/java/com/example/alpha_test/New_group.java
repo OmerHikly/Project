@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,7 +39,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class New_group extends AppCompatActivity {
 
-    Boolean f=false;//מכיוון שאחת התכונות שהועלתה לfirebase היא מסוג Boolean  ולא boolean כדי להשוות את התכונה הזאת נצטרך עצם מסוג Boolean
+    Boolean f = false;//מכיוון שאחת התכונות שהועלתה לfirebase היא מסוג Boolean  ולא boolean כדי להשוות את התכונה הזאת נצטרך עצם מסוג Boolean
     String school, phone, cls;//מאפיינים של מורה (כיתה, בית ספר וטלפון)
 
 
@@ -63,76 +65,88 @@ public class New_group extends AppCompatActivity {
     LinearLayout linearLayout;
 
     Student studentP;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_group);
 
 
+        search_students = (EditText) findViewById(R.id.Search_Uni_Students);
+        students_options = findViewById(R.id.Show_Uni_Students);//קישורבין עצמים ב-xml ל-Java
+        Shown_Students = findViewById(R.id.ChoosenTxt);
+        Group_Name = findViewById(R.id.GN);
 
 
+        Parcelable parcelable = getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
+        teacher = Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
 
-            search_students=(EditText)findViewById(R.id.Search_Uni_Students);
-            students_options= findViewById(R.id.Show_Uni_Students);//קישורבין עצמים ב-xml ל-Java
-            Shown_Students=findViewById(R.id.ChoosenTxt);
-            Group_Name=findViewById(R.id.GN);
-
-
-            Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
-            teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
-
-            school = teacher.getSchool();//השמת ערכים בתכונות של המורה
-            phone = teacher.getPhone();
-            cls = teacher.getCls();
+        school = teacher.getSchool();//השמת ערכים בתכונות של המורה
+        phone = teacher.getPhone();
+        cls = teacher.getCls();
 
 
-            refGroups=refSchool.child(school).child("Teacher").child(phone).child("zgroups");
-            linearLayout = (LinearLayout) findViewById(R.id.linear_layout);//קישור בין המסך ב-xml לרכיב ב--java
+        refGroups = refSchool.child(school).child("Teacher").child(phone).child("zgroups");
+        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);//קישור בין המסך ב-xml לרכיב ב--java
 
 
-            students_options.setLongClickable(true);
-            students_options.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    String str = Students.get(position);
-                    String[] Splitted = str.split(" ");
-                    String sphone =Splitted[4];
-                    Toast.makeText(getApplicationContext(),Splitted[4],Toast.LENGTH_SHORT).show();
+        students_options.setLongClickable(true);
+        students_options.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String str = Students.get(position);
+                String[] Splitted = str.split(" ");
+                String sphone = Splitted[4];
+                Toast.makeText(getApplicationContext(), Splitted[4], Toast.LENGTH_SHORT).show();
 
-                    refSchool.child(school).child("Student").child(sphone).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            studentP=dataSnapshot.getValue(Student.class);
+                refSchool.child(school).child("Student").child(sphone).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        studentP = dataSnapshot.getValue(Student.class);
 
-                            Intent i=new Intent(New_group.this,profile.class);
+                        Intent i = new Intent(New_group.this, profile.class);
 
-                            Parcelable parcelable= Parcels.wrap(studentP);
-                            i.putExtra("student", parcelable);
-                            i.putExtra("tphone", phone);
-                            i.putExtra("type",1);
-                            i.putExtra("WatchedUserType",0);
-                            i.putExtra("sc",school);
+                        Parcelable parcelable = Parcels.wrap(studentP);
+                        i.putExtra("student", parcelable);
+                        i.putExtra("tphone", phone);
+                        i.putExtra("type", 1);
+                        i.putExtra("WatchedUserType", 0);
+                        i.putExtra("sc", school);
 
 
-                            startActivity(i);
-                        }
+                        startActivity(i);
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                    }
+                });
 
-                    return true;
-                }
-            });
+                return true;
+            }
+        });
 
-            Do();;// פעולה שמציגה את כל התלמידים שניתן להוסיף אל הקבוצה ב-Listview
-            //ומאפשרת חיפוש עבור תלמיד ספציפי בין כל התלמידים שאושרו כתלמידי בית הספר
+        Do();
+        ;// פעולה שמציגה את כל התלמידים שניתן להוסיף אל הקבוצה ב-Listview
+        //ומאפשרת חיפוש עבור תלמיד ספציפי בין כל התלמידים שאושרו כתלמידי בית הספר
 
-        }
+    }
 
-        private void Do() {
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add("צפה בפרופיל תלמיד");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+
+        return super.onContextItemSelected(item);
+    }
+
+    private void Do() {
 
             //האזנה לרכיב ה-EditText והפעלת פעולה שמסננת את כל העצמים שאינם כוללים את מה שנרשם ב-editText
 
@@ -173,7 +187,9 @@ public class New_group extends AppCompatActivity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    adapter.clear();
+                    if(adapter!=null) {
+                        adapter.clear();//כשהטקסט משתנה המתאם ישתנה בהתאם לStrings שיכילו את מה שהוקלד
+                    }
                     adapter.getFilter().filter(s);
                 }
 
@@ -247,30 +263,7 @@ public class New_group extends AppCompatActivity {
                             }
                         }
 
-                        if(Shown_Students.getText() == ""){
-                            Choosen.add(str);
-                            ChoosenPhones.add(Splitted[4]);
-                            final TextView textView = new TextView(com.example.alpha_test.New_group.this);
-                            textView.setText(Splitted[1]+" "+Splitted[2]+", ");
-                            linearLayout.addView(textView);
-                            textView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Choosen.remove(position);
-                                    ChoosenPhones.remove(position);
-                                    linearLayout.removeView(textView);
-                                    Students.add(str);
-                                    notifyDataSetChanged();
-                                    Demo.add(str);
-
-
-                                }
-                            });
-
-
-
-                        }
-                        else{// לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
+           // לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                             Choosen.add(str);
                             ChoosenPhones.add(Splitted[4]);
                             final TextView textView = new TextView(com.example.alpha_test.New_group.this);
@@ -295,7 +288,7 @@ public class New_group extends AppCompatActivity {
 
 
                         }
-                    }
+
 
 
                 });
@@ -369,6 +362,7 @@ public class New_group extends AppCompatActivity {
                 NewGroup = NewGroup.substring(1, NewGroup.length() - 1);//שורה זו מסירה את ה'[' וה-']' שמופיעם כאשר עושים toString() ל-Arraylist -
                 refGroups.child(groupName).setValue(NewGroup);
                 Students.addAll(Choosen);
+                Demo.addAll(Choosen);
                 linearLayout.removeAllViews();
                 Choosen.clear();
                 ChoosenPhones.clear();
