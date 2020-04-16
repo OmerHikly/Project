@@ -7,6 +7,8 @@
 
     tools:context=".BarcodeScan">
 
+
+
     <me.dm7.barcodescanner.zxing.ZXingScannerView
         android:id="@+id/scan"
         android:layout_above="@+id/layout_result"
@@ -20,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="#62C2CC"
         android:orientation="vertical"
         android:padding="8dp">
 

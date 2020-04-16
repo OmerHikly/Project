@@ -9,33 +9,44 @@
     android:layoutDirection="rtl"
     tools:context=".ManageAcc">
 
-    
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="2">
-    <Button
-        android:id="@+id/ConfirmUsers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="אשר משתמשים חדשים"
-        android:onClick="Confirm_users"
-        android:textSize="15dp" />
+        android:layout_weight="1.666"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/Users"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="15dp"
-        android:onClick="Watch_users"
-        android:text="משתמשים" />
+        <Button
+            android:id="@+id/ConfirmUsers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="Confirm_users"
+            android:background="#007489"
+            android:text="אשר משתמשים חדשים"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/Users"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="Watch_users"
+            android:text="משתמשים"
+            android:background="#007489"
+            android:textSize="15dp" />
 
 
-
-</LinearLayout>
+    </LinearLayout>
 
 <EditText
     android:id="@+id/SearchText"

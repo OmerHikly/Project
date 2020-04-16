@@ -7,9 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import org.parceler.Parcels;
 
@@ -18,15 +18,20 @@ public class AdminLogin extends AppCompatActivity {
     String phone;
 
     Admin admin;
+
+    Toolbar toolbar;
     Button man;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_login);
-        Toast.makeText(getApplicationContext(),"Success is coming, Admin",Toast.LENGTH_SHORT).show();
 
         man=findViewById(R.id.manage_account);
+
+        toolbar=findViewById(R.id.tb);
+        toolbar.setTitle("Byecode");
+        setSupportActionBar(toolbar);
 
         Parcelable parcelable=getIntent().getParcelableExtra("admin");
         admin= Parcels.unwrap(parcelable);
@@ -48,6 +53,14 @@ public class AdminLogin extends AppCompatActivity {
         startActivity(i);
 
     }
+
+
+    public void MonitorView(View view) {
+        Intent i = new Intent(this, MonitorScreen.class);
+        i.putExtra("school",admin.getSchool());
+        startActivity(i);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.optionsmenu, menu);
@@ -62,9 +75,5 @@ public class AdminLogin extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void MonitorView(View view) {
-        Intent i = new Intent(this, MonitorScreen.class);
-        i.putExtra("school",admin.getSchool());
-        startActivity(i);
-    }
+
 }

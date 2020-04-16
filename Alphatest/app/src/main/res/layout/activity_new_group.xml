@@ -8,6 +8,15 @@
     android:orientation="vertical"
     tools:context=".New_group">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
 
     <Space
         android:layout_width="match_parent"
@@ -52,8 +61,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="#FDB813"
             android:onClick="New_group"
-            android:text="פתח קבוצה" />
+            android:text="פתח קבוצה"
+            android:textSize="17dp" />
 
 
 
@@ -96,7 +107,7 @@
         <ImageButton
             android:id="@+id/ImbNg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="47dp"
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:background="#ffffff"
@@ -120,7 +131,7 @@
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:onClick="Accep_pupils"
-            app:srcCompat="@drawable/ic_checkbox"
+            app:srcCompat="@drawable/ic_check"
             tools:ignore="VectorDrawableCompat" />
     </LinearLayout>
 </LinearLayout>

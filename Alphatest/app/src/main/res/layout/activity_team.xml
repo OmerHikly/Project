@@ -23,5 +23,10 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="AddStudents"
-        android:text="הוסף לקבוצה" />
+        android:text="הוסף לקבוצה"
+        android:drawableRight="@drawable/add"
+        android:paddingLeft="120dp"
+        android:paddingRight="120dp"
+        android:background="#62C2CC"
+        />
 </LinearLayout>

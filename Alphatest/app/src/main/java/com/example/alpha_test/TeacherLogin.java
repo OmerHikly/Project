@@ -1,32 +1,48 @@
 package com.example.alpha_test;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import org.parceler.Parcels;
 
 public class TeacherLogin extends AppCompatActivity {
+    TextView stv;
+    Toolbar toolbar;
+
     String school,phone,cls;
     Teacher teacher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_login);
-        Toast.makeText(getApplicationContext(),"Success is coming, Teacher",Toast.LENGTH_SHORT).show();
-
+        toolbar=findViewById(R.id.tb);
+        stv=findViewById(R.id.stv);
         Parcelable parcelable=getIntent().getParcelableExtra("teacher");
         teacher= Parcels.unwrap(parcelable);
 
         school=teacher.getSchool();
         phone=teacher.getPhone();
         cls=teacher.getCls();
+
+        toolbar.setTitle("ByeCode");
+
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_menu_black_24dp);
+        toolbar.setOverflowIcon(drawable);
+        setSupportActionBar(toolbar);
+
+
+        stv.setText("שלום"+" "+teacher.getName()+"!");
     }
 
     public void PassAc(View view) {

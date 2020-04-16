@@ -53,10 +53,9 @@ public class LoginScreen extends AppCompatActivity {
         Password = findViewById(R.id.Password);
         School=findViewById(R.id.LSchool);
 
-      toolbar=findViewById(R.id.toolbar);
-      toolbar.setTitle("התחברות");
-
-       setSupportActionBar(toolbar);
+        toolbar=findViewById(R.id.toolbar);
+        toolbar.setTitle("התחברות");
+        setSupportActionBar(toolbar);
 
 
 
@@ -69,8 +68,6 @@ public class LoginScreen extends AppCompatActivity {
             //show start activity
 
             startActivity(new Intent(LoginScreen.this, MainActivity.class));
-            Toast.makeText(LoginScreen.this, "First Run", Toast.LENGTH_LONG)
-                    .show();
         }
 
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
@@ -260,7 +257,6 @@ public class LoginScreen extends AppCompatActivity {
 
 
     private void StuActivity() {//password confirmation
-        Toast.makeText(getApplicationContext(),"Student login",Toast.LENGTH_SHORT).show();
         refSchool.child(school).child("Student").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -292,7 +288,6 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void TeachActivity() {//password confirmation
-        Toast.makeText(getApplicationContext(), "Teacher login", Toast.LENGTH_SHORT).show();
         refSchool.child(school).child("Teacher").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -324,8 +319,6 @@ public class LoginScreen extends AppCompatActivity {
 
 
     private void AdActivity() {//password confirmation
-        Toast.makeText(getApplicationContext(),"Admin login",Toast.LENGTH_SHORT).show();
-
         refSchool.child(school).child("Admin").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -355,7 +348,6 @@ public class LoginScreen extends AppCompatActivity {
 
         }
     private void GuardActivity() {
-        Toast.makeText(getApplicationContext(),"Guard login",Toast.LENGTH_SHORT).show();
 
         refSchool.child(school).child("Guard").child(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

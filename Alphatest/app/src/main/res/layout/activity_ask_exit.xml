@@ -9,6 +9,16 @@
     android:orientation="vertical"
     tools:context=".AskExit">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +61,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <TextView
@@ -60,12 +70,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="שם האישור:"
+            android:textColor="#000000"
             android:textSize="20dp" />
 
         <EditText
             android:id="@+id/portClearance"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName" />
@@ -81,7 +92,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <TextView
@@ -90,6 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="סיבת היציאה:"
+            android:textColor="#000000"
             android:textSize="20dp" />
 
         <EditText
@@ -111,7 +123,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <TextView
@@ -120,6 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="הערות:"
+            android:textColor="#000000"
             android:textSize="20dp" />
 
         <EditText
@@ -137,12 +150,20 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
     <Button
         android:id="@+id/datesetter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#5FC7C7"
+        android:drawableRight="@drawable/ic_date_range_black_24dp"
+        android:drawablePadding="5dp"
         android:onClick="getDate"
-        android:text="בחר תאריך יציאה עתידי" />
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="בחר תאריך יציאה עתידי"
+        android:textColor="#000000" />
+
 
     <Space
         android:layout_width="wrap_content"
@@ -167,6 +188,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="pickHourE"
+            android:textColor="#000000"
+            android:background="#01d4b4 "
+            android:drawableRight="@drawable/time"
+            android:drawablePadding="5dp"
+            android:paddingRight="10dp"
             android:text="שעת יציאה" />
 
         <Space
@@ -180,6 +206,11 @@
             android:layout_height="wrap_content"
             android:onClick="pickHourR"
             android:layout_weight="1"
+            android:textColor="#000000"
+            android:background="#01d4b4"
+            android:drawableRight="@drawable/ic_keyboard_return_black_24dp"
+            android:drawablePadding="5dp"
+            android:paddingRight="10dp"
             android:text="שעת חזרה" />
 
         <Space
@@ -197,20 +228,30 @@
         android:id="@+id/ParentsPermition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#b2d8d8"
+        android:drawableRight="@drawable/file"
         android:onClick="ParentsApproval"
-        android:text="הוסף אישור הורים" />
+        android:paddingLeft="120dp"
+        android:paddingRight="120dp"
+        android:text="הוסף אישור הורים"
+        android:textColor="#000000" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text=" בקש אישור"
-            android:textColor="#0000ff"
-            android:onClick="RequestBarcode"
-            android:textSize="20dp" />
+    <Button
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:background="#FDB813"
+        android:onClick="RequestBarcode"
+        android:text="אישור יציאה"
+        android:textColor="#000000"
+        android:textSize="20dp" />
 
 
 

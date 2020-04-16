@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -59,6 +61,7 @@ public class AskExit extends AppCompatActivity {
     Button firstH;
     Button secondH;
     Button DaTe;
+    Toolbar toolbar;
 
     AlertDialog.Builder adb;
 
@@ -119,6 +122,10 @@ public class AskExit extends AppCompatActivity {
 
         firstH = findViewById(R.id.exit);
         secondH = findViewById(R.id.enter);
+
+        toolbar=findViewById(R.id.tb);
+        toolbar.setTitle("מילוי בקשה");
+        setSupportActionBar(toolbar);
 
         Parcelable parcelable = getIntent().getParcelableExtra("student");
         student = Parcels.unwrap(parcelable);
@@ -328,6 +335,7 @@ public class AskExit extends AppCompatActivity {
 
             mainViewholder.remove.setVisibility(View.GONE);
             mainViewholder.approve.setText("בחר מורה");
+            mainViewholder.approve.setBackgroundColor(Color.parseColor("#b06500"));
             mainViewholder.approve.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -477,7 +485,6 @@ public class AskExit extends AppCompatActivity {
             }
 
             if (keepGoing) {
-                Toast.makeText(getApplicationContext(),"keep going",Toast.LENGTH_SHORT).show();
 
                 notes = Notes.getText().toString();
                 ex = firstH.getText().toString();

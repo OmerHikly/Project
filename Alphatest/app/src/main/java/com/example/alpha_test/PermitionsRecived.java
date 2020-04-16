@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +34,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class PermitionsRecived extends AppCompatActivity {
 ImageView iv;
+Toolbar toolbar;
 String TAG="GenerateQrCode";
 Bitmap bitmap;
 QRGEncoder qrgEncoder;
@@ -59,6 +61,10 @@ DatabaseReference refBarcode;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permitions_recived);
         iv=findViewById(R.id.Barcode);
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("ברקוד יציאה");
+        setSupportActionBar(toolbar);
 
         Parcelable parcelable=getIntent().getParcelableExtra("student");
         student= Parcels.unwrap(parcelable);

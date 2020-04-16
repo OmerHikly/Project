@@ -15,11 +15,11 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +36,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 public class Acept_pupils extends AppCompatActivity {
    ListView results;//רכיבי התצוגה של המסך הזה
    EditText search;
+   Toolbar toolbar;
 
 
     Boolean f=false;//מכיוון שאחת התכונות שהועלתה לfirebase היא מסוג Boolean  ולא boolean כדי להשוות את התכונה הזאת נצטרך עצם מסוג Boolean
@@ -59,7 +60,10 @@ public class Acept_pupils extends AppCompatActivity {
 
         results=findViewById(R.id.students_results);
         search=findViewById(R.id.Search_students);
+        toolbar=findViewById(R.id.tb);
 
+        toolbar.setTitle("אישור תלמידים לכיתה");
+        setSupportActionBar(toolbar);
 
         Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
         teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
@@ -180,7 +184,6 @@ public class Acept_pupils extends AppCompatActivity {
                     final String str = Students.get(position);
                     String[] Splitted = str.split(" ");
                     String x = String.valueOf(position);
-                    Toast.makeText(getApplicationContext(), x, Toast.LENGTH_SHORT).show();
 
                     refSchool.child(school).child("Student").child(Splitted[4]).child("activated").setValue(true);
 
@@ -303,6 +306,7 @@ public class Acept_pupils extends AppCompatActivity {
         Intent i=new Intent(this,New_group.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
+        finish();
         startActivity(i);
     }
 
@@ -311,6 +315,7 @@ public class Acept_pupils extends AppCompatActivity {
         Intent i=new Intent(this,Groups.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
+        finish();
         startActivity(i);
     }
 }

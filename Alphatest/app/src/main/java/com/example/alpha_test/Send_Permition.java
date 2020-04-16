@@ -1,47 +1,49 @@
     package com.example.alpha_test;
 
     import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
+    import android.app.DatePickerDialog;
+    import android.app.TimePickerDialog;
+    import android.content.Context;
+    import android.content.DialogInterface;
+    import android.graphics.Color;
+    import android.os.Bundle;
+    import android.os.Parcelable;
+    import android.text.Editable;
+    import android.text.TextWatcher;
+    import android.view.LayoutInflater;
+    import android.view.View;
+    import android.view.ViewGroup;
+    import android.widget.ArrayAdapter;
+    import android.widget.Button;
+    import android.widget.DatePicker;
+    import android.widget.EditText;
+    import android.widget.Filter;
+    import android.widget.LinearLayout;
+    import android.widget.ListView;
+    import android.widget.TextView;
+    import android.widget.TimePicker;
+    import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+    import androidx.annotation.NonNull;
+    import androidx.annotation.Nullable;
+    import androidx.appcompat.app.AppCompatActivity;
+    import androidx.appcompat.widget.Toolbar;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+    import com.google.firebase.database.DataSnapshot;
+    import com.google.firebase.database.DatabaseError;
+    import com.google.firebase.database.DatabaseReference;
+    import com.google.firebase.database.ValueEventListener;
 
-import org.parceler.Parcels;
+    import org.parceler.Parcels;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+    import java.text.ParseException;
+    import java.text.SimpleDateFormat;
+    import java.util.ArrayList;
+    import java.util.Calendar;
+    import java.util.Date;
+    import java.util.List;
 
-import static com.example.alpha_test.FirebaseHelper.refSchool;
+    import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 
 
@@ -53,6 +55,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
         Button firstH;
         Button secondH;
         Button DaTe;
+        Toolbar toolbar;
 
         Teacher teacher;
         Student student;
@@ -89,6 +92,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
         int UpdatedYear;
         int UpdatedMonth;
         int UpdatedDate;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -111,6 +115,10 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
             school = teacher.getSchool();
             phone = teacher.getPhone();
             cls = teacher.getCls();
+
+            toolbar=findViewById(R.id.tb);
+            toolbar.setTitle("מילוי אישורים");
+            setSupportActionBar(toolbar);
 
             refGroups = refSchool.child(school).child("Teacher").child(phone).child("zgroups");
             linearLayout = (LinearLayout) findViewById(R.id.linlay);//קישור בין המסך ב-xml לרכיב ב--java
@@ -349,6 +357,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
                 mainViewholder.remove.setVisibility(View.GONE);
                 mainViewholder.approve.setText("הוסף לשליחה");
+                mainViewholder.approve.setBackgroundColor((Color.parseColor("#b06500")));
                 mainViewholder.approve.setOnClickListener(new View.OnClickListener() {
                     @Override
 //כאשר לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
@@ -366,6 +375,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
                         // לוחצים על approve הפעולה הזאתי מעדכנת את הרשימה של התלמידים המוצעים להוספה ומוסיפה את אותם תלמידים שנבחרו לרשימה חדשה ומציגה אותם כ-textVIew
                             Choosen.add(str);
                             final TextView textView = new TextView(Send_Permition.this);
+                            textView.setTextColor(Color.parseColor("#0000ee"));
                             if (Splitted[0].equals("תלמיד:")) {
                                 textView.setText(Splitted[1] + " " + Splitted[2] + ", ");
                             } else {

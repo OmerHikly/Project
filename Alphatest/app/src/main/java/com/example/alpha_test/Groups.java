@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,11 +30,17 @@ public class Groups extends AppCompatActivity {
      ArrayList<String> GroupsList = new ArrayList<>();// רשימה שתכיל את כל הקבוצות שיש למורה
 
     ListView groups;
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
         groups=findViewById(R.id.groups);
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("קבוצות");
+        setSupportActionBar(toolbar);
 
         Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
         teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה

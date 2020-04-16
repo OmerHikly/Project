@@ -6,9 +6,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layoutDirection="rtl"
-
     tools:context=".Acept_pupils">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
 
     <Space
         android:layout_width="match_parent"
@@ -57,24 +65,24 @@
         app:srcCompat="@drawable/ic_group_add"
         tools:ignore="VectorDrawableCompat" />
 
-    <ImageButton
-        android:id="@+id/group"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:onClick="groups"
-        app:srcCompat="@drawable/ic_group"
-        tools:ignore="VectorDrawableCompat" />
+        <ImageButton
+            android:id="@+id/group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:onClick="groups"
+            app:srcCompat="@drawable/ic_group"
+            tools:ignore="VectorDrawableCompat" />
 
         <ImageButton
             android:id="@+id/Imbap"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="39dp"
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:background="@android:color/white"
-            app:srcCompat="@drawable/ic_checkbox"
+            app:srcCompat="@drawable/ic_check"
             tools:ignore="VectorDrawableCompat" />
     </LinearLayout>
 </LinearLayout>

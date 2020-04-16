@@ -9,6 +9,16 @@
     android:orientation="vertical"
     tools:context=".Send_Permition">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +32,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="חיפוש תלמידים וקבוצות"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        />
+
     <LinearLayout
         android:id="@+id/linlay"
         android:layout_width="match_parent"
@@ -51,12 +63,13 @@
         android:id="@+id/showOptions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+
         android:layout_weight="10" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <TextView
@@ -65,6 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="שם האישור:"
+            android:textColor="#000000"
             android:textSize="20dp" />
 
         <EditText
@@ -86,7 +100,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <TextView
@@ -95,6 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="סיבת היציאה:"
+            android:textColor="#000000"
             android:textSize="20dp" />
 
         <EditText
@@ -116,7 +131,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <TextView
@@ -125,6 +140,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="הערות:"
+            android:textColor="#000000"
             android:textSize="20dp" />
 
         <EditText
@@ -148,7 +164,12 @@
         android:id="@+id/datesetter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#5FC7C7"
+        android:drawableRight="@drawable/ic_date_range_black_24dp"
+        android:drawablePadding="5dp"
         android:onClick="getDate"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="בחר תאריך יציאה עתידי" />
 
     <Space
@@ -176,7 +197,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="pickHourE"
-            android:text="שעת יציאה" />
+            android:text="שעת יציאה"
+            android:background="#01d4b4 "
+            android:drawableRight="@drawable/time"
+            android:drawablePadding="5dp"
+            android:paddingRight="10dp"
+            />
 
         <Space
             android:layout_width="wrap_content"
@@ -189,7 +215,12 @@
             android:layout_height="wrap_content"
             android:onClick="pickHourR"
             android:layout_weight="1"
-            android:text="שעת חזרה" />
+            android:text="שעת חזרה"
+            android:background="#01d4b4"
+            android:drawableRight="@drawable/ic_keyboard_return_black_24dp"
+            android:drawablePadding="5dp"
+            android:paddingRight="10dp"
+            />
 
         <Space
             android:layout_width="wrap_content"
@@ -203,31 +234,22 @@
         android:layout_weight="1" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:background="#FDB813"
+        android:onClick="SendBarcode"
+        android:text="אישור יציאה"
+        android:textColor="#000000"
+        android:textSize="20dp" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="8" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="אישור יציאה"
-            android:textColor="#0000ff"
-            android:onClick="SendBarcode"
-            android:textSize="20dp" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-    </LinearLayout>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5" />
 
 </LinearLayout>

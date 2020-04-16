@@ -8,6 +8,16 @@
     android:layoutDirection="rtl"
     android:gravity="center"
     tools:context=".GuardLogin">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,27 +29,24 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="50sp"
+        android:textColor="#000000"
         android:text="שלום שומר!" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text= "לוז יציאות יומי" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+
 
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#62C2CC"
+        android:textColor="#000000"
+        android:textSize="25dp"
         android:onClick="BarcodeScan"
         android:text="סרוק ברקוד" />
     <Space
@@ -50,7 +57,11 @@
     <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#62C2CC"
+        android:textColor="#000000"
+        android:textSize="25dp"
         android:onClick="Monitor"
         android:text="צפה ביומן היציאות" />
 

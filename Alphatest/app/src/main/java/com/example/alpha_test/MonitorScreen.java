@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +32,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 public class MonitorScreen extends AppCompatActivity {
 
     ListView lv;
+    Toolbar toolbar;
 
     String school;
 
@@ -50,6 +52,11 @@ public class MonitorScreen extends AppCompatActivity {
         lv=findViewById(R.id.Outs);
         et=findViewById(R.id.SearchText);
 
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle(" יומן יציאות");
+        setSupportActionBar(toolbar);
+
         Intent gi=getIntent();
         school=gi.getStringExtra("school");
 
@@ -64,9 +71,10 @@ public class MonitorScreen extends AppCompatActivity {
 //בעת לחיצה על אחת מהקבוצות ייהיה מעבר למסך עם נתוני הקבוצה המתאימה שנבחרה
 
                 String str=outs.get(position);//קבלת שם הקבוצה
-                String Splitted[]=str.split("__");
+                String Splitt[]=str.split("__");
                 i.putExtra("school",school);
-                i.putExtra("key",Splitted[1]);//הוספת שם הקבוצה לרכיב שיעביר את המורה למסך עם נתוני הקבוצה שנבחרה
+                i.putExtra("key",Splitt[1]);//הוספת שם הקבוצה לרכיב שיעביר את המורה למסך עם נתוני הקבוצה שנבחרה
+
                 startActivity(i);
             }
         });
@@ -106,8 +114,7 @@ public class MonitorScreen extends AppCompatActivity {
                     String TimeAndDate=Splitted[8];
                     String out=name+" "+TimeAndDate;
                     String [] Split=dsp.getKey().split("_");
-
-                    outs.add(out+"__"+Split[1]+Split[2]);
+                    outs.add(out+"__"+Split[0]+"_"+Split[1]);
 
 
 

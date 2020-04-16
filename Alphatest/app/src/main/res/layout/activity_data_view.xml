@@ -9,6 +9,15 @@
     android:gravity="center"
     tools:context=".DataView">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
 
     <TextView
         android:id="@+id/tv"
@@ -17,6 +26,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="50sp"
+        android:textColor="#000000"
         android:text="בבית הספר יש: " />
 
     <TextView

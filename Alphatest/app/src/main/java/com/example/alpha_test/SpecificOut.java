@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,6 +16,8 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class SpecificOut extends AppCompatActivity {
     TextView Name,Cls,Id,TeacherName,Phone,Cause,Notes,TimeOut,TimeAndDate;
+    Toolbar toolbar;
+
     String name,cls,id,teachername,phone,cause,notes,timeout,timeanddate;
     String school;
     String key;
@@ -33,6 +36,11 @@ public class SpecificOut extends AppCompatActivity {
         Notes=findViewById(R.id.Notes);
         TimeOut=findViewById(R.id.TimeOut);
         TimeAndDate=findViewById(R.id.TimeAndDate);
+
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("פרטי היציאה");
+        setSupportActionBar(toolbar);
 
         Intent gi=getIntent();
         school=gi.getStringExtra("school");

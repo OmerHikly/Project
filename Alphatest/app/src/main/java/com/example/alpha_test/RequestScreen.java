@@ -10,8 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,12 +34,14 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class RequestScreen extends AppCompatActivity {
 
     ImageView iv;
     TextView name,clss,ID,cause,timeOut,notes,date;
+    Toolbar toolbar;
 
     String Name,Cls,Id,Notes,Cause,TimeOut,Datee,Time;
     String ex,re;
@@ -74,13 +79,15 @@ public class RequestScreen extends AppCompatActivity {
         notes=findViewById(R.id.Notes);
         date=findViewById(R.id.Date);
 
+        toolbar=findViewById(R.id.tb);
+
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
         Intent gi=getIntent();
         sphone=gi.getStringExtra("sphone");
         sphone=sphone.substring(1);
-        Toast.makeText(getApplicationContext(),sphone,Toast.LENGTH_SHORT).show();
 
         Parcelable parcelable=getIntent().getParcelableExtra("teacher");
         teacher= Parcels.unwrap(parcelable);
@@ -138,6 +145,9 @@ public class RequestScreen extends AppCompatActivity {
         if(Time!="null"&&Time!=null) {
              ref=Time.substring(1);
         }
+        toolbar.setTitle(Name);
+        setSupportActionBar(toolbar);
+
 
 
         name.setText(name.getText()+" "+Name);

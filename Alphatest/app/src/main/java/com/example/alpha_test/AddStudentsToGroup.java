@@ -2,6 +2,7 @@ package com.example.alpha_test;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -16,7 +17,6 @@ import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,7 +84,6 @@ public class AddStudentsToGroup extends AppCompatActivity {
         phone=teacher.getPhone();
         cls=teacher.getCls();
 
-        Toast.makeText(getApplicationContext(),Stu,Toast.LENGTH_SHORT).show();
         refGroup=refSchool.child(school).child("Teacher").child(phone).child("zgroups").child(GroupName);
       SetList();//יצירת רשימה של מועמדים להוספה וסינונם
 
@@ -226,6 +225,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                         Choosen.add(str);
                         NewPhones.add(Splitted[4]);
                         final TextView textView = new TextView(AddStudentsToGroup.this);
+                        textView.setTextColor(Color.parseColor("#46cb18"));
                         textView.setText(Splitted[1]+" "+Splitted[2]+", ");
                         linearLayout.addView(textView);
                         textView.setOnClickListener(new View.OnClickListener() {
@@ -248,6 +248,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                         Choosen.add(str);
                         NewPhones.add(Splitted[4]);
                         final TextView textView = new TextView(AddStudentsToGroup.this);
+                        textView.setTextColor(Color.parseColor("#b06500"));
                         textView.setText(Splitted[1]+Splitted[2]+" ");
                         linearLayout.addView(textView);
                         textView.setOnClickListener(new View.OnClickListener() {

@@ -2,6 +2,7 @@ package com.example.alpha_test;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -16,11 +17,11 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +38,7 @@ public class ManageAcc extends AppCompatActivity {
     ListView users;//רשימה נגללת שתכיל את כל המשתמשים
     Button Exist_Users, Confirm_Users;// כפתורים שמאפשרים צפייה במתשמשים קיימים או במשתמשים שיש לאשר
     EditText et;//אפשרות לחיפוש התלמידים
+    Toolbar toolbar;
 
     ArrayList<String> MainArrayList = new ArrayList<>();//רשימה שתדע להכיל בהתאם את מי שאושר ואת מי שלא בהתאם לכפתור שיילחץ
     ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת
@@ -73,6 +75,10 @@ public class ManageAcc extends AppCompatActivity {
         Exist_Users = findViewById(R.id.Users);
         Confirm_Users = findViewById(R.id.ConfirmUsers);
         et = findViewById(R.id.SearchText);
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("ניהול משתמשים");
+        setSupportActionBar(toolbar);
 
 
 
@@ -235,7 +241,6 @@ if(t!=null) {
                         String str = MainArrayList.get(position);
                         String[] Splitted = str.split(" ");
                         String x = String.valueOf(position);
-                        Toast.makeText(getApplicationContext(), x, Toast.LENGTH_SHORT).show();
 
 
                         if (Splitted[0].equals("שומר:")) {//checks if the user is guard by checking the first word in the string and looking in the firebase for the Guard branch
@@ -285,7 +290,6 @@ if(t!=null) {
                         String str = MainArrayList.get(position);
                         String[] Splitted = str.split(" ");
                         String x = String.valueOf(position);
-                        Toast.makeText(getApplicationContext(), x, Toast.LENGTH_SHORT).show();
 
                         // method that splits the string near the buttons to only words without spaces
                         if (Splitted[0].equals("שומר:")) {//checks if the user is guard by checking the first word in the string and looking in the firebase for the Guard branch
@@ -395,12 +399,17 @@ if(t!=null) {
 
         public void Confirm_users(View view) {//פעולה שמעדכנת את המשתנה הבוליאני confirmed ומפעילה את הפעולה שמעדכנת את הרשימה של המשתמשים
             confirmed = false;
+            Confirm_Users.setBackgroundColor(Color.parseColor("#14b5d0"));
+            Exist_Users.setBackgroundColor(Color.parseColor("#007489"));
             UsersList();
 
         }
 
         public void Watch_users(View view) {//פעולה שמעדכנת את המשתנה הבוליאני confirmed ומפעילה את הפעולה שמעדכנת את הרשימה של המשתמשים
             confirmed = true;
+            Exist_Users.setBackgroundColor(Color.parseColor("#14b5d0"));
+            Confirm_Users.setBackgroundColor(Color.parseColor("#007489"));
+
             UsersList();
 
         }

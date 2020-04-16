@@ -2,6 +2,7 @@ package com.example.alpha_test;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,12 +61,15 @@ public class New_group extends AppCompatActivity {
     ListView students_options;
     EditText Group_Name;
     EditText search_students;
+    Toolbar toolbar;
 
     DatabaseReference refGroups;//רפרנס לכתובת בdatabase שתחתיה אפשר להוסיף קבוצות
 
     LinearLayout linearLayout;
 
     Student studentP;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,7 @@ public class New_group extends AppCompatActivity {
         students_options = findViewById(R.id.Show_Uni_Students);//קישורבין עצמים ב-xml ל-Java
         Shown_Students = findViewById(R.id.ChoosenTxt);
         Group_Name = findViewById(R.id.GN);
+        toolbar=findViewById(R.id.tb);
 
 
         Parcelable parcelable = getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
@@ -84,6 +90,13 @@ public class New_group extends AppCompatActivity {
         school = teacher.getSchool();//השמת ערכים בתכונות של המורה
         phone = teacher.getPhone();
         cls = teacher.getCls();
+
+        toolbar.setTitle("קבוצה חדשה");
+
+
+       // Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_menu_black_24dp);
+      //  toolbar.setOverflowIcon(drawable);
+        setSupportActionBar(toolbar);
 
 
         refGroups = refSchool.child(school).child("Teacher").child(phone).child("zgroups");
@@ -97,7 +110,6 @@ public class New_group extends AppCompatActivity {
                 String str = Students.get(position);
                 String[] Splitted = str.split(" ");
                 String sphone = Splitted[4];
-                Toast.makeText(getApplicationContext(), Splitted[4], Toast.LENGTH_SHORT).show();
 
                 refSchool.child(school).child("Student").child(sphone).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -268,6 +280,7 @@ public class New_group extends AppCompatActivity {
                             ChoosenPhones.add(Splitted[4]);
                             final TextView textView = new TextView(com.example.alpha_test.New_group.this);
                             textView.setText(Splitted[1]+" "+Splitted[2]+", ");
+                            textView.setTextColor(Color.parseColor("#0000ee"));
                             linearLayout.addView(textView);
                             textView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -385,6 +398,7 @@ public class New_group extends AppCompatActivity {
             Intent i=new Intent(this,Acept_pupils.class);
             Parcelable parcelable= Parcels.wrap(teacher);
             i.putExtra("teacher", parcelable);
+            finish();
             startActivity(i);
         }
 
@@ -393,6 +407,7 @@ public class New_group extends AppCompatActivity {
             Intent i=new Intent(this,Groups.class);
             Parcelable parcelable= Parcels.wrap(teacher);
             i.putExtra("teacher", parcelable);
+            finish();
             startActivity(i);
         }
     }

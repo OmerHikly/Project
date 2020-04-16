@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -20,6 +21,7 @@ import com.squareup.picasso.Picasso;
 public class ParentsPermit extends AppCompatActivity {
     SubsamplingScaleImageView subsamplingScaleImageView;
     ImageView iv;
+    Toolbar toolbar;
 
     StorageReference mStorageRef;
    public static StorageReference Refp;
@@ -34,12 +36,16 @@ public class ParentsPermit extends AppCompatActivity {
         setContentView(R.layout.activity_parents_permit);
         subsamplingScaleImageView=findViewById(R.id.Zoom);
         iv=findViewById(R.id.ImageView);
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("אישור הורים");
+        setSupportActionBar(toolbar);
+
         Intent gi=getIntent();
         fillref=gi.getStringExtra("refrence");
 
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        Toast.makeText(getApplicationContext(),fillref,Toast.LENGTH_LONG).show();
        Refp = mStorageRef.child("ParentsPermit").child(fillref);
        DownloadPermitImg();
 
@@ -58,7 +64,7 @@ public class ParentsPermit extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-             //   Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+               Toast.makeText(getApplicationContext(), "לא צורף אישור הורים", Toast.LENGTH_SHORT).show();
 
             }
         });

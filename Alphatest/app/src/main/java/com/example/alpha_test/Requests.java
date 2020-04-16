@@ -7,9 +7,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +25,8 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class Requests extends AppCompatActivity {
     ListView Requests;
+    TextView tv;
+    Toolbar toolbar;
 
     Teacher teacher;
     String school,phone,cls;
@@ -35,6 +39,11 @@ public class Requests extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requests);
         Requests=findViewById(R.id.Reqs);
+        tv=findViewById(R.id.textView);
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("בקשות יציאה");
+        setSupportActionBar(toolbar);
 
         Parcelable parcelable=getIntent().getParcelableExtra("teacher");
         teacher= Parcels.unwrap(parcelable);
@@ -72,7 +81,14 @@ public class Requests extends AppCompatActivity {
                     phones.add(Splitted[4]);
                     reqs.add(text);
                 }
-                Adapt(reqs);
+                if(reqs.isEmpty()){
+                    Requests.setVisibility(View.GONE);
+                    tv.setVisibility(View.VISIBLE);
+
+                }
+                else {
+                    Adapt(reqs);
+                }
             }
 
             @Override
@@ -80,6 +96,7 @@ public class Requests extends AppCompatActivity {
 
             }
         });
+
 
 
     }

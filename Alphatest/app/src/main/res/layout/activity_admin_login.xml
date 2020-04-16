@@ -8,6 +8,17 @@
     android:gravity="center"
     android:layoutDirection="rtl"
     tools:context=".AdminLogin">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,6 +30,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="50sp"
+        android:textColor="#000000"
         android:text="שלום אדמין!" />
 
     <Space
@@ -29,8 +41,11 @@
     <Button
         android:id="@+id/manage_account"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:onClick="ManageAccounts"
+        android:textSize="25dp"
+        android:background="#62C2CC"
         android:text= "ניהול משתמשים" />
 
     <Space
@@ -39,25 +54,34 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/watch_data"
+        android:id="@+id/button2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:onClick="WatchData"
+        android:textSize="25dp"
+        android:background="#62C2CC"
         android:text="צפה בנתונים" />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/leaving_system"
+        android:id="@+id/button3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:onClick="MonitorView"
+        android:textSize="25dp"
+        android:background="#62C2CC"
         android:text="יומן יציאות" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3" />
+
+
 </LinearLayout>

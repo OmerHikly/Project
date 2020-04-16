@@ -9,6 +9,16 @@
     android:layoutDirection="rtl"
     tools:context=".SpecificOut">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
+
     <Space
         android:layout_weight="1"
         android:layout_width="wrap_content"
@@ -19,6 +29,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="שם:" />
 
     <Space
@@ -31,6 +42,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="כיתה:" />
 
     <Space
@@ -43,6 +55,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="ת.ז:" />
 
     <Space
@@ -55,6 +68,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="מורה מאשר:" />
 
     <Space
@@ -67,6 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="25dp"
+        android:textColor="#000000"
         android:text="מס' טלפון:" />
 
     <Space
@@ -79,6 +94,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="סיבת יציאה:" />
 
     <Space
@@ -91,6 +107,8 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
+
         android:text="הערות:" />
 
     <Space
@@ -103,6 +121,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="זמני יציאה:" />
 
     <Space
@@ -115,6 +134,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="תאריך ושעת יציאה:" />
 
     <Space

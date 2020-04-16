@@ -9,7 +9,15 @@
     android:gravity="center"
     tools:context=".BarcodeData">
 
-
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
 
 
         <ImageView
@@ -35,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:text="שם:"
+            android:textColor="#000000"
             android:textSize="25dp" />
 
         <Space
@@ -48,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:textSize="25dp"
+            android:textColor="#000000"
             android:text="כיתה:" />
 
         <Space
@@ -64,6 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="מורה מאשר:"
+        android:textColor="#000000"
         android:textSize="25dp" />
 
 
@@ -78,6 +89,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="שעות יציאה:" />
 
     <Space
@@ -90,6 +102,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="סיבת יציאה:" />
     <Space
         android:layout_width="match_parent"
@@ -101,6 +114,7 @@
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:text="הערות:" />
 
     <Space

@@ -92,7 +92,6 @@ public class ChangeProfile extends AppCompatActivity {
                 cls=student.getCls();
                 Ref=mStorageRef.child("Students").child(phone+"Profile");
                 findEducator();
-                Toast.makeText(getApplicationContext(),"Student",Toast.LENGTH_SHORT).show();
                 break;
 
 
@@ -266,7 +265,7 @@ public class ChangeProfile extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "הורדת התמונה נכשלה", Toast.LENGTH_SHORT).show();
 
             }
         });

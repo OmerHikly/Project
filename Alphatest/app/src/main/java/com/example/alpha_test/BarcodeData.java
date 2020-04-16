@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,7 +31,7 @@ import static com.example.alpha_test.FirebaseHelper.refSchool;
 public class BarcodeData extends AppCompatActivity {
     ImageView iv;
     TextView name,cls,teacher,cause,timeOut,notes,date;
-
+    Toolbar toolbar;
 
     Student student;
 
@@ -56,6 +57,11 @@ public class BarcodeData extends AppCompatActivity {
         timeOut=findViewById(R.id.ExitTime);
         notes=findViewById(R.id.Notes);
         date=findViewById(R.id.Date);
+
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("נתוני יציאה");
+        setSupportActionBar(toolbar);
 
         Intent gi=getIntent();
         data=gi.getStringExtra("data");
@@ -139,7 +145,7 @@ public class BarcodeData extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "הורדת התמונה נכשלה", Toast.LENGTH_SHORT).show();
 
             }
         });

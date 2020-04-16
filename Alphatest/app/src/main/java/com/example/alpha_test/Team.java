@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -91,7 +90,6 @@ public class Team extends AppCompatActivity {
                         }
                         ExistPhones.add(StudentD);
                     }
-                    Toast.makeText(getApplicationContext(),ExistPhones.get(0),Toast.LENGTH_SHORT).show();
                     showData();
 
 

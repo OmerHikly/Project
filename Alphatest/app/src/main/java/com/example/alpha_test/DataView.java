@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,7 @@ public class DataView extends AppCompatActivity {
     Admin admin;//עצם מסוג אדמין עבור המסך הזה
 
     TextView Admins,Guards,Teachers,Students;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,10 @@ public class DataView extends AppCompatActivity {
         Guards=findViewById(R.id.TvGuard);
         Teachers=findViewById(R.id.TvTeacher);
         Students=findViewById(R.id.TvStudent);
+        toolbar=findViewById(R.id.tb);
+
+        toolbar.setTitle("נתוני בית הספר");
+        setSupportActionBar(toolbar);
 
        HowMany();//פעולה שתספור ותציג כמה שומרים יש כמה תלמידים יש כמה מורים יש וכמה אדמינים יש
     }
