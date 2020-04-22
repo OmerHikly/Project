@@ -21,6 +21,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,6 +39,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
     TextView Shown_Students;
     ListView students_options;
     EditText search_students;
+    Toolbar toolbar;
 
     LinearLayout linearLayout;
 
@@ -70,6 +72,9 @@ public class AddStudentsToGroup extends AppCompatActivity {
         search_students=findViewById(R.id.Search_Universal_Students);
         Shown_Students=findViewById(R.id.ChoosenText);
         linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
+        toolbar=findViewById(R.id.tb);
+        toolbar.setTitle("הוספת משתמשים");
+        setSupportActionBar(toolbar);
 
         Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
         teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
@@ -249,7 +254,7 @@ public class AddStudentsToGroup extends AppCompatActivity {
                         NewPhones.add(Splitted[4]);
                         final TextView textView = new TextView(AddStudentsToGroup.this);
                         textView.setTextColor(Color.parseColor("#b06500"));
-                        textView.setText(Splitted[1]+Splitted[2]+" ");
+                        textView.setText(Splitted[1]+" "+Splitted[2]+", ");
                         linearLayout.addView(textView);
                         textView.setOnClickListener(new View.OnClickListener() {
                             @Override

@@ -48,7 +48,7 @@
 
 
     public class Send_Permition extends AppCompatActivity {
-        EditText Searcher, FileName, Cause, Notes;
+        EditText Searcher, Cause, Notes;
         ListView ShowOptions;
         TextView Shown;
         LinearLayout linearLayout;
@@ -79,7 +79,7 @@
 
         Boolean f = false;
 
-        String fileName, cause, notes;
+        String  cause, notes;
 
         long millis;
 
@@ -98,7 +98,7 @@
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_send__permition);
             Searcher = findViewById(R.id.searchUsers);
-            FileName = findViewById(R.id.portClearance);
+
             Cause = findViewById(R.id.Cause);
             Notes = findViewById(R.id.Notes);
             ShowOptions = findViewById(R.id.showOptions);
@@ -469,13 +469,7 @@
             if (Choosen.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "נא לבחור תלמידים או קבוצות לשליחה", Toast.LENGTH_SHORT).show();
             } else {
-                if (FileName.getText().toString().isEmpty()) {
-                    FileName.setError("נא לרשום את האישור");
-                    FileName.requestFocus();
-                    return;
-                } else {
-                    fileName = FileName.getText().toString();
-                }
+
                 if (Cause.getText().toString().isEmpty()) {
                     Cause.setError("נא לרשום את סיבת היציאה");
                     Cause.requestFocus();

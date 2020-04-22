@@ -114,7 +114,7 @@ public class MonitorScreen extends AppCompatActivity {
                     String TimeAndDate=Splitted[8];
                     String out=name+" "+TimeAndDate;
                     String [] Split=dsp.getKey().split("_");
-                    outs.add(out+"__"+Split[0]+"_"+Split[1]);
+                    outs.add(out+"__"+Split[0]+"_"+Split[1]+"_"+Split[2]);
 
 
 

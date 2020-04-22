@@ -194,67 +194,67 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (firstname.isEmpty()) {
-            FirstName.setError("First name is required");
+            FirstName.setError("נא לרשום שם");
             FirstName.requestFocus();
             return;
         }
         if (!Pattern.matches("['א-ת]+", firstname)) {
             FirstName.getText().clear();
             firstname = "";
-            FirstName.setError("Your first name should contain only letters");
+            FirstName.setError("השם שלך צריך להכיל רק אותיות בעברית");
             FirstName.requestFocus();
             return;
         } else {
 
 
             if (secondname.isEmpty()) {
-                SecondName.setError("Second name is required");
+                SecondName.setError("נא לרשום שם משפחה");
                 SecondName.requestFocus();
                 return;
             }
             if (!Pattern.matches("['א-ת]+", secondname)) {
                 SecondName.getText().clear();
-                SecondName.setError("Your second name should contain only letters");
+                SecondName.setError("השם שלך צריך להכיל רק אותיות בעברית");
                 SecondName.requestFocus();
                 return;
 
 
             } else {
                 if (id.isEmpty()) {
-                    Id.setError("id is required");
+                    Id.setError("מספר ת.ז הוא חיוני");
                     Id.requestFocus();
                     return;
                 }
                 if (!Pattern.matches("[0-9]+", id)) {
-                    Id.setError("id should contain only numbers");
+                    Id.setError("נא לרשום רק ספרות");
                     Id.requestFocus();
                     return;
                 }
                 if (!checkId()) {
-                    Id.setError("id number is incorrect");
+                    Id.setError("מספר ת.ז הוא לא הגיוני");
                     Id.requestFocus();
                     return;
                 } else {
                     if (school.isEmpty()) {
-                        School.setError("School should be chosen");
+                        School.setError("נא לבחור בית ספר");
                         School.requestFocus();
                         return;
 
                     } else {
 
                         if (((IfAdmin==false)&&(IfGuard==false)&&(!bo)&&(!Pattern.matches("[א-י]+", spinc.getSelectedItem().toString())))) {
-                                Toast.makeText(MainActivity.this, "Please pick class", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "נא לבחור כיתה", Toast.LENGTH_SHORT).show();
                                 spinc.requestFocus();
                                 return;
                         }
                         else if ((IfAdmin==false)&&(IfGuard==false)&&(!bo)&&(!Pattern.matches("[0-9]+", spinn.getSelectedItem().toString()))) {
-                            Toast.makeText(MainActivity.this, "Please pick class number", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "נא לבחור מספר כיתה", Toast.LENGTH_SHORT).show();
                             spinn.requestFocus();
                             return;
                         } else {
 
                             if (pass.isEmpty()) {
-                                Password.setError("Password is required");
+                                Password.setError("סיסמה היא חיונית");
                                 Password.requestFocus();
                                 return;
                             }
@@ -323,11 +323,11 @@ public class MainActivity extends AppCompatActivity {
 
         Phone = PhoneNum.getText().toString();
         if (Phone.isEmpty()) {//Validation of the phone
-            Toast.makeText(getApplicationContext(), "You didn't write phone number...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), " לא הזנת מספר טלפון", Toast.LENGTH_SHORT).show();
 
         } else {
             if (Phone.length() < 10) {
-                Toast.makeText(getApplicationContext(), "Phone Number is not valid", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "מספר טלפון שגוי", Toast.LENGTH_SHORT).show();
             } else {
 
                 Phone = PhoneNum.getText().toString();
@@ -349,11 +349,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild(school)){
-                        Toast.makeText(getApplicationContext(),"School Exists",Toast.LENGTH_SHORT).show();
                         CheckIfPhoneExists();
                     }
                     else{
-                        Toast.makeText(getApplicationContext(),"School isn't exist",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"בית הספר שהוזן אינו במערכת",Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -372,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "כבר קיים משתמש עם מספר טלפון זהה", Toast.LENGTH_SHORT).show();
 
                 } else {
                     refSchool.child(school).child("Teacher").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -380,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() != null) {
-                                Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "כבר קיים משתמש עם מספר טלפון זהה", Toast.LENGTH_SHORT).show();
 
                             } else {
                                 refSchool.child(school).child("Admin").orderByChild("phone").equalTo(Phone).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -388,7 +387,7 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.getValue() != null) {
-                                            Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "כבר קיים משתמש עם מספר טלפון זהה", Toast.LENGTH_SHORT).show();
 
                                         }
                                         else {
@@ -396,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                     if (dataSnapshot.getValue() != null) {
-                                                        Toast.makeText(getApplicationContext(), "User with that phone number already exists", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getApplicationContext(), "כבר קיים משתמש עם מספר טלפון זהה", Toast.LENGTH_SHORT).show();
 
                                                     }
                                                     else{
@@ -476,14 +475,14 @@ public class MainActivity extends AppCompatActivity {
         //This method checks the state of the code sending and reacts for that.
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            Toast.makeText(getApplicationContext(), "We are sending you the code...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "הקוד נשלח אליך ברגעים אלו...", Toast.LENGTH_SHORT).show();
             SignInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(getApplicationContext(), "Sign up failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "הרשמה נכשלה", Toast.LENGTH_SHORT).show();
 
 
         }
@@ -492,7 +491,7 @@ public class MainActivity extends AppCompatActivity {
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             //gets the code string and triggeres a method called verify
             super.onCodeSent(s, forceResendingToken);
-            Toast.makeText(getApplicationContext(), "Code sent...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "הקוד נשלח...", Toast.LENGTH_SHORT).show();
             codeSent = s;
             verify();
         }
@@ -568,7 +567,7 @@ public class MainActivity extends AppCompatActivity {
                                 refSchool.child(school).child("Admin").child(Phone).setValue(admin).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "הנך משתמש חדש עכשיו!", Toast.LENGTH_LONG).show();
                                     }
                                 });
                                 IfAdmin = false;
@@ -579,18 +578,18 @@ public class MainActivity extends AppCompatActivity {
                                 refSchool.child(school).child("Guard").child(Phone).setValue(guard).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(MainActivity.this, "Data was sucssesfully added Guard", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "הנך משתמש חדש עכשיו!", Toast.LENGTH_LONG).show();
                                     }
                                 });
                             } else {
-                                Toast.makeText(getApplicationContext(), "You are a new user now", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "הנך משתמש חדש עכשיו!", Toast.LENGTH_LONG).show();
                                 if (!bo) {
 
                                     Student student = new Student(firstname, secondname, id, school, ClassAndNumber, Phone, pass);
                                     refSchool.child(school).child("Student").child(Phone).setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(MainActivity.this, "הנך משתמש חדש עכשיו!", Toast.LENGTH_LONG).show();
                                         }
                                     });
                                 } else {
@@ -598,7 +597,7 @@ public class MainActivity extends AppCompatActivity {
                                     refSchool.child(school).child("Teacher").child(Phone).setValue(teacher).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(MainActivity.this, "Data was sucssesfully added", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(MainActivity.this, "הנך משתמש חדש עכשיו!", Toast.LENGTH_LONG).show();
                                         }
 
 
@@ -606,15 +605,15 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                             }
-                            moveActivity();
+
                         }
-                                       ChangeView2();
+                        moveActivity();
 
 
 
 
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                Toast.makeText(MainActivity.this, "The verification code entered was invalid", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, "הקוד שהוזן אינו תואם", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -622,6 +621,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveActivity() {
+        finish();
         Intent intento = new Intent(this, LoginScreen.class);
         startActivity(intento);
     }
@@ -631,7 +631,6 @@ public class MainActivity extends AppCompatActivity {
         if (bo) {
             tv.setText("הירשם כמורה");
             //ADD RELEVANT FIELDS FOR STUDENT
-
         } else {
             tv.setText("הירשם כתלמיד");
             //ADD RELEVANT FIELDS FOR Teacher

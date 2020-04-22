@@ -9,6 +9,16 @@
     android:layoutDirection="rtl"
     tools:context=".Team">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#62C2CC"
+        android:scrollbarSize="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="#000000"/>
+
     <ListView
         android:id="@+id/StudentsLv"
         android:layout_width="match_parent"

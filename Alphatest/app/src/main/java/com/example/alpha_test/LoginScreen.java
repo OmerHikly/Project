@@ -64,9 +64,8 @@ public class LoginScreen extends AppCompatActivity {
         Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
                 .getBoolean("isFirstRun", true);
 
-        if (isFirstRun) {
-            //show start activity
-
+       if (isFirstRun) {//show start activity
+            finish();
             startActivity(new Intent(LoginScreen.this, MainActivity.class));
         }
 
@@ -157,13 +156,13 @@ public class LoginScreen extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (school == "" || school == null|| school.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter school name or code", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "נא להזין את שם בית הספר", Toast.LENGTH_SHORT).show();
 
                 } else {
                     if (dataSnapshot.hasChild(school)) {
                         CheckIfPhoneExists();//פעולה הבודקת אם הטלפון שהוקלד קיים באותו בית ספר
                     } else {
-                        Toast.makeText(getApplicationContext(), "School isn't exist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "בית הספר שהוזן אינו קיים במערכת", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -179,7 +178,7 @@ public class LoginScreen extends AppCompatActivity {
         public  void CheckIfPhoneExists() {//This method checks under each type of user in the firebase if the typed phone number already as signed in
          String ph=Phone.getText().toString();
             if (ph.isEmpty()||ph == "" || ph == null ) {
-                Toast.makeText(getApplicationContext(), "Please enter phone number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "נא להזין מס' טלפון", Toast.LENGTH_SHORT).show();
 
             } else {
                 refSchool.child(school).child("Student").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -194,7 +193,6 @@ public class LoginScreen extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.getValue() != null) {
-                                        Toast.makeText(getApplicationContext(), "Teacher", Toast.LENGTH_SHORT).show();
                                         TeachActivity();
 
                                     } else {
@@ -272,7 +270,7 @@ public class LoginScreen extends AppCompatActivity {
                     }
                 }
                 else{
-                    Password.setError("Wrong password");
+                    Password.setError("סיסמה שגויה");
                     Password.requestFocus();
                     return;
 
@@ -302,7 +300,7 @@ public class LoginScreen extends AppCompatActivity {
                     }
                 }
                 else{
-                    Password.setError("Wrong password");
+                    Password.setError("סיסמה שגויה");
                     Password.requestFocus();
                     return;
                 }
@@ -333,7 +331,7 @@ public class LoginScreen extends AppCompatActivity {
                         }
                     }
                     else{
-                        Toast.makeText(getApplicationContext(),"Password is wrong",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"סיסמה שגויה",Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -363,7 +361,7 @@ public class LoginScreen extends AppCompatActivity {
                     }
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"Password is wrong",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"סיסמה שגויה",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -379,7 +377,7 @@ public class LoginScreen extends AppCompatActivity {
 
 
     private void NoUser() {//מתריעה למשתמש אם הפרטים שלו קיימים או לא
-        Toast.makeText(getApplicationContext(),"User isn't exists",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"המשתמש אינו קיים",Toast.LENGTH_SHORT).show();
 
     }
 

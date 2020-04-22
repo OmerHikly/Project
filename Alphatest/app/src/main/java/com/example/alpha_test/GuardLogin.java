@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,11 +19,14 @@ public class GuardLogin extends AppCompatActivity {
     Guard guard;
     String school,phone;
     Toolbar toolbar;
+
+    TextView stv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guard_login);
         toolbar=findViewById(R.id.tb);
+        stv=findViewById(R.id.textView);
 
         Parcelable parcelable=getIntent().getParcelableExtra("guard");
         guard= Parcels.unwrap(parcelable);
@@ -34,6 +38,9 @@ public class GuardLogin extends AppCompatActivity {
         Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_menu_black_24dp);
         toolbar.setOverflowIcon(drawable);
         setSupportActionBar(toolbar);
+
+        stv.setText("שלום"+" "+guard.getName()+"!");
+
     }
 
     @Override

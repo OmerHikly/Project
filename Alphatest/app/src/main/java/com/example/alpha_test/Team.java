@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +38,7 @@ public class Team extends AppCompatActivity {
     ArrayList<String> Students = new ArrayList<>();// יכיל את התלמידים ששייכים לקבוצה
     ArrayList<String> ExistPhones = new ArrayList<>();//רשימת התלמידים שנבחרו להיווסף לקבוצה
 
+    Toolbar toolbar;
     ListView lv;
     Button btn;
 
@@ -53,10 +55,15 @@ public class Team extends AppCompatActivity {
 
         lv=findViewById(R.id.StudentsLv);
         btn=findViewById(R.id.AddMembers);
+        toolbar=findViewById(R.id.tb);
+
+
 
         Intent gi=getIntent();//רכיב שמעביר את הערכים שהועברו מהמסך הקודם
        GroupName=gi.getStringExtra("name");//הצבת שם הקבוצה מהמסך הקודם
 
+        toolbar.setTitle(GroupName);
+        setSupportActionBar(toolbar);
         Parcelable parcelable=getIntent().getParcelableExtra("teacher");//קבלת עצם המורה מהאקטיביטים הקודמים
         teacher= Parcels.unwrap(parcelable);//קישורו אל העצם מסוג מורה שהגדרנו עבור המסך הזה
 

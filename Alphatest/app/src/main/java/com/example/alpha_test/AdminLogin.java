@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +22,7 @@ public class AdminLogin extends AppCompatActivity {
 
     Toolbar toolbar;
     Button man;
+    TextView stv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class AdminLogin extends AppCompatActivity {
         setContentView(R.layout.activity_admin_login);
 
         man=findViewById(R.id.manage_account);
+        stv=findViewById(R.id.textView);
 
         toolbar=findViewById(R.id.tb);
         toolbar.setTitle("Byecode");
@@ -36,6 +39,7 @@ public class AdminLogin extends AppCompatActivity {
         Parcelable parcelable=getIntent().getParcelableExtra("admin");
         admin= Parcels.unwrap(parcelable);
 
+        stv.setText("שלום"+" "+admin.getName()+"!");
 
     }
 

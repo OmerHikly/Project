@@ -54,7 +54,7 @@ import java.util.Locale;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class AskExit extends AppCompatActivity {
-    EditText Searcher, FileName, Cause, Notes;
+    EditText Searcher, Cause, Notes;
     ListView ShowOptions;
     TextView Shown;
     LinearLayout linearLayout;
@@ -70,16 +70,20 @@ public class AskExit extends AppCompatActivity {
     Student student;
     String school, Phone, cls;
 
-
+    String Dol;
     String ex, re;
-    String fileName, cause, notes;
+    String  cause, notes;
     String permit = "no";
     String to;
     String TiMe;
 
     int UpdatedYear;
     int UpdatedMonth;
-    int UpdatedDate;
+    int UpdatedDay;
+
+    int Year;
+    int Month;
+    int Day;
 
     ArrayList<String> Teachers = new ArrayList<>();//רשימה של תלמידים שתכלול את כל התלמידים שאושרו על ידי המורים שלהם ואפשר להוסיף אותם לקבוצה
     ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
@@ -99,11 +103,7 @@ public class AskExit extends AppCompatActivity {
     public static StorageReference Ref;
     StorageReference mStorageRef;
 
-    Calendar calendar=Calendar.getInstance();
-    int Year=calendar.get(Calendar.YEAR);
-    int Month=calendar.get(Calendar.MONTH);
-    int Date=calendar.get(Calendar.DATE);
-    String Dol=Date+"/"+Month+"/"+Year;
+
 
 
 
@@ -112,7 +112,6 @@ public class AskExit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ask_exit);
         Searcher = findViewById(R.id.searchUsers);
-        FileName = findViewById(R.id.portClearance);
         Cause = findViewById(R.id.Cause);
         Notes = findViewById(R.id.Notes);
         ShowOptions = findViewById(R.id.showOptions);
@@ -136,6 +135,12 @@ public class AskExit extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+        Calendar calendar=Calendar.getInstance();
+        Year=calendar.get(Calendar.YEAR);
+        Month=calendar.get(Calendar.MONTH);
+        Month=Month+1;
+        Day=calendar.get(Calendar.DAY_OF_MONTH);
+        Dol=Day+"/"+Month+"/"+Year;
 
 
         setList();
@@ -271,9 +276,10 @@ public class AskExit extends AppCompatActivity {
     public void getDate(View view) {
         DatePickerDialog datePickerDialog=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int date) {
-                String dataString= date+"/"+month+"/"+year;
-                if(((year<Year) ||(year==Year)&&(month<Month)||((year==Year)&&(month==Month)&&(date<Date)))) {
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                month++;
+                String dataString= day+"/"+month+"/"+year;
+                if(((year<Year) ||(year==Year)&&(month<Month)||((year==Year)&&(month==Month)&&(day<Day)))) {
                     Toast.makeText(getApplicationContext(), "נא לבחור תאריך עתידי", Toast.LENGTH_LONG).show();
                     DaTe.requestFocus();
                     return;
@@ -283,12 +289,13 @@ public class AskExit extends AppCompatActivity {
                     Dol=dataString;
                     UpdatedYear=year;
                     UpdatedMonth=month;
-                    UpdatedDate=date;
+                    UpdatedDay=day;
                 }
             }
-        },Year,Month,Date);
+        },Year,Month,Day);
         datePickerDialog.show();
     }
+
 
 
     public class TeachersAdapter extends ArrayAdapter {//ה-class עבור המתאם המעוצב שיצרתי
@@ -445,13 +452,8 @@ public class AskExit extends AppCompatActivity {
         }
 
 
-        if (FileName.getText().toString().isEmpty()) {
-            FileName.setError("נא לרשום את האישור");
-            FileName.requestFocus();
-            return;
-        } else {
-            fileName = FileName.getText().toString();
-        }
+
+
         if (Cause.getText().toString().isEmpty()) {
             Cause.setError("נא לרשום את סיבת היציאה");
             Cause.requestFocus();
@@ -504,7 +506,7 @@ public class AskExit extends AppCompatActivity {
                 String myDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
 
 
-                String Req = FullName + "; " + cls + "; " + time + "; " + myDate + "; " + Phone + "; " + Id + "; " + cause + "; " + notes + "; " + ex + "; " + re+ "; "+TiMe+"; " +Dol;
+                String Req = FullName + "; " + cls + "; " + time + "; " + myDate + "; " + Phone + "; " + Id + "; " + cause + "; " + notes + "; " + ex + "; " + re+ "; "+TiMe+"; "+Dol;
 
 
                 refSchool.child(school).child("Teacher").child(to).child("Requests").child(Phone).setValue(Req);
@@ -513,7 +515,7 @@ public class AskExit extends AppCompatActivity {
                 Searcher.setText("");
                 Notes.setText("");
                 Cause.setText("");
-                FileName.setText("");
+
 
 
 

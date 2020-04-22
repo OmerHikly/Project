@@ -9,6 +9,7 @@
     android:gravity="center"
     tools:context=".MainActivity">
 
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -150,7 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Code..."
+            android:hint="הזן קוד..."
             android:inputType="number"
             android:visibility="gone" />
 
@@ -170,14 +171,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="SendData"
+            android:textSize="20sp"
+            android:background="#FDB813"
             android:text="הירשם" />
 
         <Button
             android:id="@+id/Ver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Verify code" />
+            android:text="אמת קוד"
+            android:visibility="gone" />
     </LinearLayout>
     <Space
         android:layout_width="match_parent"
