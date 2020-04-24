@@ -337,7 +337,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                     checkIfSchoolExists();
-                    //  CheckIfPhoneExists();
                 }
 
             }

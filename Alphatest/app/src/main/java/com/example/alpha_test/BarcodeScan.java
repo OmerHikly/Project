@@ -79,8 +79,7 @@ public class BarcodeScan extends AppCompatActivity implements ZXingScannerView.R
 
     }
 
-    //A construction that checks which types of qr code text we get and remove their firet letters
-    //Works with Vcard,Vevent,Url,,Geo and text
+
     private void ProcessRawResult(String text) {
 
         Intent i = new Intent(this, BarcodeData.class);

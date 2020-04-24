@@ -1,7 +1,6 @@
 package com.example.alpha_test;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -222,11 +220,7 @@ public class ChangeProfile extends AppCompatActivity {
         }
     }
 
-    private String getExtension(Uri uri){//This method gets the extension of the file that have been picked (png,jpg,jpeg)
-        ContentResolver cr=getContentResolver();
-        MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
-    }
+
 
 
 

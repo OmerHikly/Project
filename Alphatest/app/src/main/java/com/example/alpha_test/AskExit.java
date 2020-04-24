@@ -77,6 +77,8 @@ public class AskExit extends AppCompatActivity {
     String to;
     String TiMe;
 
+    boolean NeverGoBack=false;
+
     int UpdatedYear;
     int UpdatedMonth;
     int UpdatedDay;
@@ -89,7 +91,7 @@ public class AskExit extends AppCompatActivity {
     ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
 
     Boolean f = false;
-    Boolean keepGoing=true;
+    Boolean keepGoing=false;
 
     TeachersAdapter adapter;
 
@@ -465,7 +467,7 @@ public class AskExit extends AppCompatActivity {
         if (firstH.getText().toString().equals("שעת יציאה")) {
             Toast.makeText(getApplicationContext(), "חובה למלא שעת יציאה", Toast.LENGTH_LONG).show();
         } else {
-            if (secondH.getText().toString().equals("שעת חזרה")) {
+            if ((secondH.getText().toString().equals("שעת חזרה"))&&(NeverGoBack==false)) {
                 keepGoing = false;
                 adb=new AlertDialog.Builder(this);
                 adb.setTitle("שים לב!");
@@ -474,6 +476,7 @@ public class AskExit extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         keepGoing = true;
+                        NeverGoBack=true;
                     }
                 });
                 adb.setNegativeButton("אופס שכחתי!", new DialogInterface.OnClickListener() {
@@ -490,7 +493,12 @@ public class AskExit extends AppCompatActivity {
 
                 notes = Notes.getText().toString();
                 ex = firstH.getText().toString();
-                re = secondH.getText().toString();
+                if(NeverGoBack){
+                    re="התלמיד אינו חוזר היום";
+                }
+                else {
+                    re = secondH.getText().toString();
+                }
                 firstH.setText("שעת יציאה");
                 secondH.setText("שעת חזרה");
                 String FullName = student.getName() + " " + student.getSecondName();
