@@ -35,14 +35,22 @@
         android:inputType="textPersonName"
         />
 
-    <LinearLayout
-        android:id="@+id/linlay"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layoutDirection="rtl"
+        android:layout_weight="1">
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
     <Space
         android:layout_width="match_parent"

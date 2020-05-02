@@ -252,7 +252,7 @@ public class ChangeProfile extends AppCompatActivity {
         Ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>(){
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.with(ctx).load(uri).fit().centerCrop().into(Iv);
+                Picasso.with(ctx).load(uri).fit().into(Iv);
             }
 
 

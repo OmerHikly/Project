@@ -79,6 +79,8 @@ public class AskExit extends AppCompatActivity {
 
     boolean NeverGoBack=false;
 
+    boolean c=false;
+
     int UpdatedYear;
     int UpdatedMonth;
     int UpdatedDay;
@@ -91,7 +93,7 @@ public class AskExit extends AppCompatActivity {
     ArrayList<String> Demo = new ArrayList<>();//רשימה מועתקת של Students לצורך ביצוע חיפושים מבלי לשנות את ערכה המקורי של רשימת התלמידים
 
     Boolean f = false;
-    Boolean keepGoing=false;
+    Boolean keepGoing=true;
 
     TeachersAdapter adapter;
 
@@ -438,7 +440,6 @@ public class AskExit extends AppCompatActivity {
 
     public void RequestBarcode(View view) {
         String t= Searcher.getText().toString()+ " " +to;
-        boolean c=false;
 
         for(int i=0;i<Teachers.size();i++){
             if(Teachers.get(i).equals(t)){
@@ -489,8 +490,8 @@ public class AskExit extends AppCompatActivity {
                 ad.show();
             }
 
-            if (keepGoing) {
 
+            if (keepGoing) {
                 notes = Notes.getText().toString();
                 ex = firstH.getText().toString();
                 if(NeverGoBack){

@@ -46,7 +46,6 @@
         android:layout_gravity="start"
         android:textColor="#000000"
         android:text="שם:"
-
         android:textSize="25dp" />
 
     <Space
@@ -118,8 +117,9 @@
         android:id="@+id/Notes"
         android:textSize="25dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:textColor="#000000"
+        android:scrollbars="vertical"
         android:text="הערות:" />
 
     <Space

@@ -81,7 +81,6 @@ public class BarcodeScan extends AppCompatActivity implements ZXingScannerView.R
 
 
     private void ProcessRawResult(String text) {
-
         Intent i = new Intent(this, BarcodeData.class);
         i.putExtra("data", text);
         i.putExtra("school", school);

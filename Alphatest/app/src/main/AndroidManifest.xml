@@ -10,7 +10,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -65,7 +65,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".BarcodeScan" />
-        <activity android:name=".UploadPictures" />
         <activity android:name=".MainActivity" />
     </application>
 

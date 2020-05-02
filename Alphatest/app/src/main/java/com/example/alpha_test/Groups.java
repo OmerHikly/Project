@@ -113,6 +113,7 @@ public class Groups extends AppCompatActivity {
         Intent i=new Intent(this,Acept_pupils.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
+        finish();
         startActivity(i);
     }
 
@@ -121,6 +122,7 @@ public class Groups extends AppCompatActivity {
         Intent i=new Intent(this,New_group.class);
         Parcelable parcelable= Parcels.wrap(teacher);
         i.putExtra("teacher", parcelable);
+        finish();
         startActivity(i);
     }
 }

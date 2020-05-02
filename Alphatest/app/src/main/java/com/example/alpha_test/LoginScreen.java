@@ -21,7 +21,6 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import static com.example.alpha_test.FirebaseHelper.mAuth;
 import static com.example.alpha_test.FirebaseHelper.refSchool;
 
 public class LoginScreen extends AppCompatActivity {
@@ -59,20 +58,6 @@ public class LoginScreen extends AppCompatActivity {
 
 
 
-
-
-        Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
-                .getBoolean("isFirstRun", true);
-
-       if (isFirstRun) {//show start activity
-            finish();
-            startActivity(new Intent(LoginScreen.this, MainActivity.class));
-        }
-
-        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
-                .putBoolean("isFirstRun", false).commit();
-
-
         FirebaseSchools();//פעולה שמוסיפה את כל האפשרויות
 
 
@@ -80,6 +65,8 @@ public class LoginScreen extends AppCompatActivity {
 
 
     }
+
+
 
 
     private void FirebaseSchools() {
@@ -122,21 +109,18 @@ public class LoginScreen extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
-        SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
-        Boolean isChecked = settings.getBoolean("stayConnect", false);
-        if (mAuth.getCurrentUser() != null && isChecked) {
-            stayConnect = true;
+        SharedPreferences settings=getSharedPreferences("PREFS_NAME",MODE_PRIVATE);
+        Boolean isNotSigned=settings.getBoolean("NotSigned",true);
 
+        if (isNotSigned) {//show start activity
+            finish();
+            startActivity(new Intent(LoginScreen.this, MainActivity.class));
         }
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (stayConnect) finish();
-    }
+        settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
 
+        super.onStart();
+    }
 
     public void login(View view) {//פעולה בעת לחיצה על התחבר מקבלת לString את מה שהוקלד
         phone = "+972" + Phone.getText().toString();

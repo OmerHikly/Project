@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     boolean IfAdmin = false; //משתנה שבודק האם המשתמש שנרשם נרשם כאדמין
     boolean IfGuard = false; //משתנה שבודק האם המשתמש שנרשם נרשם כשומר
 
+    int counter=0;
 
 
     DatabaseReference databaseReference;//אזכור לdatabase- יצביע על השורש של העץ בבבסיס הנתונים
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    /*
 
     @Override
     protected void onStart() {
@@ -131,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(si);
         }
     }
+
+     */
 
     private void FirebaseSchools() {
 
@@ -605,7 +609,14 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
 
+
+
+
                         }
+                        SharedPreferences settings=getSharedPreferences("PREFS_NAME",MODE_PRIVATE);
+                        SharedPreferences.Editor editor=settings.edit();
+                        editor.putBoolean("NotSigned",false);
+                        editor.commit();
                         moveActivity();
 
 
@@ -613,6 +624,11 @@ public class MainActivity extends AppCompatActivity {
 
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 Toast.makeText(MainActivity.this, "הקוד שהוזן אינו תואם", Toast.LENGTH_LONG).show();
+                                counter++;
+                                if(counter==3){
+                                    ChangeView2();
+                                    counter=0;
+                                }
                             }
                         }
                     });
