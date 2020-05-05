@@ -115,7 +115,7 @@ public class PermitionsRecived extends AppCompatActivity {
                             }
                             else{
                                 Toast.makeText(getApplicationContext(),"נא לחכות עד זמן היציאה", Toast.LENGTH_SHORT).show();
-
+//
                             }
                         }
                     }
