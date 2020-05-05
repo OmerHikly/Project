@@ -615,7 +615,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         SharedPreferences settings=getSharedPreferences("PREFS_NAME",MODE_PRIVATE);
                         SharedPreferences.Editor editor=settings.edit();
-                        editor.putBoolean("NotSigned",false);
+                        editor.putBoolean("NoSigned",false);
                         editor.commit();
                         moveActivity();
 
@@ -632,7 +632,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-
     }
 
     private void moveActivity() {

@@ -110,7 +110,7 @@ public class LoginScreen extends AppCompatActivity {
     @Override
     protected void onStart() {
         SharedPreferences settings=getSharedPreferences("PREFS_NAME",MODE_PRIVATE);
-        Boolean isNotSigned=settings.getBoolean("NotSigned",true);
+        Boolean isNotSigned=settings.getBoolean("NoSigned",true);
 
         if (isNotSigned) {//show start activity
             finish();
