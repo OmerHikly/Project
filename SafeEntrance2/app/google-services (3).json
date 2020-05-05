@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "632059662928",
+    "firebase_url": "https://safeentrance-ca1c0.firebaseio.com",
+    "project_id": "safeentrance-ca1c0",
+    "storage_bucket": "safeentrance-ca1c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632059662928:android:75ecb99a09d9b4d2827755",
+        "android_client_info": {
+          "package_name": "com.example.safeentrance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632059662928-8q1gf6mp7todrc053r0nu1mmrr2s0lim.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.safeentrance",
+            "certificate_hash": "726a46bfef1871b5a1a6fdbbe7e147915d668359"
+          }
+        },
+        {
+          "client_id": "632059662928-p90tpu7n2fk6jdjlp6hcu4npddb6k1qp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuLJpb4rToMiu-7UqM1YlKATC090bzrfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632059662928-p90tpu7n2fk6jdjlp6hcu4npddb6k1qp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
