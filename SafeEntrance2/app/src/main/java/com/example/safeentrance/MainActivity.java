@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         ArrayAdapter<CharSequence> ClassAdapter = ArrayAdapter.createFromResource(this, R.array.classes, R.layout.support_simple_spinner_dropdown_item);
         //מתאם שנועד לקשר ספינר אל רשימת הכיתות האפשריים
         ArrayAdapter<CharSequence> NumbersAdapter = ArrayAdapter.createFromResource(this, R.array.Numbers, R.layout.support_simple_spinner_dropdown_item);
@@ -509,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = settings.edit();
-                                editor.putBoolean("NotSigned", false);
+                                editor.putBoolean("NSigned", false);
                                 editor.commit();
                                 moveActivity();
 

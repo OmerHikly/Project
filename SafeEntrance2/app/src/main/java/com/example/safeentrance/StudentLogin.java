@@ -96,13 +96,11 @@ public class StudentLogin extends AppCompatActivity {
     }
 
     public void AskPermition(View view) {
-        /*
         Intent i = new Intent(this, AskPermit.class);
         Parcelable parcelable= Parcels.wrap(student);
         i.putExtra("student", parcelable);
         startActivity(i);
 
-         */
     }
 
     public void ViewPermition(View view) {

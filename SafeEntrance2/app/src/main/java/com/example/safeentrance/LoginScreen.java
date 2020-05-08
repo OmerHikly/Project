@@ -47,6 +47,11 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
 
+        Phone = findViewById(R.id.Phone);
+        Password = findViewById(R.id.Password);
+        School=findViewById(R.id.LSchool);
+
+
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("התחברות");
         setSupportActionBar(toolbar);
@@ -99,7 +104,7 @@ public class LoginScreen extends AppCompatActivity {
     @Override
     protected void onStart() {
         SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
-        Boolean isNotSigned = settings.getBoolean("NotSigned", true);
+        Boolean isNotSigned = settings.getBoolean("NSigned", true);
 
         if (isNotSigned) {//show start activity
             finish();

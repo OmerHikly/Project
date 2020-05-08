@@ -1,20 +1,23 @@
 package com.example.safeentrance;
 
+import org.parceler.Parcel;
+
+@Parcel(Parcel.Serialization.BEAN)
 public class ParentsPermit {
     String DateAndTime;
     String Url;
     String Qr_Info;
-    boolean Parent;
+    boolean ParentType;
 
 
     public ParentsPermit() {
     }
 
-    public ParentsPermit(String dateAndTime, String url, String qr_Info, boolean parent) {
+    public ParentsPermit(String dateAndTime, String url, String qr_Info, boolean pare) {
         DateAndTime = dateAndTime;
         Url = url;
         Qr_Info = qr_Info;
-        Parent = parent;
+        ParentType = pare;
     }
 
 
@@ -45,10 +48,10 @@ public class ParentsPermit {
     }
 
     public boolean whichParent() {
-        return Parent;
+        return ParentType;
     }
 
     public void setParent(boolean parent) {
-        Parent = parent;
+        ParentType = parent;
     }
 }

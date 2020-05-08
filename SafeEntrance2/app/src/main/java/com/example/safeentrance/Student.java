@@ -17,6 +17,9 @@ public class Student {
 
  boolean activated=false;
 
+    public Student() {
+    }
+
     @ParcelConstructor
     public Student(String name, String id, String school, String cls, String phone, String password, Parent parent1, Parent parent2) {
         Phone = phone;

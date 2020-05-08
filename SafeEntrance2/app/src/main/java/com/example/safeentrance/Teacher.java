@@ -4,12 +4,12 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Teacher {
-    private  String Phone;
-    private String Id;
-    private String Name;
-    private String School;
-    private String Cls;
-    private String Password;
+    String Phone;
+    String Id;
+    String Name;
+    String School;
+    String Cls;
+    String Password;
 
     private boolean activated=false;
 

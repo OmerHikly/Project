@@ -46,15 +46,7 @@ public class PermitionsRecived extends AppCompatActivity {
     String school,phone;
 
 
-    Calendar calendar=Calendar.getInstance();
-    int Year=calendar.get(Calendar.YEAR);
-    int Month=calendar.get(Calendar.MONTH);
-    int Date=calendar.get(Calendar.DATE);
-    int Hour=calendar.get(Calendar.HOUR_OF_DAY);
-    int Minute=calendar.get(Calendar.MINUTE);
-    int Second=calendar.get(Calendar.SECOND);
 
-    String myDate = Year + "/" + Month + "/" + Date + " " + Hour + ":" + Minute + ":" + Second;
     long current;
 
     @Override
@@ -73,20 +65,10 @@ public class PermitionsRecived extends AppCompatActivity {
         school=student.getSchool();
         phone=student.getPhone();
 
-        refBarcode= refSchool.child(school).child("Student").child(phone).child("QR_Info");
+        refBarcode= refSchool.child(school).child("Student").child(phone).child("Permit").child("qr_Info");
 
         //המרתת הזמן הנוכחי לאלפיות השניה
 
-        SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
-        java.util.Date date = null;
-        try {
-            date = sd.parse(myDate);
-        } catch (
-                ParseException e) {
-            e.printStackTrace();
-        }
-        current = date.getTime();
 
 
         GenerateAndShow();
@@ -96,34 +78,43 @@ public class PermitionsRecived extends AppCompatActivity {
         refBarcode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
+                if (dataSnapshot.getValue() != null) {
                     String d = dataSnapshot.getValue().toString();
                     String Splitted[] = d.split("; ");
-                    long t= Long.parseLong(Splitted[7]);
-                    long ft=t+30*60*1000;
-                    if (phone.equals(Splitted[0])) {
-                        //בדיקה אם התלמיד מנסה לצאת בחלון ההזמנויות
-                        //חלון ההזדמנויות הוא מזמן היציאה הקבוע עד כחצי שעה אחריו.ו
-                        if ((t <= current) && (current <= ft)) {
-                            Continue(d);
-                        }
-                        else {
-                            if (current>ft){
-                                refBarcode.removeValue();
-                                Toast.makeText(getApplicationContext(),"זמן היציאה חלף", Toast.LENGTH_SHORT).show();
+                    String t = Splitted[0];
+                    long sendTime = Long.parseLong(t);
+                    long Untill = sendTime + 12 * 60 * 60 * 1000;// 12 שעות במילישניות
+                    current=System.currentTimeMillis();
 
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(),"נא לחכות עד זמן היציאה", Toast.LENGTH_SHORT).show();
-//
+                    String st = String.valueOf(current);
+                    Toast.makeText(getApplicationContext(),st,Toast.LENGTH_LONG);
+
+
+
+                    if ((sendTime < current)&&(current<Untill)) {
+                        Continue(d);
+                        } else {
+                            if (current > Untill) {
+                                refBarcode.removeValue();
+                                Toast.makeText(getApplicationContext(), "זמן היציאה חלף", Toast.LENGTH_SHORT).show();
+                            } else if (current < sendTime) {
+                                Toast.makeText(getApplicationContext(), "נא לחכות עד זמן היציאה", Toast.LENGTH_SHORT).show();
                             }
                         }
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(),"אין גישה לקובץ ברקוד זה", Toast.LENGTH_SHORT).show();
+
                     }
                 }
-            }
+
+
+
+
+
+
+
+
+
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

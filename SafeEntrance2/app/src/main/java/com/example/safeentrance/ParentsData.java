@@ -86,7 +86,7 @@ public class ParentsData extends AppCompatActivity {
     public void Sign(View view) {
         String n1=name1.getText().toString();
         if (n1.isEmpty()) {
-            name1.setError("נא לרשום שם של הורה אחד");
+            name1.setError("נא לרשום שם");
             name1.requestFocus();
             return;
         }
@@ -105,23 +105,60 @@ public class ParentsData extends AppCompatActivity {
             return;
         }
 
-        if (!checkId()||I1==I2||I2==student.getId()||I1==student.getId()) {//בדיקה האם תעודת הזהות תקינה ואם כן בדיקה נוספת שאין שתי ת.ז זהות בין המשתמשים
+        if (!checkId(I1)||I1.equals(I2)||I1.equals(student.getId())) {//בדיקה האם תעודת הזהות תקינה ואם כן בדיקה נוספת שאין שתי ת.ז זהות בין המשתמשים
             Id1.setError("מספר ת.ז הוא לא הגיוני");
             Id1.requestFocus();
             return;
         }
 
+        if (!checkId(I2)||I2.equals(student.getId())) {//בדיקה האם תעודת הזהות תקינה ואם כן בדיקה נוספת שאין שתי ת.ז זהות בין המשתמשים
+            Id1.setError("מספר ת.ז הוא לא הגיוני");
+            Id1.requestFocus();
+            return;
+        }
 
         String Name1=n1+" "+sn1;
         String n2=name2.getText().toString();
         String sn2=seondName2.getText().toString();
         String Name2 =n2+" "+sn2;
 
+        if(n2.isEmpty()&&sn2.isEmpty()&&Name2.isEmpty()){
+            student.setParent2(null);
 
-        one=new Parent(Name1,I1,true);
-        two=new Parent (Name2,I2,false);
+        }
+        else{
+            if (n2.isEmpty()) {
+                name2.setError("נא לרשום שם");
+                name2.requestFocus();
+                return;
+            }
+
+            if (sn2.isEmpty()) {
+                seondName2.setError("נא לרשום שם משפחה");
+                seondName2.requestFocus();
+                return;
+            }
+
+            if (I2.isEmpty()) {
+                Id2.setError("נא לרשום תעודת זהות");
+                Id2.requestFocus();
+                return;
+            }
+
+
+
+
+
+
+            two=new Parent (I2,Name2,false);
+            student.setParent2(two);
+        }
+
+
+
+
+        one=new Parent(I1,Name1,true);
         student.setParent1(one);
-        student.setParent2(two);
 
         Phone=student.getPhone();
         school=student.getSchool();
@@ -231,7 +268,7 @@ public class ParentsData extends AppCompatActivity {
 
                         SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
-                        editor.putBoolean("NotSigned", false);
+                        editor.putBoolean("NSigned", false);
                         editor.commit();
                         moveActivity();
 
@@ -242,12 +279,12 @@ public class ParentsData extends AppCompatActivity {
 
     }
 
-    private boolean checkId() {
+    private boolean checkId(String id) {
 //   A method that checks for a legal id -ID in israel requires to multiply every digit in the  odd place by 1 and a digit in a
         //even place by 2 and sum up the result (if we get result that higher than 9 we need to sum those digits  and we use the given result instead)
         //after we got all those results from each digit in the id code - we sum up all the results and the given Result should be devided by 10.
         //That's what this method does
-        String str = I1;
+        String str = id;
         if ((str.length() > 9) || (str.length() < 5)) {
 
             return false;
