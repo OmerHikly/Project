@@ -7,13 +7,14 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layoutDirection="rtl"
-    tools:context=".TeacherLogin">
+    tools:context=".MainScreen">
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#62C2CC"
+        android:background="#62C2FF"
         android:scrollbarSize="?attr/actionBarSize"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -22,7 +23,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3" />
+        android:layout_weight="2" />
 
     <TextView
         android:id="@+id/stv"
@@ -31,20 +32,8 @@
         android:gravity="center"
         android:textSize="50sp"
         android:textColor="#000000"
-        android:text="שלום מורה!" />
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:onClick="ExitActivity"
-        android:textSize="25dp"
-        android:background="#62C2CC"
-        android:text= "מלא אישור חדש" />
+        android:text="שלום משתמש!"
+        />
 
     <Space
         android:layout_width="match_parent"
@@ -52,31 +41,70 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
+
+        android:id="@+id/CoronaButton"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:onClick="OpenRequests"
+        android:background="#62C2FF"
+        android:drawableRight="@drawable/coronavirus"
+        android:onClick="Declare"
+        android:text="הצהרת קורונה יומית"
+        android:textColor="#000000"
         android:textSize="25dp"
-        android:background="#62C2CC"
-        android:text="פתח בקשות שנשלחו" />
+
+        />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+
     <Button
-        android:id="@+id/button3"
-        android:layout_width="match_parent"
+
+        android:id="@+id/AddChild"
+        android:layout_width="314dp"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:onClick="PassAc"
+        android:background="#62C2FF"
+        android:drawableRight="@drawable/children"
+        android:onClick="AddChildren"
+        android:text="הוסף את ילדיך"
+        android:textColor="#000000"
         android:textSize="25dp"
-        android:background="#62C2CC"
-        android:text="ניהול קבוצות" />
+
+        />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3" />
+        android:layout_weight="1" />
+
+
+    <Button
+
+        android:id="@+id/JoinOrganization"
+        android:layout_width="314dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#62C2FF"
+        android:drawableRight="@drawable/business"
+        android:onClick="JoinOrganiztion"
+        android:text="הצטרף לארגון"
+        android:textColor="#000000"
+        android:textSize="25dp"
+
+        />
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" />
+
+
+
+
+
 </LinearLayout>
